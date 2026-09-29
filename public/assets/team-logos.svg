@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+  <symbol id="harbor-sharks" viewBox="0 0 64 64">
+    <path fill="currentColor" d="M5 39c15-2 23-20 47-18-7 5-8 11-5 16l12 4-12 4c-8 3-18 5-29 2L7 53l4-11z"/>
+    <path fill="#fff" d="m23 38 7-5-1 7 8-5-2 9-10 1z"/><circle cx="43" cy="29" r="2.5" fill="#071a2b"/>
+  </symbol>
+  <symbol id="metro-comets" viewBox="0 0 64 64">
+    <path fill="#fff" d="M7 45C21 43 25 27 42 17l-5 12 15-9-9 14 14-2C45 44 29 50 7 50z"/>
+    <circle cx="41" cy="35" r="11" fill="currentColor"/><path d="M31 35h20M41 25c-5 6-5 14 0 20M41 25c5 6 5 14 0 20" fill="none" stroke="#071a2b" stroke-width="2"/>
+  </symbol>
+  <symbol id="desert-scorpions" viewBox="0 0 64 64">
+    <path fill="currentColor" d="M25 22h14l7 8-5 16-9 7-9-7-5-16zm-9 9L7 23l2-7 11 10zm32-5 11-10 2 7-13 12z"/>
+    <path d="M32 21V9l8 4-5 5m-7 15h8m-10 7 6 5 6-5" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="bay-city-waves" viewBox="0 0 64 64">
+    <path fill="currentColor" d="M5 37c9-12 18-14 27-6 8 7 14 6 27-2-7 18-21 25-35 17C15 41 11 43 5 49z"/>
+    <path d="M9 34c8-10 16-11 24-4 7 6 12 6 20 1" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="capital-kings" viewBox="0 0 64 64">
+    <path fill="currentColor" d="m10 21 13 9 9-18 9 18 13-9-5 27H15z"/><path fill="#fff" d="M18 41h28v6H18z"/>
+    <circle cx="10" cy="19" r="4" fill="#fff"/><circle cx="32" cy="10" r="4" fill="#fff"/><circle cx="54" cy="19" r="4" fill="#fff"/>
+  </symbol>
+  <symbol id="summit-hawks" viewBox="0 0 64 64">
+    <path fill="currentColor" d="M7 18c14 0 20 6 25 17 5-11 11-17 25-17-2 14-10 24-25 32C17 42 9 32 7 18z"/>
+    <path fill="#fff" d="m18 24 14 10 14-10-14 19z"/><circle cx="25" cy="30" r="2" fill="#071a2b"/><circle cx="39" cy="30" r="2" fill="#071a2b"/>
+  </symbol>
+  <symbol id="river-city-foxes" viewBox="0 0 64 64">
+    <path fill="currentColor" d="m10 15 15 8 7-10 7 10 15-8-5 29-17 11-17-11z"/>
+    <path fill="#fff" d="m18 27 10 5-8 5m26-10-10 5 8 5M26 44l6 4 6-4-6-5z"/>
+  </symbol>
+  <symbol id="orlando-orbit" viewBox="0 0 64 64">
+    <circle cx="32" cy="32" r="13" fill="currentColor"/><ellipse cx="32" cy="32" rx="28" ry="12" fill="none" stroke="#fff" stroke-width="4" transform="rotate(-18 32 32)"/>
+    <circle cx="52" cy="21" r="5" fill="#fff"/><path d="M20 32h24M32 19c-6 8-6 18 0 26M32 19c6 8 6 18 0 26" fill="none" stroke="#071a2b" stroke-width="2"/>
+  </symbol>
+  <symbol id="brooklyn-beats" viewBox="0 0 64 64">
+    <path fill="currentColor" d="M10 30h7v22h-7zm12-10h7v32h-7zm12 7h7v25h-7zm12-14h7v39h-7z"/>
+    <path d="M8 39c12-8 19 8 29 0s15-6 20-2" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="austin-arrows" viewBox="0 0 64 64">
+    <path fill="currentColor" d="m7 32 43-21-9 16 16 5-16 5 9 16z"/>
+    <path d="M14 32h34" stroke="#fff" stroke-width="5" stroke-linecap="round"/><path d="m34 24 12 8-12 8" fill="none" stroke="#fff" stroke-width="4" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="seattle-stormers" viewBox="0 0 64 64">
+    <path fill="currentColor" d="M9 23c10-12 34-12 44 1 5 7 2 15-5 18H16C5 38 3 30 9 23z"/>
+    <path fill="#fff" d="M28 28h14l-7 9h8L25 54l5-13h-9z"/><path d="M9 46h14M43 47h12" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="chicago-charge" viewBox="0 0 64 64">
+    <path fill="currentColor" d="M49 9 17 31h15L17 55l35-29H37z"/><path d="m31 26 9-6-5 10h8L29 43l4-11h-9z" fill="#fff"/>
+  </symbol>
+  <symbol id="philly-phantoms" viewBox="0 0 64 64">
+    <path fill="currentColor" d="M14 46V29C14 14 24 8 32 8s18 6 18 21v21l-9-7-9 8-9-8-9 7z"/>
+    <path fill="#fff" d="M20 29c1-8 6-13 12-13s11 5 12 13l-8-5-4 7-4-7z"/><circle cx="25" cy="31" r="3" fill="#071a2b"/><circle cx="39" cy="31" r="3" fill="#071a2b"/>
+  </symbol>
+  <symbol id="miami-blaze" viewBox="0 0 64 64">
+    <path fill="currentColor" d="M33 7c2 12-7 14-5 25 4-6 8-8 11-15 10 10 14 22 8 31-7 11-25 11-32 0-6-10 0-23 9-31-1 9 3 12 3 18 8-10 1-18 6-28z"/>
+    <path fill="#fff" d="M32 33c8 6 8 16 0 20-8-4-8-14 0-20z"/>
+  </symbol>
+  <symbol id="denver-peaks" viewBox="0 0 64 64">
+    <path fill="currentColor" d="M5 51 25 17l7 11 8-17 19 40z"/><path fill="#fff" d="m17 40 8-13 7 10 8-16 11 22-11-8-8 9-8-8z"/>
+  </symbol>
+  <symbol id="phoenix-flight" viewBox="0 0 64 64">
+    <path fill="currentColor" d="M32 8c3 13 17 12 25 10-4 11-10 18-20 20l-5 18-5-18C17 36 11 29 7 18c8 2 22 3 25-10z"/>
+    <path fill="#fff" d="m13 23 15 5 4 14 4-14 15-5-14 14-5 16-5-16z"/>
+  </symbol>
+  <symbol id="dallas-dynamos" viewBox="0 0 64 64">
+    <circle cx="32" cy="32" r="23" fill="currentColor"/><path d="M32 13v38M13 32h38M19 19l26 26M45 19 19 45" stroke="#fff" stroke-width="3"/>
+    <circle cx="32" cy="32" r="9" fill="#071a2b"/><circle cx="32" cy="32" r="4" fill="#fff"/>
+  </symbol>
+  <symbol id="vegas-vipers" viewBox="0 0 64 64">
+    <path fill="currentColor" d="M15 11c18 2 32 14 34 29 1 9-8 15-17 13-10-2-15-10-11-18l9 4c-1 4 2 7 6 6 5-1 6-6 3-10-6-9-17-10-27-12z"/>
+    <path d="m19 17 16 9m-9-11 13 7" stroke="#fff" stroke-width="4" stroke-linecap="round"/><circle cx="44" cy="37" r="2.5" fill="#fff"/>
+  </symbol>
+  <symbol id="toronto-towers" viewBox="0 0 64 64">
+    <path fill="currentColor" d="m29 7 6 0 2 16 8 8-4 5 5 18H18l5-18-4-5 8-8z"/>
+    <path fill="#fff" d="M25 29h14l-3 5h-8zm-1 18h16v5H24z"/><circle cx="32" cy="17" r="4" fill="#fff"/>
+  </symbol>
+  <symbol id="golden-guardians" viewBox="0 0 64 64">
+    <path fill="currentColor" d="M32 7 53 17v15c0 13-9 21-21 26C20 53 11 45 11 32V17z"/>
+    <path fill="#fff" d="m32 15 6 11 13 2-9 9 2 13-12-6-12 6 2-13-9-9 13-2z"/>
+  </symbol>
+  <symbol id="hollywood-stars" viewBox="0 0 64 64">
+    <path fill="currentColor" d="m32 6 8 17 19 2-14 13 4 19-17-9-17 9 4-19L5 25l19-2z"/>
+    <circle cx="32" cy="34" r="9" fill="#fff"/><path d="M23 34h18M32 25c-4 5-4 13 0 18M32 25c4 5 4 13 0 18" fill="none" stroke="#071a2b" stroke-width="2"/>
+  </symbol>
+  <symbol id="empire-elite" viewBox="0 0 64 64">
+    <path fill="currentColor" d="M9 12h46v10H20v8h29v9H20v9h35v10H9z"/><path fill="#fff" d="M27 26h25v9H27zm0 17h25v9H27z"/>
+  </symbol>
+</svg>

@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#071a2b" />
+    <title>Basketball Empire</title>
+    <script>
+      if (window.location.protocol === 'file:') {
+        window.location.replace(`https://macpro.tail86c614.ts.net/${window.location.search}${window.location.hash}`);
+      }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Nunito+Sans:wght@600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css?v=20260929j" />
+  </head>
+  <body>
+    <div class="arena-shell">
+      <header class="topbar">
+        <a class="brand" href="#" aria-label="Basketball Empire home">
+          <span class="brand-ball" aria-hidden="true"></span>
+          <span><strong>BASKETBALL</strong><em>EMPIRE</em></span>
+        </a>
+        <div class="match-meta">
+          <span class="live-dot"></span>
+          <span>ROOM <strong id="header-room-code">—</strong></span>
+          <span class="quarter" id="header-game-status">WAITING FOR TIP-OFF</span>
+        </div>
+        <button class="icon-button" type="button" aria-label="Open game menu">•••</button>
+      </header>
+
+      <section class="lobby-screen" id="lobby-screen" aria-labelledby="lobby-title">
+        <div class="lobby-hero">
+          <span class="eyebrow">BUILD YOUR DYNASTY</span>
+          <h1 id="lobby-title">OWN THE COURT.<br /><em>RULE THE LEAGUE.</em></h1>
+          <p>Create a private room, invite up to three friends, and turn fictional teams into a basketball empire.</p>
+          <div class="lobby-feature-row" aria-label="Game features">
+            <span>2–4 Players</span><span>Live Turns</span><span>15-Second Auctions</span>
+          </div>
+        </div>
+
+        <div class="lobby-card" id="entry-panel">
+          <div class="lobby-tabs" role="tablist" aria-label="Room options">
+            <button class="is-active" id="create-tab" type="button" role="tab">Create room</button>
+            <button id="join-tab" type="button" role="tab">Join room</button>
+          </div>
+          <form id="create-room-form">
+            <label for="player-name">Your player name</label>
+            <input id="player-name" name="name" maxlength="32" autocomplete="name" placeholder="e.g. Aaron Wang" required />
+            <fieldset class="avatar-picker" data-avatar-picker="create-room-form">
+              <legend>Player avatar <small>optional</small></legend>
+              <span class="avatar-preview" aria-hidden="true">📷</span>
+              <div>
+                <label class="avatar-action">UPLOAD PHOTO<input type="file" accept="image/*" data-avatar-upload /></label>
+                <label class="avatar-action">TAKE PHOTO<input type="file" accept="image/*" capture="user" data-avatar-camera /></label>
+              </div>
+              <button class="avatar-remove is-hidden" type="button" data-avatar-remove>USE INITIALS</button>
+            </fieldset>
+            <button class="lobby-primary" type="submit">CREATE MY COURT</button>
+          </form>
+          <form class="is-hidden" id="join-room-form">
+            <label for="join-player-name">Your player name</label>
+            <input id="join-player-name" name="name" maxlength="32" autocomplete="name" placeholder="e.g. Maya Chen" required />
+            <label for="room-code">Room code</label>
+            <input id="room-code" name="roomCode" maxlength="6" autocomplete="off" placeholder="DUNK42" required />
+            <fieldset class="avatar-picker" data-avatar-picker="join-room-form">
+              <legend>Player avatar <small>optional</small></legend>
+              <span class="avatar-preview" aria-hidden="true">📷</span>
+              <div>
+                <label class="avatar-action">UPLOAD PHOTO<input type="file" accept="image/*" data-avatar-upload /></label>
+                <label class="avatar-action">TAKE PHOTO<input type="file" accept="image/*" capture="user" data-avatar-camera /></label>
+              </div>
+              <button class="avatar-remove is-hidden" type="button" data-avatar-remove>USE INITIALS</button>
+            </fieldset>
+            <button class="lobby-primary" type="submit">JOIN THE GAME</button>
+          </form>
+          <p class="form-status" id="form-status" role="status"></p>
+        </div>
+
+        <div class="room-lobby is-hidden" id="room-lobby">
+          <div class="room-code-block"><span>YOUR ROOM</span><strong id="lobby-room-code">—</strong></div>
+          <button class="share-room-button" id="share-room-button" type="button">COPY INVITE LINK</button>
+          <p>Everyone enters their own name. The host starts when all players are ready.</p>
+          <div class="lobby-player-list" id="lobby-player-list"></div>
+          <div class="lobby-controls">
+            <button id="ready-button" type="button">I'M READY</button>
+            <button class="lobby-primary" id="start-button" type="button" disabled>START MATCH</button>
+          </div>
+        </div>
+      </section>
+
+      <main class="game-stage is-hidden" id="game-stage">
+        <section class="player-rail" id="player-rail" aria-label="Players"></section>
+
+        <p class="board-scroll-hint"><span aria-hidden="true">↔</span> Swipe the court to explore all 40 spaces</p>
+        <section class="board-wrap" aria-label="Basketball Empire board" tabindex="0">
+          <div class="board" id="board">
+            <section class="court-center" id="court-center" aria-label="Current turn">
+              <div class="court-texture" aria-hidden="true"></div>
+              <div class="court-lines" aria-hidden="true">
+                <span class="center-circle"></span>
+                <span class="three-point-line left"></span>
+                <span class="three-point-line right"></span>
+                <span class="paint left"></span>
+                <span class="paint right"></span>
+              </div>
+
+              <div class="turn-banner">
+                <span class="eyebrow">ON THE CLOCK</span>
+                <div class="turn-player" id="turn-player"><span class="mini-avatar">AW</span> Waiting</div>
+                <div class="shot-clock" aria-label="10 minutes remaining"><strong id="timer">10:00</strong><small>GAME</small></div>
+              </div>
+
+              <div class="possession">
+                <div class="dice-tray" aria-live="polite">
+                  <div class="die" id="die-one">3</div>
+                  <div class="die is-accent" id="die-two">5</div>
+                </div>
+                <div class="roll-total"><span>MOVE</span><strong id="roll-total">8</strong><span>SPACES</span></div>
+                <button class="roll-button" id="roll-button" type="button" aria-label="Roll the dice">
+                  <span class="ball-icon" aria-hidden="true"></span>
+                  ROLL DICE
+                </button>
+                <div class="decision-panel is-hidden" id="decision-panel">
+                  <strong id="decision-title">Sign this team?</strong>
+                  <span id="decision-cost">0 PTS</span>
+                  <div>
+                    <button id="sign-team-button" type="button">SIGN TEAM</button>
+                    <button id="decline-team-button" type="button">PASS</button>
+                  </div>
+                </div>
+                <section class="auction-panel is-hidden" id="auction-panel" aria-live="assertive">
+                  <div class="auction-head"><span>LIVE AUCTION</span><b id="auction-countdown">15.0s</b></div>
+                  <strong id="auction-space">TEAM NAME</strong>
+                  <div class="auction-score"><span>HIGH BID</span><b id="auction-high-bid">0 PTS</b></div>
+                  <p id="auction-leader">No bids yet — be the first!</p>
+                  <div class="auction-actions" aria-label="Auction bid controls">
+                    <button type="button" data-bid-increment="2">+2</button>
+                    <button type="button" data-bid-increment="50">+50</button>
+                    <button type="button" data-bid-increment="100">+100</button>
+                  </div>
+                </section>
+              </div>
+
+              <div class="activity-panel court-history">
+                <div class="activity-heading">
+                  <span>FULL GAME HISTORY</span>
+                  <button type="button" id="mute-feed">Sound on</button>
+                </div>
+                <ol class="activity-feed" id="activity-feed" aria-live="polite">
+                  <li class="is-new"><span class="feed-icon orange">BE</span><span><strong>Basketball Empire</strong> Waiting for tip-off.</span></li>
+                </ol>
+              </div>
+
+              <div class="payment-callout" id="payment-callout" role="status" aria-live="assertive"></div>
+              <div class="card-draw-overlay" id="card-draw-overlay" role="status" aria-live="assertive" aria-hidden="true">
+                <article class="drawn-card">
+                  <span id="drawn-card-deck">TEAM OPERATIONS</span>
+                  <strong id="drawn-card-title">SPONSORSHIP DEAL</strong>
+                  <p id="drawn-card-description"></p>
+                  <b id="drawn-card-effect">+100 PTS</b>
+                </article>
+              </div>
+
+            </section>
+          </div>
+        </section>
+
+        <aside class="coach-panel" aria-label="Your team controls">
+          <div class="coach-heading">
+            <span class="eyebrow">MY FRANCHISE</span>
+            <strong id="franchise-summary">0 teams · 0 stars</strong>
+          </div>
+          <div class="stat-row">
+            <div><span>Cash</span><strong id="stat-cash">1,500</strong></div>
+            <div><span>Assets</span><strong id="stat-assets">0</strong></div>
+            <div><span>Lap</span><strong id="stat-lap">0/4</strong></div>
+          </div>
+          <div class="quick-actions">
+            <button type="button" data-office-tab="recruits"><span>★</span> Recruit</button>
+            <button type="button" data-office-tab="trade"><span>⇄</span> Trade</button>
+            <button type="button" data-office-tab="teams"><span>▣</span> Teams</button>
+          </div>
+          <button class="end-game-button is-hidden" id="end-game-button" type="button">END GAME</button>
+        </aside>
+      </main>
+
+    </div>
+
+    <dialog class="team-card-dialog" id="team-card-dialog" aria-labelledby="card-team-name">
+      <button class="card-close" id="card-close" type="button" aria-label="Close team card">×</button>
+      <div class="card-topline"><span>OFFICIAL TEAM CARD</span><span id="card-division">ROOKIE DIVISION</span></div>
+      <div class="card-hero">
+        <span class="card-logo" id="card-logo-wrap">
+          <svg id="card-logo" aria-hidden="true"><use href=""></use></svg>
+        </span>
+        <div>
+          <span class="eyebrow">BASKETBALL EMPIRE</span>
+          <h2 id="card-team-name">Team name</h2>
+        </div>
+      </div>
+      <div class="card-costs">
+        <div><span>BUY TEAM</span><strong id="card-buy-cost">0</strong><small>PTS</small></div>
+        <div><span>SELL VALUE</span><strong id="card-sell-value">0</strong><small>PTS</small></div>
+        <div><span>RECRUIT STAR</span><strong id="card-recruit-cost">0</strong><small>PTS</small></div>
+      </div>
+      <section class="card-roster-details">
+        <div><span>LANDING PAYMENT</span><strong id="card-landing-payment">0 PTS</strong></div>
+        <div><span>RECRUITED PLAYERS</span><div id="card-recruited-players">No star players recruited.</div></div>
+      </section>
+      <p class="card-note">Complete the full color division before recruiting Star Players.</p>
+      <div class="card-action-row" id="owned-team-actions">
+        <button id="recruit-star-button" type="button">★ RECRUIT</button>
+        <button id="mortgage-team-button" type="button">MORTGAGE</button>
+      </div>
+      <button class="card-primary" id="card-primary" type="button">CLOSE CARD</button>
+    </dialog>
+
+    <dialog class="front-office-dialog" id="front-office-dialog" aria-labelledby="front-office-title">
+      <button class="card-close" id="front-office-close" type="button" aria-label="Close front office">×</button>
+      <div class="office-heading">
+        <span class="eyebrow">BASKETBALL OPERATIONS</span>
+        <h2 id="front-office-title">FRONT OFFICE</h2>
+        <p>Scout stars, plan a trade, and manage your franchise.</p>
+      </div>
+      <div class="office-tabs" role="tablist" aria-label="Front office sections">
+        <button type="button" role="tab" data-office-tab="recruits">★ RECRUITS</button>
+        <button type="button" role="tab" data-office-tab="trade">⇄ TRADE</button>
+        <button type="button" role="tab" data-office-tab="teams">▣ TEAMS</button>
+      </div>
+      <section class="front-office-content" id="front-office-content" aria-live="polite"></section>
+    </dialog>
+
+    <dialog class="space-guide-dialog" id="space-guide-dialog" aria-labelledby="space-guide-name">
+      <button class="card-close" id="space-guide-close" type="button" aria-label="Close space guide">×</button>
+      <span class="space-guide-icon" id="space-guide-icon" aria-hidden="true">!</span>
+      <span class="eyebrow" id="space-guide-type">GAME GUIDE</span>
+      <h2 id="space-guide-name">SPECIAL SPACE</h2>
+      <p id="space-guide-description"></p>
+      <div class="space-guide-rule" id="space-guide-rule"></div>
+      <div class="space-guide-costs" id="space-guide-costs"></div>
+      <button class="card-primary" id="space-guide-done" type="button">GOT IT</button>
+    </dialog>
+
+    <script>
+      if (window.location.protocol !== 'file:') {
+        const gameScript = document.createElement('script');
+        gameScript.src = 'app.js?v=20260929j';
+        document.body.append(gameScript);
+      }
+    </script>
+  </body>
+</html>
