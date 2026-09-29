@@ -16,7 +16,7 @@
       href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Nunito+Sans:wght@600;700;800;900&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20260930r" />
+    <link rel="stylesheet" href="styles.css?v=20260930s" />
   </head>
   <body>
     <div class="arena-shell">
@@ -140,14 +140,30 @@
                   </div>
                 </div>
                 <section class="auction-panel is-hidden" id="auction-panel" aria-live="assertive">
-                  <div class="auction-head"><span>LIVE AUCTION</span><b id="auction-countdown">5.0s</b></div>
-                  <strong id="auction-space">TEAM NAME</strong>
-                  <div class="auction-score"><span>HIGH BID</span><b id="auction-high-bid">0 PTS</b></div>
-                  <p id="auction-leader">No bids yet — be the first!</p>
-                  <div class="auction-actions" aria-label="Auction bid controls">
-                    <button type="button" data-bid-increment="2">+2</button>
-                    <button type="button" data-bid-increment="50">+50</button>
-                    <button type="button" data-bid-increment="100">+100</button>
+                  <div class="auction-shell">
+                    <header class="auction-title"><span>LIVE LEAGUE AUCTION</span><strong id="auction-space">TEAM NAME</strong><small id="auction-asset-type">TEAM ASSET</small></header>
+                    <div class="auction-layout">
+                      <section class="auction-bidding">
+                        <span class="auction-kicker">CURRENT BID</span>
+                        <div class="auction-score"><span id="auction-leader-avatar" class="auction-leader-avatar">BE</span><b id="auction-high-bid">0 PTS</b></div>
+                        <p id="auction-leader">No bids yet — be the first!</p>
+                        <div class="auction-timer-row"><span>Sold in <b id="auction-countdown">5.0s</b></span><span aria-hidden="true">⌛</span></div>
+                        <div class="auction-progress-track"><i id="auction-progress"></i></div>
+                        <span class="auction-kicker">PLACE YOUR BID</span>
+                        <div class="auction-actions" aria-label="Auction bid controls">
+                          <button type="button" data-bid-increment="2"><strong class="auction-next-bid">2 PTS</strong><small>+2</small></button>
+                          <button type="button" data-bid-increment="50"><strong class="auction-next-bid">50 PTS</strong><small>+50</small></button>
+                          <button type="button" data-bid-increment="100"><strong class="auction-next-bid">100 PTS</strong><small>+100</small></button>
+                        </div>
+                        <ol class="auction-bid-history" id="auction-bid-history"></ol>
+                      </section>
+                      <article class="auction-asset-card" id="auction-asset-card">
+                        <div class="auction-asset-mark" id="auction-asset-mark">★</div>
+                        <h3 id="auction-card-name">TEAM NAME</h3>
+                        <div class="auction-revenue-list" id="auction-asset-revenue"></div>
+                        <footer><span>PRICE <b id="auction-asset-price">0 PTS</b></span><span>MORTGAGE <b id="auction-asset-mortgage">0 PTS</b></span></footer>
+                      </article>
+                    </div>
                   </div>
                 </section>
               </div>
@@ -289,7 +305,7 @@
     <script>
       if (window.location.protocol !== 'file:') {
         const gameScript = document.createElement('script');
-        gameScript.src = 'app.js?v=20260930r';
+        gameScript.src = 'app.js?v=20260930s';
         document.body.append(gameScript);
       }
     </script>

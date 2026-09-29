@@ -358,8 +358,8 @@ test('Tip-Off guide explains the exact-landing 300 point bonus', () => {
 test('deployed browsers receive the current interface assets instead of stale cached files', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
 
-  assert.match(html, /styles\.css\?v=20260930r/);
-  assert.match(html, /app\.js\?v=20260930r/);
+  assert.match(html, /styles\.css\?v=20260930s/);
+  assert.match(html, /app\.js\?v=20260930s/);
 });
 
 test('API requests report an understandable connection error when a tunnel returns HTML', () => {
@@ -545,4 +545,19 @@ test('bankruptcy remains visible but disabled until the player is insolvent', ()
   assert.match(html, /class="bankrupt-button" id="bankrupt-button"/);
   assert.match(script, /bankruptButton\.disabled = !canDeclareBankruptcy/);
   assert.match(script, /Mortgage available assets first/);
+});
+
+test('auction uses a full overlay with bid progress and an asset card', () => {
+  const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
+  const script = fs.readFileSync(path.join(projectRoot, 'public/app.js'), 'utf8');
+  const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
+  assert.match(html, /id="auction-progress"/);
+  assert.match(html, /id="auction-asset-card"/);
+  assert.match(html, /id="auction-bid-history"/);
+  assert.match(html, /class="auction-next-bid"/);
+  assert.match(script, /auctionProgress/);
+  assert.match(script, /auction-asset-revenue/);
+  assert.match(script, /auction_bid/);
+  assert.match(css, /\.auction-panel[^}]*position:\s*fixed/s);
+  assert.match(css, /\.auction-layout[^}]*grid-template-columns/s);
 });

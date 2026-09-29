@@ -63,3 +63,9 @@
 - [x] RED: specify pip-only 3D dice and an always-visible bankruptcy control.
 - [x] GREEN: implement tactile white dice and disabled-state bankruptcy guidance.
 - [x] Verify the full automated test suite and commit the completed feature.
+
+## Sprint 015 — Full Auction Overlay
+
+- [x] RED: specify the synchronized auction overlay and asset details.
+- [x] GREEN: implement current bid, countdown progress, bid totals, history, and asset card.
+- [x] Verify responsive behavior, run the full suite, and commit.

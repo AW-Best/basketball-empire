@@ -433,19 +433,42 @@ function renderAuction() {
   const space = room.board.find((candidate) => candidate.id === auction.spaceId);
   const leader = room.players.find((candidate) => candidate.id === auction.highBidderId);
   const local = localPlayer();
+  const spaceIndex = room.board.indexOf(space);
+  const displaySpace = BOARD_SPACES[spaceIndex];
   document.querySelector('#auction-space').textContent = space?.name || 'Available asset';
+  document.querySelector('#auction-card-name').textContent = space?.name || 'Available asset';
+  document.querySelector('#auction-asset-type').textContent = `${space?.type?.replace('_', ' ') || 'league'} asset`;
   document.querySelector('#auction-high-bid').textContent = `${auction.highBid.toLocaleString()} PTS`;
   document.querySelector('#auction-leader').textContent = leader ? `${leader.name} leads the auction` : 'No bids yet — be the first!';
+  document.querySelector('#auction-leader-avatar').innerHTML = leader ? avatarMarkup(leader, 'mini-avatar') : '—';
+  document.querySelector('#auction-asset-mark').innerHTML = displaySpace?.logo
+    ? `<svg aria-hidden="true"><use href="assets/team-logos.svg#${displaySpace.logo}"></use></svg>`
+    : escapeHtml(displaySpace?.icon || '★');
+  document.querySelector('#auction-asset-price').textContent = `${space.price.toLocaleString()} PTS`;
+  document.querySelector('#auction-asset-mortgage').textContent = `${space.mortgage.toLocaleString()} PTS`;
+  const revenueRows = space.type === 'team'
+    ? space.revenue.map((amount, index) => [index === 0 ? 'Base lineup' : index === 5 ? 'Championship' : `${index} recruit${index === 1 ? '' : 's'}`, `${amount} PTS`])
+    : space.type === 'route'
+      ? [[1, 25], [2, 50], [3, 100], [4, 200]].map(([count, amount]) => [`${count} route${count === 1 ? '' : 's'}`, `${amount} PTS`])
+      : [['One lab', 'dice ×4'], ['Both labs', 'dice ×10']];
+  document.querySelector('#auction-asset-revenue').innerHTML = revenueRows.map(([label, value]) => `<span><small>${escapeHtml(label)}</small><b>${escapeHtml(value)}</b></span>`).join('');
+  const bidEntries = room.log.filter((entry) => entry.type === 'auction_bid' && entry.spaceId === auction.spaceId).slice(-5).reverse();
+  document.querySelector('#auction-bid-history').innerHTML = bidEntries.length
+    ? bidEntries.map((entry) => { const bidder = room.players.find((player) => player.id === entry.playerId); return `<li>${avatarMarkup(bidder, 'mini-avatar')}<span><strong>${escapeHtml(bidder?.name || 'Player')}</strong> bids ${entry.amount.toLocaleString()} PTS</span></li>`; }).join('')
+    : '<li class="is-empty">Waiting for the opening bid…</li>';
 
   const refreshCountdown = () => {
     const remaining = Math.max(0, auction.endsAt - Date.now());
     document.querySelector('#auction-countdown').textContent = `${(remaining / 1000).toFixed(1)}s`;
+    const auctionProgress = document.querySelector('#auction-progress');
+    auctionProgress.style.width = `${Math.min(100, remaining / 50)}%`;
   };
   refreshCountdown();
   auctionClockTimer = setInterval(refreshCountdown, 100);
 
   document.querySelectorAll('[data-bid-increment]').forEach((button) => {
     const nextBid = auction.highBid + Number(button.dataset.bidIncrement);
+    button.querySelector('.auction-next-bid').textContent = `${nextBid.toLocaleString()} PTS`;
     button.disabled = !local?.active || local.points < nextBid;
     button.title = button.disabled ? 'Not enough points for this bid.' : `Bid ${nextBid} PTS`;
   });
