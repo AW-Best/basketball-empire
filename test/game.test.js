@@ -85,6 +85,32 @@ test('starting a match creates an authoritative 18-second turn clock', () => {
   assert.equal(game.turnStartedAt, 10_000);
 });
 
+test('host-selected timed and unlimited match lengths are authoritative', () => {
+  for (const matchDurationSeconds of [600, 900, 1200, null]) {
+    let game = createGame({ roomCode: 'COURT1' });
+    game = addPlayer(game, { id: 'p1', name: 'Aaron Wang' });
+    game = addPlayer(game, { id: 'p2', name: 'Maya Chen' });
+    game = startGame(game, { firstPlayerIndex: 0, now: 10_000, matchDurationSeconds });
+    assert.equal(game.matchDurationSeconds, matchDurationSeconds);
+  }
+
+  let invalid = createGame({ roomCode: 'COURT1' });
+  invalid = addPlayer(invalid, { id: 'p1', name: 'Aaron Wang' });
+  invalid = addPlayer(invalid, { id: 'p2', name: 'Maya Chen' });
+  assert.throws(() => startGame(invalid, { matchDurationSeconds: 300 }), /game length/i);
+});
+
+test('an unlimited match never expires automatically', () => {
+  let game = createGame({ roomCode: 'COURT1' });
+  game = addPlayer(game, { id: 'p1', name: 'Aaron Wang' });
+  game = addPlayer(game, { id: 'p2', name: 'Maya Chen' });
+  game = startGame(game, { now: 1_000, matchDurationSeconds: null });
+
+  game = finishExpiredGame(game, 99_999_999);
+  assert.equal(game.status, 'playing');
+  assert.equal(game.winnerId, null);
+});
+
 test('rolling moves the current player and creates a sign-team decision', () => {
   const game = fourPlayerGame();
   const next = rollDice(game, 'p1', [1, 2]);

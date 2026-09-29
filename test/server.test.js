@@ -57,11 +57,12 @@ test('creates, joins, readies, and starts a two-player room over HTTP', async ()
 
     await post(baseUrl, '/api/rooms/DUNK42/ready', { ready: true }, host.token);
     await post(baseUrl, '/api/rooms/DUNK42/ready', { ready: true }, guest.token);
-    const startResponse = await post(baseUrl, '/api/rooms/DUNK42/start', {}, host.token);
+    const startResponse = await post(baseUrl, '/api/rooms/DUNK42/start', { durationMinutes: 15 }, host.token);
     const started = await startResponse.json();
 
     assert.equal(startResponse.status, 200);
     assert.equal(started.room.status, 'playing');
+    assert.equal(started.room.matchDurationSeconds, 900);
     assert.deepEqual(started.room.players.map((player) => player.name), ['Aaron Wang', 'Maya Chen']);
   });
 });

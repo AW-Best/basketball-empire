@@ -113,7 +113,8 @@ function createServer({ roomService = new RoomService(), publicDir = DEFAULT_PUB
           return;
         }
         if (request.method === 'POST' && operation === 'start') {
-          sendJson(response, 200, { room: roomService.startRoom(roomCode, bearerToken(request)) });
+          const body = await readJson(request);
+          sendJson(response, 200, { room: roomService.startRoom(roomCode, bearerToken(request), { durationMinutes: body.durationMinutes }) });
           return;
         }
         if (request.method === 'POST' && operation === 'actions') {

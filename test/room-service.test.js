@@ -64,6 +64,18 @@ test('only the host can start and every player must be ready', () => {
   assert.equal(started.players.length, 2);
 });
 
+test('host chooses a 10, 15, 20 minute, or unlimited match', () => {
+  const rooms = service();
+  const host = rooms.createRoom({ name: 'Aaron Wang' });
+  const guest = rooms.joinRoom('DUNK42', { name: 'Maya Chen' });
+  rooms.setReady('DUNK42', host.token, true);
+  rooms.setReady('DUNK42', guest.token, true);
+
+  assert.throws(() => rooms.startRoom('DUNK42', guest.token, { durationMinutes: 20 }), /host/i);
+  const started = rooms.startRoom('DUNK42', host.token, { durationMinutes: 20 });
+  assert.equal(started.matchDurationSeconds, 1200);
+});
+
 test('authorizes actions by player token and uses server-controlled dice', () => {
   const rooms = service();
   const host = rooms.createRoom({ name: 'Aaron Wang' });

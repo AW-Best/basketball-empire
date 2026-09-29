@@ -36,3 +36,10 @@
 - [x] RED: specify a player-facing rulebook on the Create/Join screen.
 - [x] GREEN: add a responsive in-page rulebook with the implemented game rules.
 - [x] Verify the full automated test suite and commit the completed feature.
+
+## Sprint 011 — Host Game Length
+
+- [x] RED: specify host-selected 10, 15, 20 minute, and Unlimited matches.
+- [x] GREEN: enforce the selected duration through the UI, API, room service, and game engine.
+- [x] Show an infinity clock for Unlimited matches and prevent automatic expiry.
+- [x] Verify the full automated test suite and commit the completed feature.

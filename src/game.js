@@ -172,15 +172,17 @@ function addPlayer(game, playerInput) {
   return next;
 }
 
-function startGame(game, { firstPlayerIndex = 0, now = Date.now() } = {}) {
+function startGame(game, { firstPlayerIndex = 0, now = Date.now(), matchDurationSeconds = MATCH_DURATION_SECONDS } = {}) {
   if (game.players.length < 2) throw new Error('At least two players are required to start.');
   if (firstPlayerIndex < 0 || firstPlayerIndex >= game.players.length) throw new Error('Invalid first player.');
+  if (![600, 900, 1200, null].includes(matchDurationSeconds)) throw new Error('Choose a valid game length.');
   const next = clone(game);
   next.status = 'playing';
   next.phase = 'roll';
   next.currentPlayerIndex = firstPlayerIndex;
   next.turnStartedAt = now;
   next.matchStartedAt = now;
+  next.matchDurationSeconds = matchDurationSeconds;
   next.players.forEach((player) => {
     player.points = STARTING_POINTS;
     player.position = 0;
@@ -201,7 +203,7 @@ function finishWithWinner(next, winnerId, reason) {
 }
 
 function finishExpiredGame(game, now = Date.now()) {
-  if (game.status !== 'playing' || !game.matchStartedAt || now < game.matchStartedAt + game.matchDurationSeconds * 1000) return game;
+  if (game.status !== 'playing' || !game.matchStartedAt || game.matchDurationSeconds == null || now < game.matchStartedAt + game.matchDurationSeconds * 1000) return game;
   const next = clone(game);
   const eligible = next.players.filter((player) => player.active);
   const winner = eligible.reduce((leader, player) => (!leader || player.points > leader.points ? player : leader), null);

@@ -211,7 +211,13 @@ function localPlayer() { return room?.players?.find((player) => player.id === se
 function updateShotClock() {
   const clock = document.querySelector('.shot-clock');
   const display = document.querySelector('#timer');
-  const duration = room.matchDurationSeconds || 600;
+  if (room?.matchDurationSeconds == null && room?.status !== 'lobby') {
+    display.textContent = '∞';
+    clock.setAttribute('aria-label', 'Unlimited game with no time limit');
+    clock.classList.remove('is-urgent', 'is-expired');
+    return;
+  }
+  const duration = room?.matchDurationSeconds ?? 600;
   let remaining = duration;
   if (room?.status === 'playing' && room.matchStartedAt) {
     const elapsed = Math.floor((Date.now() - room.matchStartedAt) / 1000);
@@ -588,6 +594,11 @@ function renderLobby() {
   const local = localPlayer();
   document.querySelector('#ready-button').textContent = local?.ready ? 'NOT READY' : "I'M READY";
   const startButton = document.querySelector('#start-button');
+  const durationSelect = document.querySelector('#match-duration');
+  durationSelect.disabled = !session?.isHost;
+  document.querySelector('#match-duration-note').textContent = session?.isHost
+    ? 'Choose the game length before starting.'
+    : 'Only the host can choose the game length.';
   startButton.disabled = !(session?.isHost && room.players.length >= 2 && room.players.every((player) => player.ready));
   startButton.textContent = session?.isHost ? 'START MATCH' : 'WAITING FOR HOST';
 }
@@ -747,7 +758,9 @@ document.querySelector('#ready-button').addEventListener('click', async () => {
   applyRoom(result.room);
 });
 document.querySelector('#start-button').addEventListener('click', async () => {
-  const result = await api(`/api/rooms/${encodeURIComponent(session.roomCode)}/start`, { method: 'POST', body: {} });
+  const selectedDuration = document.querySelector('#match-duration').value;
+  const durationMinutes = selectedDuration === 'unlimited' ? 'unlimited' : Number(selectedDuration);
+  const result = await api(`/api/rooms/${encodeURIComponent(session.roomCode)}/start`, { method: 'POST', body: { durationMinutes } });
   applyRoom(result.room);
 });
 document.querySelector('#share-room-button').addEventListener('click', async (event) => {

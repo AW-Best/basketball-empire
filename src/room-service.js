@@ -115,12 +115,15 @@ class RoomService {
     return getPublicGame(record.game);
   }
 
-  startRoom(roomCode, token) {
+  startRoom(roomCode, token, { durationMinutes = 10 } = {}) {
     const record = this.requireRecord(roomCode);
     const playerId = this.authenticate(record, token);
     if (playerId !== record.hostId) throw new Error('Only the host can start the match.');
     if (!record.game.players.every((player) => player.ready)) throw new Error('Every player must be ready.');
-    record.game = startGame(record.game, { now: this.now() });
+    const durations = { 10: 600, 15: 900, 20: 1200, unlimited: null };
+    const durationKey = String(durationMinutes);
+    if (!Object.hasOwn(durations, durationKey)) throw new Error('Choose a valid game length.');
+    record.game = startGame(record.game, { now: this.now(), matchDurationSeconds: durations[durationKey] });
     this.notify(record);
     return getPublicGame(record.game);
   }

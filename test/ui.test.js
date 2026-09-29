@@ -113,6 +113,21 @@ test('player interface supports creating, joining, readying, and sharing a live 
   assert.match(script, /localStorage/);
 });
 
+test('host can choose 10, 15, 20 minutes, or an unlimited match', () => {
+  const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
+  const script = fs.readFileSync(path.join(projectRoot, 'public/app.js'), 'utf8');
+
+  assert.match(html, /id="match-duration"/);
+  assert.match(html, /value="10"/);
+  assert.match(html, /value="15"/);
+  assert.match(html, /value="20"/);
+  assert.match(html, /value="unlimited"/);
+  assert.match(script, /durationMinutes/);
+  assert.match(script, /matchDurationSeconds == null/);
+  assert.match(script, /display\.textContent = '∞'/);
+  assert.match(script, /durationSelect\.disabled = !session\?\.isHost/);
+});
+
 test('create and join screen includes an in-page player rulebook', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
   const script = fs.readFileSync(path.join(projectRoot, 'public/app.js'), 'utf8');
@@ -121,7 +136,7 @@ test('create and join screen includes an in-page player rulebook', () => {
   assert.match(html, /id="open-rulebook-button"/);
   assert.match(html, /id="rulebook-dialog"/);
   assert.match(html, /PLAYER RULEBOOK/);
-  assert.match(html, /10-MINUTE GAME/);
+  assert.match(html, /HOST-SELECTED LENGTH/);
   assert.match(html, /5-SECOND AUCTION/);
   assert.match(html, /MOST PTS WINS/);
   assert.match(script, /#open-rulebook-button'[\s\S]{0,160}rulebookDialog\.showModal\(\)/);
@@ -343,8 +358,8 @@ test('Tip-Off guide explains the exact-landing 300 point bonus', () => {
 test('deployed browsers receive the current interface assets instead of stale cached files', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
 
-  assert.match(html, /styles\.css\?v=20260929m/);
-  assert.match(html, /app\.js\?v=20260929m/);
+  assert.match(html, /styles\.css\?v=20260930n/);
+  assert.match(html, /app\.js\?v=20260930n/);
 });
 
 test('API requests report an understandable connection error when a tunnel returns HTML', () => {
@@ -379,7 +394,7 @@ test('match clock counts down from the synchronized server start time', () => {
 
   assert.match(script, /function updateShotClock/);
   assert.match(script, /room\.matchStartedAt/);
-  assert.match(script, /room\.matchDurationSeconds/);
+  assert.match(script, /room\?\.matchDurationSeconds/);
   assert.match(script, /setInterval\(updateShotClock, 250\)/);
   assert.match(css, /\.shot-clock\.is-urgent/);
 });

@@ -16,7 +16,7 @@
       href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Nunito+Sans:wght@600;700;800;900&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20260929m" />
+    <link rel="stylesheet" href="styles.css?v=20260930n" />
   </head>
   <body>
     <div class="arena-shell">
@@ -87,6 +87,7 @@
           <button class="share-room-button" id="share-room-button" type="button">COPY INVITE LINK</button>
           <p>Everyone enters their own name. The host starts when all players are ready.</p>
           <div class="lobby-player-list" id="lobby-player-list"></div>
+          <label class="match-duration-control" for="match-duration"><span>HOST GAME LENGTH</span><select id="match-duration"><option value="10">10 minutes</option><option value="15">15 minutes</option><option value="20">20 minutes</option><option value="unlimited">Unlimited</option></select><small id="match-duration-note">The host chooses before starting.</small></label>
           <div class="lobby-controls">
             <button id="ready-button" type="button">I'M READY</button>
             <button class="lobby-primary" id="start-button" type="button" disabled>START MATCH</button>
@@ -199,7 +200,7 @@
         <span class="eyebrow">BASKETBALL EMPIRE</span>
         <h2 id="rulebook-title">PLAYER RULEBOOK</h2>
         <p>Build your franchise, outplay your rivals, and finish with the most PTS.</p>
-        <div class="rulebook-facts"><span>2–4 PLAYERS</span><span>10-MINUTE GAME</span><span>18-SECOND TURNS</span></div>
+        <div class="rulebook-facts"><span>2–4 PLAYERS</span><span>HOST-SELECTED LENGTH</span><span>18-SECOND TURNS</span></div>
       </header>
       <div class="rulebook-content">
         <section><b>01</b><div><h3>GET READY</h3><p>Create or join a room, choose your name and avatar, then press Ready. Every player begins on Tip-Off with <strong>1,500 PTS</strong>. The host starts when at least two players are ready.</p></div></section>
@@ -209,7 +210,7 @@
         <section><b>05</b><div><h3>BUILD A DIVISION</h3><p>Own every Team in one color division to recruit named Star Players. Develop teams evenly. More recruits create larger landing payments; a fully developed team becomes a Championship Lineup.</p></div></section>
         <section><b>06</b><div><h3>SPECIAL BLOCKS</h3><p><strong>Team Ops</strong> and <strong>Game Time</strong> draw event cards. Routes earn more as you own more of them. Labs charge dice-based payments. Click any special block to read its exact rule.</p></div></section>
         <section><b>07</b><div><h3>TIP-OFF &amp; BANKRUPTCY</h3><p>Passing Tip-Off earns 200 PTS; landing exactly on it earns 300 PTS. If you run out of PTS, mortgage eligible undeveloped assets. If you still cannot pay, you are eliminated.</p></div></section>
-        <section><b>08</b><div><h3>MOST PTS WINS</h3><p>When the 10-minute timer ends—or the host ends the match—the active player with the most available PTS is Champion. Purchased assets are <strong>not</strong> added to the final score.</p></div></section>
+        <section><b>08</b><div><h3>MOST PTS WINS</h3><p>The host chooses 10, 15, 20 minutes, or Unlimited before tip-off. When a timed match ends—or the host ends any match—the active player with the most available PTS is Champion. Purchased assets are <strong>not</strong> added to the final score.</p></div></section>
       </div>
       <button class="card-primary rulebook-done" id="rulebook-done" type="button">READY FOR TIP-OFF</button>
     </dialog>
@@ -272,7 +273,7 @@
     <script>
       if (window.location.protocol !== 'file:') {
         const gameScript = document.createElement('script');
-        gameScript.src = 'app.js?v=20260929m';
+        gameScript.src = 'app.js?v=20260930n';
         document.body.append(gameScript);
       }
     </script>
