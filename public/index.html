@@ -16,7 +16,7 @@
       href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Nunito+Sans:wght@600;700;800;900&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20260929l" />
+    <link rel="stylesheet" href="styles.css?v=20260929m" />
   </head>
   <body>
     <div class="arena-shell">
@@ -48,6 +48,7 @@
             <button class="is-active" id="create-tab" type="button" role="tab">Create room</button>
             <button id="join-tab" type="button" role="tab">Join room</button>
           </div>
+          <button class="rulebook-launch" id="open-rulebook-button" type="button"><span aria-hidden="true">▤</span><strong>PLAYER RULEBOOK</strong><small>Learn the game before tip-off</small></button>
           <form id="create-room-form">
             <label for="player-name">Your player name</label>
             <input id="player-name" name="name" maxlength="32" autocomplete="name" placeholder="e.g. Aaron Wang" required />
@@ -192,6 +193,27 @@
 
     </div>
 
+    <dialog class="rulebook-dialog" id="rulebook-dialog" aria-labelledby="rulebook-title">
+      <button class="card-close" id="rulebook-close" type="button" aria-label="Close rulebook">×</button>
+      <header class="rulebook-heading">
+        <span class="eyebrow">BASKETBALL EMPIRE</span>
+        <h2 id="rulebook-title">PLAYER RULEBOOK</h2>
+        <p>Build your franchise, outplay your rivals, and finish with the most PTS.</p>
+        <div class="rulebook-facts"><span>2–4 PLAYERS</span><span>10-MINUTE GAME</span><span>18-SECOND TURNS</span></div>
+      </header>
+      <div class="rulebook-content">
+        <section><b>01</b><div><h3>GET READY</h3><p>Create or join a room, choose your name and avatar, then press Ready. Every player begins on Tip-Off with <strong>1,500 PTS</strong>. The host starts when at least two players are ready.</p></div></section>
+        <section><b>02</b><div><h3>TAKE YOUR TURN</h3><p>Roll two dice and move clockwise one block at a time. Resolve the block where you stop, then end your turn. The turn clock is <strong>18 seconds</strong>.</p></div></section>
+        <section><b>03</b><div><h3>SIGN ASSETS</h3><p>Land on an unsigned Team, Route, Offense Lab, or Defense Lab to buy it for the displayed price. If another player owns it, pay that owner the displayed landing payment.</p></div></section>
+        <section><b>04</b><div><h3>5-SECOND AUCTION</h3><p>If the landing player passes on an available asset, every active player may bid. Use +2, +50, or +100. Every valid bid resets the clock to five seconds; the highest bidder wins and pays the bid.</p></div></section>
+        <section><b>05</b><div><h3>BUILD A DIVISION</h3><p>Own every Team in one color division to recruit named Star Players. Develop teams evenly. More recruits create larger landing payments; a fully developed team becomes a Championship Lineup.</p></div></section>
+        <section><b>06</b><div><h3>SPECIAL BLOCKS</h3><p><strong>Team Ops</strong> and <strong>Game Time</strong> draw event cards. Routes earn more as you own more of them. Labs charge dice-based payments. Click any special block to read its exact rule.</p></div></section>
+        <section><b>07</b><div><h3>TIP-OFF &amp; BANKRUPTCY</h3><p>Passing Tip-Off earns 200 PTS; landing exactly on it earns 300 PTS. If you run out of PTS, mortgage eligible undeveloped assets. If you still cannot pay, you are eliminated.</p></div></section>
+        <section><b>08</b><div><h3>MOST PTS WINS</h3><p>When the 10-minute timer ends—or the host ends the match—the active player with the most available PTS is Champion. Purchased assets are <strong>not</strong> added to the final score.</p></div></section>
+      </div>
+      <button class="card-primary rulebook-done" id="rulebook-done" type="button">READY FOR TIP-OFF</button>
+    </dialog>
+
     <dialog class="team-card-dialog" id="team-card-dialog" aria-labelledby="card-team-name">
       <button class="card-close" id="card-close" type="button" aria-label="Close team card">×</button>
       <div class="card-topline"><span>OFFICIAL TEAM CARD</span><span id="card-division">ROOKIE DIVISION</span></div>
@@ -250,7 +272,7 @@
     <script>
       if (window.location.protocol !== 'file:') {
         const gameScript = document.createElement('script');
-        gameScript.src = 'app.js?v=20260929l';
+        gameScript.src = 'app.js?v=20260929m';
         document.body.append(gameScript);
       }
     </script>

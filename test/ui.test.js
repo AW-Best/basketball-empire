@@ -113,6 +113,23 @@ test('player interface supports creating, joining, readying, and sharing a live 
   assert.match(script, /localStorage/);
 });
 
+test('create and join screen includes an in-page player rulebook', () => {
+  const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
+  const script = fs.readFileSync(path.join(projectRoot, 'public/app.js'), 'utf8');
+  const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
+
+  assert.match(html, /id="open-rulebook-button"/);
+  assert.match(html, /id="rulebook-dialog"/);
+  assert.match(html, /PLAYER RULEBOOK/);
+  assert.match(html, /10-MINUTE GAME/);
+  assert.match(html, /5-SECOND AUCTION/);
+  assert.match(html, /MOST PTS WINS/);
+  assert.match(script, /#open-rulebook-button'[\s\S]{0,160}rulebookDialog\.showModal\(\)/);
+  assert.match(script, /#rulebook-close'[\s\S]{0,120}rulebookDialog\.close\(\)/);
+  assert.match(css, /\.rulebook-dialog/);
+  assert.match(css, /\.rulebook-content/);
+});
+
 test('entry forms support photo upload, camera capture, preview, compression, and initials fallback', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
   const script = fs.readFileSync(path.join(projectRoot, 'public/app.js'), 'utf8');
@@ -326,8 +343,8 @@ test('Tip-Off guide explains the exact-landing 300 point bonus', () => {
 test('deployed browsers receive the current interface assets instead of stale cached files', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
 
-  assert.match(html, /styles\.css\?v=20260929l/);
-  assert.match(html, /app\.js\?v=20260929l/);
+  assert.match(html, /styles\.css\?v=20260929m/);
+  assert.match(html, /app\.js\?v=20260929m/);
 });
 
 test('API requests report an understandable connection error when a tunnel returns HTML', () => {

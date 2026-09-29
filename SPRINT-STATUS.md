@@ -30,3 +30,9 @@
 - [x] RED: specify an in-game leave/new-game control and session cleanup.
 - [x] GREEN: clear the saved identity, disconnect live updates, and return to Create/Join.
 - [x] Verify the full automated test suite and commit the completed feature.
+
+## Sprint 010 — Lobby Rulebook
+
+- [x] RED: specify a player-facing rulebook on the Create/Join screen.
+- [x] GREEN: add a responsive in-page rulebook with the implemented game rules.
+- [x] Verify the full automated test suite and commit the completed feature.

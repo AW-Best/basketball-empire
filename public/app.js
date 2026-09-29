@@ -100,6 +100,7 @@ const rollButton = document.querySelector('#roll-button');
 const teamCardDialog = document.querySelector('#team-card-dialog');
 const frontOfficeDialog = document.querySelector('#front-office-dialog');
 const spaceGuideDialog = document.querySelector('#space-guide-dialog');
+const rulebookDialog = document.querySelector('#rulebook-dialog');
 const lobbyScreen = document.querySelector('#lobby-screen');
 const gameStage = document.querySelector('#game-stage');
 
@@ -726,6 +727,10 @@ document.querySelector('#join-tab').addEventListener('click', () => {
   document.querySelector('#join-tab').classList.add('is-active'); document.querySelector('#create-tab').classList.remove('is-active');
   document.querySelector('#join-room-form').classList.remove('is-hidden'); document.querySelector('#create-room-form').classList.add('is-hidden');
 });
+document.querySelector('#open-rulebook-button').addEventListener('click', () => rulebookDialog.showModal());
+document.querySelector('#rulebook-close').addEventListener('click', () => rulebookDialog.close());
+document.querySelector('#rulebook-done').addEventListener('click', () => rulebookDialog.close());
+rulebookDialog.addEventListener('click', (event) => { if (event.target === rulebookDialog) rulebookDialog.close(); });
 document.querySelector('#create-room-form').addEventListener('submit', async (event) => {
   event.preventDefault();
   try { await enterRoom(await api('/api/rooms', { method: 'POST', body: { name: event.currentTarget.elements.name.value, avatarDataUrl: selectedAvatars.get(event.currentTarget.id) || null } }), true); } catch (error) { showError(error); }
