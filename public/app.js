@@ -99,6 +99,7 @@ const playerRail = document.querySelector('#player-rail');
 const rollButton = document.querySelector('#roll-button');
 const teamCardDialog = document.querySelector('#team-card-dialog');
 const frontOfficeDialog = document.querySelector('#front-office-dialog');
+const tradeDialog = document.querySelector('#trade-dialog');
 const spaceGuideDialog = document.querySelector('#space-guide-dialog');
 const rulebookDialog = document.querySelector('#rulebook-dialog');
 const lobbyScreen = document.querySelector('#lobby-screen');
@@ -246,11 +247,28 @@ function syncShotClock() {
 
 function renderPlayers() {
   playerRail.innerHTML = room.players.map((player, index) => `
-    <article class="player-card ${index === room.currentPlayerIndex ? 'is-active' : ''} ${player.active ? '' : 'is-eliminated'}" style="--player-color: ${escapeHtml(player.color)}">
+    <article class="player-card ${index === room.currentPlayerIndex ? 'is-active' : ''} ${player.active ? '' : 'is-eliminated'}" data-player-id="${escapeHtml(player.id)}" style="--player-color: ${escapeHtml(player.color)}">
       <span class="rank">${index + 1}</span>${avatarMarkup(player)}
       <span class="player-name">${escapeHtml(player.name)}${player.id === room.hostId ? '<b class="host-label">HOST</b>' : ''}<small>${player.active ? (index === room.currentPlayerIndex ? 'ON THE CLOCK' : 'READY') : 'ELIMINATED'}</small></span>
       <strong class="points">${player.points.toLocaleString()}<small>PTS</small></strong>
     </article>`).join('');
+}
+
+function showBalanceChanges(previousRoom, nextRoom) {
+  if (!previousRoom || previousRoom.status === 'lobby') return;
+  nextRoom.players.forEach((player) => {
+    const previous = previousRoom.players.find((candidate) => candidate.id === player.id);
+    const delta = previous ? player.points - previous.points : 0;
+    if (!delta) return;
+    const card = playerRail.querySelector(`[data-player-id="${CSS.escape(player.id)}"]`);
+    if (!card) return;
+    const badge = document.createElement('span');
+    badge.className = `balance-change ${delta > 0 ? 'is-gain' : 'is-loss'}`;
+    badge.textContent = `${delta > 0 ? '+' : '−'}${Math.abs(delta).toLocaleString()}`;
+    badge.setAttribute('role', 'status');
+    card.append(badge);
+    setTimeout(() => badge.remove(), 2200);
+  });
 }
 
 function playerPieces(index) {
@@ -458,6 +476,10 @@ function renderFeed() {
       message = `paid ${entry.amount} PTS to ${recipient?.name || 'the owner'} at ${space?.name}`;
     }
     if (entry.type === 'card') message = `drew ${entry.title}: ${entry.amount >= 0 ? '+' : ''}${entry.amount} PTS`;
+    if (entry.type === 'bankrupt') message = 'declared bankruptcy and left the court';
+    if (entry.type === 'trade_offered') message = `sent a trade offer to ${room.players.find((candidate) => candidate.id === entry.recipientId)?.name || 'a rival'}`;
+    if (entry.type === 'trade_accepted') message = 'accepted a trade offer';
+    if (entry.type === 'trade_rejected') message = 'rejected a trade offer';
     return `<li class="${index === 0 ? 'is-new' : 'is-old'}">${avatarMarkup(player, 'feed-icon orange')}<span><strong>${escapeHtml(player?.name || 'Basketball Empire')}</strong> ${escapeHtml(message)}.</span></li>`;
   }).join('');
 }
@@ -546,12 +568,11 @@ function renderFrontOffice(section = 'recruits') {
     return;
   }
   if (section === 'trade') {
-    const rivals = room.players.filter((player) => player.id !== local?.id);
-    const tradeableTeams = room.board.filter((space) => space.type === 'team' && room.assets[space.id]?.ownerId === local?.id);
-    content.innerHTML = `<div class="office-intro"><strong>TRADE DESK</strong><span>Trade on your turn before rolling. Compare franchises and agree on a fair deal.</span></div>
-      <div class="trade-columns"><section><h3>YOUR TRADE ASSETS</h3>${tradeableTeams.length ? tradeableTeams.map((team) => `<button class="office-team-button" data-team-id="${team.id}">${escapeHtml(team.name)}<span>${Math.floor(team.price / 2)} PTS value</span></button>`).join('') : '<p class="empty-office">Sign a team before opening trade talks.</p>'}</section>
-      <section><h3>OTHER GENERAL MANAGERS</h3>${rivals.map((player) => `<article class="trade-rival">${avatarMarkup(player, 'mini-avatar')}<div><strong>${escapeHtml(player.name)}</strong><small>${Object.values(room.assets).filter((asset) => asset.ownerId === player.id).length} assets · ${player.points} PTS</small></div></article>`).join('') || '<p class="empty-office">Waiting for another general manager.</p>'}</section></div>
-      <p class="office-footnote">Trade proposals are discussed between players; asset transfer confirmation will be added in a later rules update.</p>`;
+    const offers = (room.tradeOffers || []).filter((offer) => [offer.senderId, offer.recipientId].includes(local?.id));
+    const pending = offers.filter((offer) => offer.status === 'pending');
+    content.innerHTML = `<div class="trade-desk-head"><div><strong>TRADES</strong><span>Swap PTS, teams, routes, or labs.</span></div><button id="create-trade-button" type="button"><b>＋</b> CREATE TRADE</button></div>
+      <div class="trade-offer-list">${pending.length ? pending.map((offer) => tradeOfferMarkup(offer, local)).join('') : '<p class="empty-office">No live offers. Create a deal with another general manager.</p>'}</div>
+      ${offers.some((offer) => offer.status !== 'pending') ? `<h3 class="trade-history-title">RECENT DEALS</h3>${offers.filter((offer) => offer.status !== 'pending').slice(-3).reverse().map((offer) => tradeOfferMarkup(offer, local)).join('')}` : ''}`;
     return;
   }
   const ownedTeams = room.board.filter((space) => space.type === 'team' && room.assets[space.id]?.ownerId === local?.id);
@@ -561,6 +582,62 @@ function renderFrontOffice(section = 'recruits') {
       const asset = room.assets[team.id];
       return `<button class="office-team-button team-sheet-row" data-team-id="${team.id}"><svg aria-hidden="true"><use href="assets/team-logos.svg#${display.logo}"></use></svg><span><strong>${escapeHtml(team.name)}</strong><small>${asset.championship ? 'CHAMPIONSHIP LINEUP' : `${asset.stars} recruited star${asset.stars === 1 ? '' : 's'}`}${asset.mortgaged ? ' · MORTGAGED' : ''}</small></span><b>${team.price} PTS</b></button>`;
     }).join('') : '<p class="empty-office">Your team sheet is empty. Land on an unsigned team to build your franchise.</p>'}</div>`;
+}
+
+function assetNames(assetIds) {
+  return assetIds.map((assetId) => room.board.find((space) => space.id === assetId)?.name).filter(Boolean);
+}
+
+function tradeSideText(points, assetIds) {
+  const parts = [];
+  if (points) parts.push(`${points.toLocaleString()} PTS`);
+  parts.push(...assetNames(assetIds));
+  return parts.join(' + ') || 'Nothing';
+}
+
+function tradeOfferMarkup(offer, local) {
+  const sender = room.players.find((player) => player.id === offer.senderId);
+  const recipient = room.players.find((player) => player.id === offer.recipientId);
+  const incoming = offer.recipientId === local?.id;
+  return `<article class="trade-offer ${offer.status !== 'pending' ? `is-${offer.status}` : ''}">
+    <header>${avatarMarkup(incoming ? sender : recipient, 'mini-avatar')}<div><strong>${incoming ? `FROM ${escapeHtml(sender?.name)}` : `TO ${escapeHtml(recipient?.name)}`}</strong><small>${escapeHtml(offer.status.toUpperCase())}</small></div></header>
+    <div class="trade-swap"><span><small>${escapeHtml(sender?.name)} GIVES</small>${escapeHtml(tradeSideText(offer.offeredPoints, offer.offeredAssetIds))}</span><b>⇄</b><span><small>${escapeHtml(recipient?.name)} GIVES</small>${escapeHtml(tradeSideText(offer.requestedPoints, offer.requestedAssetIds))}</span></div>
+    ${incoming && offer.status === 'pending' ? `<footer><button data-trade-response="reject" data-offer-id="${offer.id}">REJECT</button><button data-trade-response="accept" data-offer-id="${offer.id}">ACCEPT</button></footer>` : ''}
+  </article>`;
+}
+
+function tradeableAssets(playerId) {
+  return room.board.filter((space) => {
+    const asset = room.assets[space.id];
+    return asset?.ownerId === playerId && !asset.mortgaged && asset.stars === 0 && !asset.championship;
+  });
+}
+
+function openTradeCreator() {
+  const rivals = room.players.filter((player) => player.active && player.id !== session?.playerId);
+  document.querySelector('#trade-dialog-title').textContent = 'CREATE A TRADE';
+  document.querySelector('#trade-dialog-subtitle').textContent = 'Select a player to trade with:';
+  document.querySelector('#trade-dialog-content').innerHTML = `<div class="trade-rival-picker">${rivals.map((player) => `<button type="button" data-trade-rival="${player.id}">${avatarMarkup(player, 'mini-avatar')}<span><strong>${escapeHtml(player.name)}</strong><small>${player.points.toLocaleString()} PTS · ${tradeableAssets(player.id).length} tradeable assets</small></span></button>`).join('') || '<p class="empty-office">No active rivals are available.</p>'}</div>`;
+  frontOfficeDialog.close();
+  tradeDialog.showModal();
+}
+
+function tradeAssetChoices(player, side) {
+  const assets = tradeableAssets(player.id);
+  return assets.length ? assets.map((space) => `<label><input type="checkbox" name="${side}AssetIds" value="${space.id}" /><span>${escapeHtml(space.name)}<small>${space.type.toUpperCase()} · ${space.price} PTS</small></span></label>`).join('') : '<p class="empty-trade-side">No tradeable assets</p>';
+}
+
+function renderTradeBuilder(recipientId) {
+  const local = localPlayer();
+  const rival = room.players.find((player) => player.id === recipientId);
+  document.querySelector('#trade-dialog-title').textContent = `TRADE WITH ${rival.name}`;
+  document.querySelector('#trade-dialog-subtitle').textContent = 'Build both sides of the deal. The other player must accept.';
+  document.querySelector('#trade-dialog-content').innerHTML = `<input type="hidden" name="recipientId" value="${rival.id}" />
+    <div class="trade-builder">
+      <section><h3>${escapeHtml(local.name)} GIVES</h3><label class="trade-points-input">PTS <input name="offeredPoints" type="number" min="0" max="${local.points}" value="0" inputmode="numeric" /></label><div class="trade-asset-list">${tradeAssetChoices(local, 'offered')}</div></section>
+      <b class="trade-builder-arrow">⇄</b>
+      <section><h3>${escapeHtml(rival.name)} GIVES</h3><label class="trade-points-input">PTS <input name="requestedPoints" type="number" min="0" max="${rival.points}" value="0" inputmode="numeric" /></label><div class="trade-asset-list">${tradeAssetChoices(rival, 'requested')}</div></section>
+    </div><button class="trade-submit" type="submit">SEND TRADE OFFER</button>`;
 }
 
 function openFrontOffice(section) {
@@ -612,6 +689,13 @@ function renderRoom() {
   lobbyScreen.classList.add('is-hidden'); gameStage.classList.remove('is-hidden');
   const endGameButton = document.querySelector('#end-game-button');
   endGameButton.classList.toggle('is-hidden', session?.playerId !== room.hostId || room.status !== 'playing');
+  const local = localPlayer();
+  const canMortgage = room.board.some((space) => {
+    const asset = room.assets[space.id];
+    return asset?.ownerId === local?.id && !asset.mortgaged && !asset.championship && asset.stars === 0;
+  });
+  const bankruptButton = document.querySelector('#bankrupt-button');
+  bankruptButton.classList.toggle('is-hidden', !local?.active || local.points !== 0 || canMortgage || room.status !== 'playing');
   renderPlayers(); renderBoard(); renderTurn(); renderAuction(); renderFeed();
 }
 
@@ -619,6 +703,7 @@ function applyRoom(nextRoom) {
   const previousRoom = room;
   room = nextRoom;
   renderRoom();
+  showBalanceChanges(previousRoom, nextRoom);
   if (!previousRoom || room.status === 'lobby') return;
 
   const rollIndex = room.log.findLastIndex((entry) => entry.type === 'roll');
@@ -700,7 +785,8 @@ async function performAction(action) {
   try {
     const result = await api(`/api/rooms/${encodeURIComponent(session.roomCode)}/actions`, { method: 'POST', body: action });
     applyRoom(result.room);
-  } catch (error) { showError(error); }
+    return result.room;
+  } catch (error) { showError(error); return null; }
 }
 
 function openTeamCard(space, index) {
@@ -774,6 +860,9 @@ rollButton.addEventListener('click', () => {
 document.querySelector('#end-game-button').addEventListener('click', () => {
   if (window.confirm('End the game now? The player with the most points will win.')) performAction({ type: 'end_game' });
 });
+document.querySelector('#bankrupt-button').addEventListener('click', () => {
+  if (window.confirm('Declare bankruptcy? Your assets will return to the bank and you will leave this match.')) performAction({ type: 'bankrupt' });
+});
 document.querySelector('#leave-game-button').addEventListener('click', () => {
   if (window.confirm('Leave this game and return to Create / Join?')) leaveCurrentRoom();
 });
@@ -825,6 +914,13 @@ document.querySelectorAll('[data-office-tab]').forEach((button) => {
   button.addEventListener('click', () => openFrontOffice(button.dataset.officeTab));
 });
 document.querySelector('#front-office-content').addEventListener('click', (event) => {
+  if (event.target.closest('#create-trade-button')) { openTradeCreator(); return; }
+  const responseButton = event.target.closest('[data-trade-response]');
+  if (responseButton) {
+    performAction({ type: 'trade_respond', offerId: responseButton.dataset.offerId, accept: responseButton.dataset.tradeResponse === 'accept' })
+      .then(() => renderFrontOffice('trade'));
+    return;
+  }
   const recruitButton = event.target.closest('[data-recruit-player]');
   if (recruitButton) {
     const assetId = recruitButton.closest('.scout-card').querySelector('select').value;
@@ -839,6 +935,24 @@ document.querySelector('#front-office-content').addEventListener('click', (event
   frontOfficeDialog.close();
   openTeamCard(space, index);
 });
+document.querySelector('#trade-dialog-content').addEventListener('click', (event) => {
+  const rival = event.target.closest('[data-trade-rival]');
+  if (rival) renderTradeBuilder(rival.dataset.tradeRival);
+});
+document.querySelector('#trade-form').addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const data = new FormData(event.currentTarget);
+  const updatedRoom = await performAction({
+    type: 'trade_create', recipientId: data.get('recipientId'),
+    offeredPoints: Number(data.get('offeredPoints') || 0), requestedPoints: Number(data.get('requestedPoints') || 0),
+    offeredAssetIds: data.getAll('offeredAssetIds'), requestedAssetIds: data.getAll('requestedAssetIds'),
+  });
+  if (!updatedRoom) return;
+  tradeDialog.close();
+  openFrontOffice('trade');
+});
+document.querySelector('#trade-close').addEventListener('click', () => tradeDialog.close());
+tradeDialog.addEventListener('click', (event) => { if (event.target === tradeDialog) tradeDialog.close(); });
 document.querySelector('#front-office-close').addEventListener('click', () => frontOfficeDialog.close());
 frontOfficeDialog.addEventListener('click', (event) => { if (event.target === frontOfficeDialog) frontOfficeDialog.close(); });
 document.querySelector('#space-guide-close').addEventListener('click', () => spaceGuideDialog.close());

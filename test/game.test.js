@@ -7,6 +7,8 @@ const {
   addPlayer,
   createGame,
   createInitials,
+  createTradeOffer,
+  declareBankruptcy,
   endTurn,
   finalizeAuction,
   finishExpiredGame,
@@ -17,6 +19,7 @@ const {
   resolvePendingDecision,
   rollDice,
   startGame,
+  respondToTradeOffer,
 } = require('../src/game.js');
 
 function fourPlayerGame() {
@@ -109,6 +112,48 @@ test('an unlimited match never expires automatically', () => {
   game = finishExpiredGame(game, 99_999_999);
   assert.equal(game.status, 'playing');
   assert.equal(game.winnerId, null);
+});
+
+test('players can trade points, teams, or both through an accepted offer', () => {
+  let game = fourPlayerGame();
+  game.assets['space-1'].ownerId = 'p1';
+  game.assets['space-3'].ownerId = 'p2';
+  game = createTradeOffer(game, 'p1', {
+    recipientId: 'p2', offeredPoints: 120, requestedPoints: 40,
+    offeredAssetIds: ['space-1'], requestedAssetIds: ['space-3'],
+  });
+  const offer = game.tradeOffers[0];
+  assert.equal(offer.status, 'pending');
+
+  game = respondToTradeOffer(game, 'p2', offer.id, true);
+  assert.equal(game.players[0].points, 1420);
+  assert.equal(game.players[1].points, 1580);
+  assert.equal(game.assets['space-1'].ownerId, 'p2');
+  assert.equal(game.assets['space-3'].ownerId, 'p1');
+  assert.equal(game.tradeOffers[0].status, 'accepted');
+});
+
+test('trade offers reject invalid assets, overspending, and responses from strangers', () => {
+  let game = fourPlayerGame();
+  game.assets['space-1'].ownerId = 'p1';
+  game.assets['space-1'].stars = 1;
+  assert.throws(() => createTradeOffer(game, 'p1', { recipientId: 'p2', offeredAssetIds: ['space-1'] }), /developed/i);
+  assert.throws(() => createTradeOffer(game, 'p1', { recipientId: 'p2', offeredPoints: 2000 }), /enough points/i);
+  game.assets['space-1'].stars = 0;
+  game = createTradeOffer(game, 'p1', { recipientId: 'p2', offeredPoints: 50 });
+  assert.throws(() => respondToTradeOffer(game, 'p3', game.tradeOffers[0].id, true), /recipient/i);
+});
+
+test('an insolvent player can declare bankruptcy and return assets to the bank', () => {
+  let game = fourPlayerGame();
+  game.players[0].points = 0;
+  game.assets['space-1'].ownerId = 'p1';
+  game.assets['space-1'].mortgaged = true;
+  game = declareBankruptcy(game, 'p1');
+  assert.equal(game.players[0].active, false);
+  assert.equal(game.assets['space-1'].ownerId, null);
+  assert.equal(game.assets['space-1'].mortgaged, false);
+  assert.throws(() => declareBankruptcy(game, 'p2'), /still has/i);
 });
 
 test('rolling moves the current player and creates a sign-team decision', () => {
@@ -408,13 +453,15 @@ test('a match lasts ten minutes and the highest points player wins at expiry', (
   assert.equal(game.finishReason, 'time');
 });
 
-test('a broke player with no mortgageable assets is eliminated', () => {
+test('a broke player stays active until they declare bankruptcy', () => {
   let game = fourPlayerGame();
   game.players[0].points = 20;
   game = rollDice(game, 'p1', [2, 2]);
   assert.equal(game.players[0].points, 0);
+  assert.equal(game.players[0].active, true);
+  game = declareBankruptcy(game, 'p1');
   assert.equal(game.players[0].active, false);
-  assert.ok(game.log.some((entry) => entry.type === 'eliminated' && entry.playerId === 'p1'));
+  assert.ok(game.log.some((entry) => entry.type === 'bankrupt' && entry.playerId === 'p1'));
 });
 
 test('a broke player stays active while an asset can still be mortgaged', () => {

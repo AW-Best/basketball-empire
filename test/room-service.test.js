@@ -168,3 +168,31 @@ test('only the host can end an active match and the richest active player wins',
   assert.equal(finished.winnerId, guest.playerId);
   assert.equal(finished.finishReason, 'host_ended');
 });
+
+test('room actions create, accept, and reject synchronized trades', () => {
+  const rooms = service();
+  const host = rooms.createRoom({ name: 'Aaron Wang' });
+  const guest = rooms.joinRoom('DUNK42', { name: 'Maya Chen' });
+  rooms.setReady('DUNK42', host.token, true);
+  rooms.setReady('DUNK42', guest.token, true);
+  rooms.startRoom('DUNK42', host.token);
+  const proposed = rooms.performAction('DUNK42', host.token, { type: 'trade_create', recipientId: guest.playerId, offeredPoints: 100 });
+  const accepted = rooms.performAction('DUNK42', guest.token, { type: 'trade_respond', offerId: proposed.tradeOffers[0].id, accept: true });
+  assert.equal(accepted.players[0].points, 1400);
+  assert.equal(accepted.players[1].points, 1600);
+  assert.equal(accepted.tradeOffers[0].status, 'accepted');
+});
+
+test('room action lets only an insolvent player declare bankruptcy', () => {
+  const rooms = service();
+  const host = rooms.createRoom({ name: 'Aaron Wang' });
+  const guest = rooms.joinRoom('DUNK42', { name: 'Maya Chen' });
+  rooms.setReady('DUNK42', host.token, true);
+  rooms.setReady('DUNK42', guest.token, true);
+  rooms.startRoom('DUNK42', host.token);
+  assert.throws(() => rooms.performAction('DUNK42', host.token, { type: 'bankrupt' }), /still has/i);
+  rooms.requireRecord('DUNK42').game.players[0].points = 0;
+  const result = rooms.performAction('DUNK42', host.token, { type: 'bankrupt' });
+  assert.equal(result.players[0].active, false);
+  assert.equal(result.winnerId, guest.playerId);
+});

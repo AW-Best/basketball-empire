@@ -43,3 +43,10 @@
 - [x] GREEN: enforce the selected duration through the UI, API, room service, and game engine.
 - [x] Show an infinity clock for Unlimited matches and prevent automatic expiry.
 - [x] Verify the full automated test suite and commit the completed feature.
+
+## Sprint 012 — Trading, Bankruptcy, and Balance Feedback
+
+- [x] RED: specify authoritative trade offers, voluntary bankruptcy, and the new UI contracts.
+- [x] GREEN: implement PTS/asset trading and recipient accept/reject controls.
+- [x] Add synchronized balance-change badges, My Teams naming, and a real basketball brand mark.
+- [x] Verify the full automated test suite and commit the completed feature.

@@ -4,6 +4,8 @@ const crypto = require('node:crypto');
 const {
   addPlayer,
   createGame,
+  createTradeOffer,
+  declareBankruptcy,
   endTurn,
   finalizeAuction,
   finishExpiredGame,
@@ -12,6 +14,7 @@ const {
   mortgageAsset,
   placeAuctionBid,
   recruitStar,
+  respondToTradeOffer,
   resolvePendingDecision,
   rollDice,
   startGame,
@@ -158,6 +161,15 @@ class RoomService {
         break;
       case 'mortgage':
         record.game = mortgageAsset(record.game, playerId, action.assetId);
+        break;
+      case 'bankrupt':
+        record.game = declareBankruptcy(record.game, playerId);
+        break;
+      case 'trade_create':
+        record.game = createTradeOffer(record.game, playerId, action);
+        break;
+      case 'trade_respond':
+        record.game = respondToTradeOffer(record.game, playerId, action.offerId, Boolean(action.accept));
         break;
       default:
         throw new Error('Unknown game action.');

@@ -16,13 +16,16 @@
       href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Nunito+Sans:wght@600;700;800;900&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20260930n" />
+    <link rel="stylesheet" href="styles.css?v=20260930p" />
   </head>
   <body>
     <div class="arena-shell">
       <header class="topbar">
         <a class="brand" href="#" aria-label="Basketball Empire home">
-          <span class="brand-ball" aria-hidden="true"></span>
+          <svg class="brand-ball" viewBox="0 0 48 48" aria-hidden="true">
+            <circle cx="24" cy="24" r="21"></circle>
+            <path d="M4 20c10 1 17 8 20 24M44 28c-10-1-17-8-20-24M6 34c11-8 25-12 37-10M5 15c12 2 26-2 36-9"></path>
+          </svg>
           <span><strong>BASKETBALL</strong><em>EMPIRE</em></span>
         </a>
         <div class="match-meta">
@@ -97,6 +100,7 @@
 
       <main class="game-stage is-hidden" id="game-stage">
         <section class="player-rail" id="player-rail" aria-label="Players"></section>
+        <div id="balance-change-layer" class="balance-change-layer" aria-live="polite"></div>
 
         <p class="board-scroll-hint"><span aria-hidden="true">↔</span> Swipe the court to explore all 40 spaces</p>
         <section class="board-wrap" aria-label="Basketball Empire board" tabindex="0">
@@ -185,8 +189,9 @@
           <div class="quick-actions">
             <button type="button" data-office-tab="recruits"><span>★</span> Recruit</button>
             <button type="button" data-office-tab="trade"><span>⇄</span> Trade</button>
-            <button type="button" data-office-tab="teams"><span>▣</span> Teams</button>
+            <button type="button" data-office-tab="teams"><span>▣</span> My Teams</button>
           </div>
+          <button class="bankrupt-button is-hidden" id="bankrupt-button" type="button">DECLARE BANKRUPTCY</button>
           <button class="end-game-button is-hidden" id="end-game-button" type="button">END GAME</button>
           <button class="leave-game-button" id="leave-game-button" type="button">LEAVE GAME / NEW GAME</button>
         </aside>
@@ -209,8 +214,9 @@
         <section><b>04</b><div><h3>5-SECOND AUCTION</h3><p>If the landing player passes on an available asset, every active player may bid. Use +2, +50, or +100. Every valid bid resets the clock to five seconds; the highest bidder wins and pays the bid.</p></div></section>
         <section><b>05</b><div><h3>BUILD A DIVISION</h3><p>Own every Team in one color division to recruit named Star Players. Develop teams evenly. More recruits create larger landing payments; a fully developed team becomes a Championship Lineup.</p></div></section>
         <section><b>06</b><div><h3>SPECIAL BLOCKS</h3><p><strong>Team Ops</strong> and <strong>Game Time</strong> draw event cards. Routes earn more as you own more of them. Labs charge dice-based payments. Click any special block to read its exact rule.</p></div></section>
-        <section><b>07</b><div><h3>TIP-OFF &amp; BANKRUPTCY</h3><p>Passing Tip-Off earns 200 PTS; landing exactly on it earns 300 PTS. If you run out of PTS, mortgage eligible undeveloped assets. If you still cannot pay, you are eliminated.</p></div></section>
-        <section><b>08</b><div><h3>MOST PTS WINS</h3><p>The host chooses 10, 15, 20 minutes, or Unlimited before tip-off. When a timed match ends—or the host ends any match—the active player with the most available PTS is Champion. Purchased assets are <strong>not</strong> added to the final score.</p></div></section>
+        <section><b>07</b><div><h3>TRADE</h3><p>Open the Trade Desk, choose an active rival, and offer PTS, undeveloped assets, or both. The receiving player must accept before anything moves. Mortgaged and developed assets cannot be traded.</p></div></section>
+        <section><b>08</b><div><h3>TIP-OFF &amp; BANKRUPTCY</h3><p>Passing Tip-Off earns 200 PTS; landing exactly on it earns 300 PTS. At 0 PTS, mortgage eligible undeveloped assets. If none remain, press <strong>Declare Bankruptcy</strong>; your assets return to the bank and you leave the match.</p></div></section>
+        <section><b>09</b><div><h3>MOST PTS WINS</h3><p>The host chooses 10, 15, 20 minutes, or Unlimited before tip-off. When a timed match ends—or the host ends any match—the active player with the most available PTS is Champion. Purchased assets are <strong>not</strong> added to the final score.</p></div></section>
       </div>
       <button class="card-primary rulebook-done" id="rulebook-done" type="button">READY FOR TIP-OFF</button>
     </dialog>
@@ -254,9 +260,19 @@
       <div class="office-tabs" role="tablist" aria-label="Front office sections">
         <button type="button" role="tab" data-office-tab="recruits">★ RECRUITS</button>
         <button type="button" role="tab" data-office-tab="trade">⇄ TRADE</button>
-        <button type="button" role="tab" data-office-tab="teams">▣ TEAMS</button>
+        <button type="button" role="tab" data-office-tab="teams">▣ MY TEAMS</button>
       </div>
       <section class="front-office-content" id="front-office-content" aria-live="polite"></section>
+    </dialog>
+
+    <dialog class="trade-dialog" id="trade-dialog" aria-labelledby="trade-dialog-title">
+      <button class="card-close" id="trade-close" type="button" aria-label="Close trade">×</button>
+      <div class="office-heading trade-dialog-heading">
+        <span class="eyebrow">LEAGUE TRADE DESK</span>
+        <h2 id="trade-dialog-title">CREATE A TRADE</h2>
+        <p id="trade-dialog-subtitle">Select a player to trade with.</p>
+      </div>
+      <form id="trade-form"><div id="trade-dialog-content" class="trade-dialog-content"></div></form>
     </dialog>
 
     <dialog class="space-guide-dialog" id="space-guide-dialog" aria-labelledby="space-guide-name">
@@ -273,7 +289,7 @@
     <script>
       if (window.location.protocol !== 'file:') {
         const gameScript = document.createElement('script');
-        gameScript.src = 'app.js?v=20260930n';
+        gameScript.src = 'app.js?v=20260930p';
         document.body.append(gameScript);
       }
     </script>

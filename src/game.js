@@ -139,6 +139,8 @@ function createGame({ roomCode, lapsToWin = 4 } = {}) {
     lastRoll: null,
     pendingDecision: null,
     auction: null,
+    tradeOffers: [],
+    nextTradeOfferId: 1,
     turn: 0,
     turnDurationSeconds: TURN_DURATION_SECONDS,
     turnStartedAt: null,
@@ -219,19 +221,111 @@ function finishGameByHost(game) {
 }
 
 function eliminateBankruptPlayers(next) {
-  next.players.forEach((player) => {
-    if (!player.active || player.points > 0) return;
-    const canMortgage = next.board.some((space) => {
-      const asset = next.assets[space.id];
-      return asset?.ownerId === player.id && !asset.mortgaged && !asset.championship && asset.stars === 0;
-    });
-    if (!canMortgage) {
-      player.active = false;
-      next.log.push({ type: 'eliminated', playerId: player.id });
-    }
+  return next;
+}
+
+function canMortgageAsset(game, playerId) {
+  return game.board.some((space) => {
+    const asset = game.assets[space.id];
+    return asset?.ownerId === playerId && !asset.mortgaged && !asset.championship && asset.stars === 0;
   });
-  const survivors = next.players.filter((player) => player.active);
-  if (next.players.length > 1 && survivors.length === 1) finishWithWinner(next, survivors[0].id, 'last_player');
+}
+
+function declareBankruptcy(game, playerId) {
+  if (game.status !== 'playing') throw new Error('Bankruptcy is only available during an active match.');
+  const player = game.players.find((candidate) => candidate.id === playerId);
+  if (!player?.active) throw new Error('This player is no longer active.');
+  if (player.points > 0 || canMortgageAsset(game, playerId)) throw new Error('This player still has PTS or an asset to mortgage.');
+  const next = clone(game);
+  const bankrupt = next.players.find((candidate) => candidate.id === playerId);
+  bankrupt.active = false;
+  Object.values(next.assets).forEach((asset) => {
+    if (asset.ownerId !== playerId) return;
+    asset.ownerId = null;
+    asset.mortgaged = false;
+    asset.stars = 0;
+    asset.championship = false;
+    asset.recruits = [];
+  });
+  next.tradeOffers.forEach((offer) => {
+    if (offer.status === 'pending' && [offer.senderId, offer.recipientId].includes(playerId)) offer.status = 'cancelled';
+  });
+  next.log.push({ type: 'bankrupt', playerId });
+  const survivors = next.players.filter((candidate) => candidate.active);
+  if (survivors.length === 1) return finishWithWinner(next, survivors[0].id, 'last_player');
+  if (next.players[next.currentPlayerIndex].id === playerId) {
+    do next.currentPlayerIndex = (next.currentPlayerIndex + 1) % next.players.length;
+    while (!next.players[next.currentPlayerIndex].active);
+    next.pendingDecision = null;
+    next.auction = null;
+    next.phase = 'roll';
+    next.turn += 1;
+    next.turnStartedAt = Date.now();
+  }
+  return next;
+}
+
+function normalizeTradePoints(value) {
+  const points = Number(value || 0);
+  if (!Number.isInteger(points) || points < 0) throw new Error('Trade PTS must be a whole positive amount.');
+  return points;
+}
+
+function validateTradeAssets(game, ownerId, assetIds) {
+  const uniqueIds = [...new Set(Array.isArray(assetIds) ? assetIds : [])];
+  uniqueIds.forEach((assetId) => {
+    const asset = game.assets[assetId];
+    if (!asset || asset.ownerId !== ownerId) throw new Error('A trade asset must belong to the offering player.');
+    if (asset.mortgaged) throw new Error('A mortgaged asset cannot be traded.');
+    if (asset.stars > 0 || asset.championship) throw new Error('A developed asset cannot be traded.');
+  });
+  return uniqueIds;
+}
+
+function createTradeOffer(game, senderId, proposal = {}) {
+  if (game.status !== 'playing') throw new Error('Trades are only available during an active match.');
+  const sender = game.players.find((player) => player.id === senderId);
+  const recipient = game.players.find((player) => player.id === proposal.recipientId);
+  if (!sender?.active || !recipient?.active || sender.id === recipient.id) throw new Error('Choose an active rival to trade with.');
+  const offeredPoints = normalizeTradePoints(proposal.offeredPoints);
+  const requestedPoints = normalizeTradePoints(proposal.requestedPoints);
+  if (sender.points < offeredPoints) throw new Error('You do not have enough points for this trade.');
+  if (recipient.points < requestedPoints) throw new Error('The recipient does not have enough points for this trade.');
+  const offeredAssetIds = validateTradeAssets(game, senderId, proposal.offeredAssetIds);
+  const requestedAssetIds = validateTradeAssets(game, recipient.id, proposal.requestedAssetIds);
+  if (!offeredPoints && !requestedPoints && !offeredAssetIds.length && !requestedAssetIds.length) throw new Error('Add PTS or an asset to the trade.');
+  const next = clone(game);
+  const id = `trade-${next.nextTradeOfferId++}`;
+  next.tradeOffers.push({ id, senderId, recipientId: recipient.id, offeredPoints, requestedPoints, offeredAssetIds, requestedAssetIds, status: 'pending' });
+  next.log.push({ type: 'trade_offered', playerId: senderId, recipientId: recipient.id, offerId: id });
+  return next;
+}
+
+function respondToTradeOffer(game, playerId, offerId, accept) {
+  if (game.status !== 'playing') throw new Error('Trades are only available during an active match.');
+  const offer = game.tradeOffers.find((candidate) => candidate.id === offerId);
+  if (!offer || offer.status !== 'pending') throw new Error('This trade offer is no longer pending.');
+  if (offer.recipientId !== playerId) throw new Error('Only the trade recipient can respond.');
+  const next = clone(game);
+  const nextOffer = next.tradeOffers.find((candidate) => candidate.id === offerId);
+  if (!accept) {
+    nextOffer.status = 'rejected';
+    next.log.push({ type: 'trade_rejected', playerId, recipientId: nextOffer.senderId, offerId });
+    return next;
+  }
+  const sender = next.players.find((player) => player.id === nextOffer.senderId);
+  const recipient = next.players.find((player) => player.id === nextOffer.recipientId);
+  if (!sender?.active || !recipient?.active || sender.points < nextOffer.offeredPoints || recipient.points < nextOffer.requestedPoints) {
+    throw new Error('The trade can no longer be completed.');
+  }
+  validateTradeAssets(next, sender.id, nextOffer.offeredAssetIds);
+  validateTradeAssets(next, recipient.id, nextOffer.requestedAssetIds);
+  sender.points += nextOffer.requestedPoints - nextOffer.offeredPoints;
+  recipient.points += nextOffer.offeredPoints - nextOffer.requestedPoints;
+  nextOffer.offeredAssetIds.forEach((assetId) => { next.assets[assetId].ownerId = recipient.id; });
+  nextOffer.requestedAssetIds.forEach((assetId) => { next.assets[assetId].ownerId = sender.id; });
+  nextOffer.status = 'accepted';
+  next.log.push({ type: 'trade_accepted', playerId, recipientId: sender.id, offerId });
   return next;
 }
 
@@ -464,6 +558,8 @@ module.exports = {
   addPlayer,
   createGame,
   createInitials,
+  createTradeOffer,
+  declareBankruptcy,
   endTurn,
   finalizeAuction,
   finishExpiredGame,
@@ -472,6 +568,7 @@ module.exports = {
   mortgageAsset,
   placeAuctionBid,
   recruitStar,
+  respondToTradeOffer,
   resolvePendingDecision,
   rollDice,
   startGame,
