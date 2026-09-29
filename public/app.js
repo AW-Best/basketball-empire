@@ -406,7 +406,7 @@ function renderTurn() {
   } else if (room.phase === 'roll') {
     rollButton.textContent = 'ROLL DICE'; rollButton.disabled = false;
   } else if (room.phase === 'end_turn') {
-    rollButton.textContent = 'END TURN'; rollButton.disabled = false;
+    rollButton.textContent = room.extraRollPending ? 'ROLL AGAIN' : 'END TURN'; rollButton.disabled = false;
   } else { rollButton.disabled = true; }
 
   if (local) {
@@ -480,6 +480,7 @@ function renderFeed() {
     if (entry.type === 'trade_offered') message = `sent a trade offer to ${room.players.find((candidate) => candidate.id === entry.recipientId)?.name || 'a rival'}`;
     if (entry.type === 'trade_accepted') message = 'accepted a trade offer';
     if (entry.type === 'trade_rejected') message = 'rejected a trade offer';
+    if (entry.type === 'extra_roll') message = 'rolled doubles and earned another roll';
     return `<li class="${index === 0 ? 'is-new' : 'is-old'}">${avatarMarkup(player, 'feed-icon orange')}<span><strong>${escapeHtml(player?.name || 'Basketball Empire')}</strong> ${escapeHtml(message)}.</span></li>`;
   }).join('');
 }

@@ -379,6 +379,24 @@ test('end turn advances to the next active player', () => {
   assert.equal(game.phase, 'roll');
 });
 
+test('rolling doubles lets the same player roll again after resolving the space', () => {
+  let game = fourPlayerGame();
+  game = rollDice(game, 'p1', [2, 2]);
+  assert.equal(game.extraRollPending, true);
+  game = endTurn(game, 'p1', { now: 5_000 });
+  assert.equal(game.currentPlayerIndex, 0);
+  assert.equal(game.phase, 'roll');
+  assert.equal(game.extraRollPending, false);
+  assert.ok(game.log.some((entry) => entry.type === 'extra_roll' && entry.playerId === 'p1'));
+});
+
+test('a non-double roll still passes play to the next active player', () => {
+  let game = fourPlayerGame();
+  game = rollDice(game, 'p1', [3, 4]);
+  game = endTurn(game, 'p1');
+  assert.equal(game.currentPlayerIndex, 1);
+});
+
 test('ending a turn resets the authoritative shot clock for the next player', () => {
   let game = fourPlayerGame();
   game = rollDice(game, 'p1', [1, 2]);

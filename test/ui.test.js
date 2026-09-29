@@ -358,8 +358,8 @@ test('Tip-Off guide explains the exact-landing 300 point bonus', () => {
 test('deployed browsers receive the current interface assets instead of stale cached files', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
 
-  assert.match(html, /styles\.css\?v=20260930p/);
-  assert.match(html, /app\.js\?v=20260930p/);
+  assert.match(html, /styles\.css\?v=20260930q/);
+  assert.match(html, /app\.js\?v=20260930q/);
 });
 
 test('API requests report an understandable connection error when a tunnel returns HTML', () => {
@@ -520,4 +520,11 @@ test('brand mark uses an accessible basketball svg with curved seams', () => {
   assert.match(html, /class="brand-ball"/);
   assert.match(html, /<circle/);
   assert.match(html, /<path/);
+});
+
+test('doubles clearly tell the current player to roll again', () => {
+  const script = fs.readFileSync(path.join(projectRoot, 'public/app.js'), 'utf8');
+  assert.match(script, /extraRollPending/);
+  assert.match(script, /ROLL AGAIN/);
+  assert.match(script, /entry\.type === 'extra_roll'/);
 });

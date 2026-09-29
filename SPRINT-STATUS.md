@@ -50,3 +50,10 @@
 - [x] GREEN: implement PTS/asset trading and recipient accept/reject controls.
 - [x] Add synchronized balance-change badges, My Teams naming, and a real basketball brand mark.
 - [x] Verify the full automated test suite and commit the completed feature.
+
+## Sprint 013 — Doubles Extra Roll
+
+- [x] RED: specify that doubles grant the same player another roll after resolving the space.
+- [x] GREEN: preserve and consume the server-authoritative extra-roll state.
+- [x] Show `ROLL AGAIN` and record the bonus in game history.
+- [x] Verify the full automated test suite and commit the completed feature.

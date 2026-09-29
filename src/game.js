@@ -137,6 +137,7 @@ function createGame({ roomCode, lapsToWin = 4 } = {}) {
     currentPlayerIndex: 0,
     winnerId: null,
     lastRoll: null,
+    extraRollPending: false,
     pendingDecision: null,
     auction: null,
     tradeOffers: [],
@@ -185,6 +186,7 @@ function startGame(game, { firstPlayerIndex = 0, now = Date.now(), matchDuration
   next.turnStartedAt = now;
   next.matchStartedAt = now;
   next.matchDurationSeconds = matchDurationSeconds;
+  next.extraRollPending = false;
   next.players.forEach((player) => {
     player.points = STARTING_POINTS;
     player.position = 0;
@@ -379,6 +381,7 @@ function rollDice(game, playerId, dice, options = {}) {
   }
   player.position = rawPosition % BOARD_SIZE;
   next.lastRoll = [...roll];
+  next.extraRollPending = roll[0] === roll[1];
   next.pendingDecision = null;
   next.phase = 'end_turn';
 
@@ -532,11 +535,16 @@ function mortgageAsset(game, playerId, assetId) {
 function endTurn(game, playerId, { now = Date.now() } = {}) {
   requireTurn(game, playerId, 'end_turn');
   const next = clone(game);
-  let nextIndex = next.currentPlayerIndex;
-  do {
-    nextIndex = (nextIndex + 1) % next.players.length;
-  } while (!next.players[nextIndex].active && nextIndex !== next.currentPlayerIndex);
-  next.currentPlayerIndex = nextIndex;
+  if (next.extraRollPending) {
+    next.extraRollPending = false;
+    next.log.push({ type: 'extra_roll', playerId });
+  } else {
+    let nextIndex = next.currentPlayerIndex;
+    do {
+      nextIndex = (nextIndex + 1) % next.players.length;
+    } while (!next.players[nextIndex].active && nextIndex !== next.currentPlayerIndex);
+    next.currentPlayerIndex = nextIndex;
+  }
   next.phase = 'roll';
   next.lastRoll = null;
   next.turn += 1;
