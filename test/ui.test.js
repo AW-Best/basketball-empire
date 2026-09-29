@@ -170,6 +170,19 @@ test('player rail labels the host and exposes an in-game host end button', () =>
   assert.match(script, /type: 'end_game'/);
 });
 
+test('every player can leave the saved game and return to create or join', () => {
+  const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
+  const script = fs.readFileSync(path.join(projectRoot, 'public/app.js'), 'utf8');
+
+  assert.match(html, /id="leave-game-button"/);
+  assert.match(html, />LEAVE GAME \/ NEW GAME</);
+  assert.match(script, /function leaveCurrentRoom/);
+  assert.match(script, /localStorage\.removeItem\(SESSION_KEY\)/);
+  assert.match(script, /searchParams\.delete\('room'\)/);
+  assert.match(script, /#entry-panel'[\s\S]{0,100}classList\.remove\('is-hidden'\)/);
+  assert.match(script, /#leave-game-button'[\s\S]{0,180}leaveCurrentRoom\(\)/);
+});
+
 test('dice use a standard dice presentation without the basketball-shot treatment', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
   const script = fs.readFileSync(path.join(projectRoot, 'public/app.js'), 'utf8');
@@ -313,8 +326,8 @@ test('Tip-Off guide explains the exact-landing 300 point bonus', () => {
 test('deployed browsers receive the current interface assets instead of stale cached files', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
 
-  assert.match(html, /styles\.css\?v=20260929k/);
-  assert.match(html, /app\.js\?v=20260929k/);
+  assert.match(html, /styles\.css\?v=20260929l/);
+  assert.match(html, /app\.js\?v=20260929l/);
 });
 
 test('API requests report an understandable connection error when a tunnel returns HTML', () => {

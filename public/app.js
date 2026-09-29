@@ -149,6 +149,30 @@ function saveSession(nextSession) {
   localStorage.setItem(SESSION_KEY, JSON.stringify(nextSession));
 }
 
+function leaveCurrentRoom() {
+  eventSource?.close();
+  eventSource = null;
+  [pollTimer, movementTimer, shotClockTimer, auctionClockTimer].forEach((timer) => clearInterval(timer));
+  [paymentTimer, cardDrawTimer, purchaseTimer].forEach((timer) => clearTimeout(timer));
+  pollTimer = null;
+  movementTimer = null;
+  shotClockTimer = null;
+  auctionClockTimer = null;
+  localStorage.removeItem(SESSION_KEY);
+  session = null;
+  room = null;
+  const cleanUrl = new URL(window.location.href);
+  cleanUrl.searchParams.delete('room');
+  history.replaceState(null, '', cleanUrl);
+  gameStage.classList.add('is-hidden');
+  lobbyScreen.classList.remove('is-hidden');
+  document.querySelector('#room-lobby').classList.add('is-hidden');
+  document.querySelector('#entry-panel').classList.remove('is-hidden');
+  document.querySelector('#header-room-code').textContent = '—';
+  document.querySelector('#header-game-status').textContent = 'WAITING FOR TIP-OFF';
+  document.querySelector('#form-status').textContent = '';
+}
+
 async function api(path, options = {}) {
   const response = await fetch(path, {
     method: options.method || 'GET',
@@ -731,6 +755,9 @@ rollButton.addEventListener('click', () => {
 });
 document.querySelector('#end-game-button').addEventListener('click', () => {
   if (window.confirm('End the game now? The player with the most points will win.')) performAction({ type: 'end_game' });
+});
+document.querySelector('#leave-game-button').addEventListener('click', () => {
+  if (window.confirm('Leave this game and return to Create / Join?')) leaveCurrentRoom();
 });
 document.querySelectorAll('[data-avatar-picker]').forEach((picker) => {
   const formId = picker.dataset.avatarPicker;

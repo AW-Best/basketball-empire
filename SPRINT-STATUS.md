@@ -24,3 +24,9 @@
 - [x] Change auction start and bid-reset windows to five seconds.
 - [x] Open the Scouting Board from a team card and preselect that team.
 - [x] Verify the full automated test suite and commit the completed fix.
+
+## Sprint 009 — Leave Game
+
+- [x] RED: specify an in-game leave/new-game control and session cleanup.
+- [x] GREEN: clear the saved identity, disconnect live updates, and return to Create/Join.
+- [x] Verify the full automated test suite and commit the completed feature.

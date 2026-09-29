@@ -460,6 +460,8 @@ button { font: inherit; }
 .quick-actions span { display: grid; place-items: center; width: 25px; height: 25px; border-radius: 7px; color: var(--arena-navy); background: var(--cyan); }
 .end-game-button { min-height: 40px; border: 1px solid rgba(255,84,75,.45); border-radius: 10px; color: #ff9b94; background: rgba(179,39,39,.14); font: 900 13px 'Barlow Condensed', sans-serif; letter-spacing: .1em; cursor: pointer; }
 .end-game-button:hover { color: white; background: rgba(179,39,39,.35); }
+.leave-game-button { min-height: 40px; border: 1px solid var(--line); border-radius: 10px; color: var(--muted); background: rgba(255,255,255,.035); font: 900 12px 'Barlow Condensed', sans-serif; letter-spacing: .08em; cursor: pointer; }
+.leave-game-button:hover { color: var(--white); border-color: var(--cyan); background: rgba(42,210,223,.08); }
 .team-card-dialog {
   width: min(430px, calc(100vw - 28px));
   padding: 0;
