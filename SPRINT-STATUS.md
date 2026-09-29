@@ -16,3 +16,11 @@
 - [x] Document free-tier room persistence limitations.
 - [ ] Create the private GitHub repository and connect it to Render.
 - [ ] Verify the deployed HTTPS page and health endpoint.
+
+## Sprint 008 — Dice, Auction, and Recruiting Fixes
+
+- [x] RED: specify a standard animated dice roll, five-second auctions, and responsive Recruit flow.
+- [x] GREEN: replay a normal dice tumble on every roll without basketball-shot effects.
+- [x] Change auction start and bid-reset windows to five seconds.
+- [x] Open the Scouting Board from a team card and preselect that team.
+- [x] Verify the full automated test suite and commit the completed fix.

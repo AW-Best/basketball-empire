@@ -110,7 +110,7 @@ test('named recruit actions assign the selected player to an eligible team', () 
   assert.deepEqual(result.assets['space-1'].recruits, ['Stephen Curry']);
 });
 
-test('room auctions reschedule on bids and finish automatically after fifteen quiet seconds', () => {
+test('room auctions reschedule on bids and finish automatically after five quiet seconds', () => {
   let now = 1_000;
   const timers = [];
   const rooms = service();
@@ -126,14 +126,14 @@ test('room auctions reschedule on bids and finish automatically after fifteen qu
 
   const auction = rooms.performAction('DUNK42', host.token, { type: 'decision', choice: 'decline' });
   assert.equal(auction.phase, 'auction');
-  assert.equal(timers.at(-1).delay, 15_000);
+  assert.equal(timers.at(-1).delay, 5_000);
 
   now = 2_000;
   const bid = rooms.performAction('DUNK42', guest.token, { type: 'bid', increment: 50 });
   assert.equal(bid.auction.highBid, 50);
-  assert.equal(timers.at(-1).delay, 15_000);
+  assert.equal(timers.at(-1).delay, 5_000);
 
-  now = 17_000;
+  now = 7_000;
   timers.at(-1).callback();
   const finished = rooms.getRoom('DUNK42');
   assert.equal(finished.assets['space-3'].ownerId, guest.playerId);

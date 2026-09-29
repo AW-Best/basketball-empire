@@ -16,7 +16,7 @@
       href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Nunito+Sans:wght@600;700;800;900&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20260929j" />
+    <link rel="stylesheet" href="styles.css?v=20260929k" />
   </head>
   <body>
     <div class="arena-shell">
@@ -39,7 +39,7 @@
           <h1 id="lobby-title">OWN THE COURT.<br /><em>RULE THE LEAGUE.</em></h1>
           <p>Create a private room, invite up to three friends, and turn fictional teams into a basketball empire.</p>
           <div class="lobby-feature-row" aria-label="Game features">
-            <span>2–4 Players</span><span>Live Turns</span><span>15-Second Auctions</span>
+            <span>2–4 Players</span><span>Live Turns</span><span>5-Second Auctions</span>
           </div>
         </div>
 
@@ -122,7 +122,7 @@
                 </div>
                 <div class="roll-total"><span>MOVE</span><strong id="roll-total">8</strong><span>SPACES</span></div>
                 <button class="roll-button" id="roll-button" type="button" aria-label="Roll the dice">
-                  <span class="ball-icon" aria-hidden="true"></span>
+                  <span class="dice-button-icon" aria-hidden="true">⚄</span>
                   ROLL DICE
                 </button>
                 <div class="decision-panel is-hidden" id="decision-panel">
@@ -134,7 +134,7 @@
                   </div>
                 </div>
                 <section class="auction-panel is-hidden" id="auction-panel" aria-live="assertive">
-                  <div class="auction-head"><span>LIVE AUCTION</span><b id="auction-countdown">15.0s</b></div>
+                  <div class="auction-head"><span>LIVE AUCTION</span><b id="auction-countdown">5.0s</b></div>
                   <strong id="auction-space">TEAM NAME</strong>
                   <div class="auction-score"><span>HIGH BID</span><b id="auction-high-bid">0 PTS</b></div>
                   <p id="auction-leader">No bids yet — be the first!</p>
@@ -249,7 +249,7 @@
     <script>
       if (window.location.protocol !== 'file:') {
         const gameScript = document.createElement('script');
-        gameScript.src = 'app.js?v=20260929j';
+        gameScript.src = 'app.js?v=20260929k';
         document.body.append(gameScript);
       }
     </script>

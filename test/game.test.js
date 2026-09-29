@@ -96,7 +96,7 @@ test('rolling moves the current player and creates a sign-team decision', () => 
   assert.equal(next.phase, 'decision');
 });
 
-test('signing a team pays its fixed price and declining starts a fifteen-second auction', () => {
+test('signing a team pays its fixed price and declining starts a five-second auction', () => {
   let game = fourPlayerGame();
   game = rollDice(game, 'p1', [1, 2]);
   const team = game.board[3];
@@ -118,11 +118,11 @@ test('signing a team pays its fixed price and declining starts a fifteen-second 
     declinedByPlayerId: 'p1',
     highBidderId: null,
     highBid: 0,
-    endsAt: 16_000,
+    endsAt: 6_000,
   });
 });
 
-test('auction accepts repeated +2, +50, and +100 bids and resets its fifteen-second clock', () => {
+test('auction accepts repeated +2, +50, and +100 bids and resets its five-second clock', () => {
   let game = fourPlayerGame();
   game = rollDice(game, 'p1', [1, 2]);
   game = resolvePendingDecision(game, 'p1', { choice: 'decline', now: 1_000 });
@@ -130,18 +130,18 @@ test('auction accepts repeated +2, +50, and +100 bids and resets its fifteen-sec
   game = placeAuctionBid(game, 'p2', 50, { now: 2_000 });
   assert.equal(game.auction.highBid, 50);
   assert.equal(game.auction.highBidderId, 'p2');
-  assert.equal(game.auction.endsAt, 17_000);
+  assert.equal(game.auction.endsAt, 7_000);
 
   game = placeAuctionBid(game, 'p3', 2, { now: 3_000 });
   assert.equal(game.auction.highBid, 52);
   assert.equal(game.auction.highBidderId, 'p3');
-  assert.equal(game.auction.endsAt, 18_000);
+  assert.equal(game.auction.endsAt, 8_000);
   game = placeAuctionBid(game, 'p1', 100, { now: 3_100 });
   assert.equal(game.auction.highBidderId, 'p1');
   assert.equal(game.auction.highBid, 152);
   game = placeAuctionBid(game, 'p2', 100, { now: 4_000 });
   assert.equal(game.auction.highBid, 252);
-  assert.equal(game.auction.endsAt, 19_000);
+  assert.equal(game.auction.endsAt, 9_000);
   assert.throws(() => placeAuctionBid(game, 'p4', 10, { now: 3_100 }), /2, 50, or 100/i);
 });
 
@@ -150,7 +150,7 @@ test('auction awards the asset to the high bidder and charges the winning amount
   game = rollDice(game, 'p1', [1, 2]);
   game = resolvePendingDecision(game, 'p1', { choice: 'decline', now: 1_000 });
   game = placeAuctionBid(game, 'p2', 100, { now: 2_000 });
-  game = finalizeAuction(game, { now: 17_000 });
+  game = finalizeAuction(game, { now: 7_000 });
 
   assert.equal(game.assets['space-3'].ownerId, 'p2');
   assert.equal(game.players[1].points, 1_400);
@@ -163,7 +163,7 @@ test('an auction with no bids ends with the asset still available', () => {
   let game = fourPlayerGame();
   game = rollDice(game, 'p1', [1, 2]);
   game = resolvePendingDecision(game, 'p1', { choice: 'decline', now: 1_000 });
-  game = finalizeAuction(game, { now: 16_000 });
+  game = finalizeAuction(game, { now: 6_000 });
 
   assert.equal(game.assets['space-3'].ownerId, null);
   assert.equal(game.phase, 'end_turn');

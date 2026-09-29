@@ -474,6 +474,12 @@ function showPurchaseHighlight(entry) {
   purchaseTimer = setTimeout(() => cell.classList.remove('is-purchased'), 2600);
 }
 
+function animateDice() {
+  const dice = [document.querySelector('#die-one'), document.querySelector('#die-two')];
+  dice.forEach((die) => die.classList.remove('is-rolling'));
+  requestAnimationFrame(() => dice.forEach((die) => die.classList.add('is-rolling')));
+}
+
 function teamDisplaySpace(space) {
   const index = room.board.findIndex((candidate) => candidate.id === space.id);
   return { index, display: BOARD_SPACES[index] };
@@ -584,6 +590,7 @@ function applyRoom(nextRoom) {
   const rollKey = rollEntry ? `${rollIndex}:${rollEntry.playerId}:${rollEntry.path?.join('-')}` : '';
   if (rollEntry?.path && rollKey !== lastAnimatedRollKey) {
     lastAnimatedRollKey = rollKey;
+    animateDice();
     animateMovement(rollEntry);
   }
 
@@ -750,10 +757,14 @@ document.querySelector('#auction-panel').addEventListener('click', (event) => {
   const bidButton = event.target.closest('[data-bid-increment]');
   if (bidButton) performAction({ type: 'bid', increment: Number(bidButton.dataset.bidIncrement) });
 });
-document.querySelector('#recruit-star-button').addEventListener('click', async () => {
+function openRecruitForSelectedTeam() {
   teamCardDialog.close();
-  await performAction({ type: 'recruit', assetId: selectedTeamId });
-});
+  openFrontOffice('recruits');
+  document.querySelectorAll('#front-office-content .scout-card select').forEach((select) => {
+    if ([...select.options].some((option) => option.value === selectedTeamId)) select.value = selectedTeamId;
+  });
+}
+document.querySelector('#recruit-star-button').addEventListener('click', openRecruitForSelectedTeam);
 document.querySelector('#mortgage-team-button').addEventListener('click', async () => {
   teamCardDialog.close();
   await performAction({ type: 'mortgage', assetId: selectedTeamId });

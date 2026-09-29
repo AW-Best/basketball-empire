@@ -143,14 +143,15 @@ test('live game controls cover sign, decline, roll, and end-turn decisions', () 
   assert.match(script, /currentPlayerIndex/);
 });
 
-test('live auction shows the high bid, fifteen-second clock, and three bid increments', () => {
+test('live auction shows the high bid, five-second clock, and three bid increments', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
   const script = fs.readFileSync(path.join(projectRoot, 'public/app.js'), 'utf8');
   const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
 
   assert.match(html, /id="auction-panel"/);
   assert.match(html, /id="auction-countdown"/);
-  assert.match(html, />15\.0s</);
+  assert.match(html, /5-Second Auctions/);
+  assert.match(html, />5\.0s</);
   assert.match(html, /data-bid-increment="2"/);
   assert.match(html, /data-bid-increment="50"/);
   assert.match(html, /data-bid-increment="100"/);
@@ -215,6 +216,27 @@ test('owned team cards expose recruit and mortgage actions', () => {
   assert.match(script, /type: 'recruit'/);
   assert.match(script, /type: 'mortgage'/);
   assert.match(script, /selectedTeamId/);
+});
+
+test('team-card recruit opens scouting and preselects the clicked team', () => {
+  const script = fs.readFileSync(path.join(projectRoot, 'public/app.js'), 'utf8');
+
+  assert.match(script, /function openRecruitForSelectedTeam/);
+  assert.match(script, /openFrontOffice\('recruits'\)/);
+  assert.match(script, /select\.value = selectedTeamId/);
+  assert.doesNotMatch(script, /#recruit-star-button'[\s\S]{0,180}performAction\(\{ type: 'recruit'/);
+});
+
+test('new rolls replay a standard dice tumble animation without basketball effects', () => {
+  const script = fs.readFileSync(path.join(projectRoot, 'public/app.js'), 'utf8');
+  const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
+
+  assert.match(script, /function animateDice/);
+  assert.match(script, /die\.classList\.add\('is-rolling'\)/);
+  assert.match(script, /animateDice\(\);[\s\S]{0,100}animateMovement\(rollEntry\)/);
+  assert.match(css, /\.die\.is-rolling\s*\{[^}]*animation:\s*dice-tumble/s);
+  assert.match(css, /@keyframes dice-tumble/);
+  assert.doesNotMatch(script, /dice-hoop|is-shooting/i);
 });
 
 test('live updates fall back to polling when server-sent events are unavailable', () => {
@@ -291,8 +313,8 @@ test('Tip-Off guide explains the exact-landing 300 point bonus', () => {
 test('deployed browsers receive the current interface assets instead of stale cached files', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
 
-  assert.match(html, /styles\.css\?v=20260929j/);
-  assert.match(html, /app\.js\?v=20260929j/);
+  assert.match(html, /styles\.css\?v=20260929k/);
+  assert.match(html, /app\.js\?v=20260929k/);
 });
 
 test('API requests report an understandable connection error when a tunnel returns HTML', () => {

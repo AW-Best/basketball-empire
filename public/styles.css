@@ -402,14 +402,15 @@ button { font: inherit; }
 .dice-tray { display: flex; gap: 12px; perspective: 500px; }
 .die { display: grid; place-items: center; width: clamp(58px, 6vw, 86px); aspect-ratio: 1; border-radius: 18px; color: var(--arena-navy); background: var(--cream); font: 900 clamp(28px, 3vw, 44px) 'Barlow Condensed', sans-serif; box-shadow: 0 14px 0 #c9b998, 0 20px 28px rgba(35,11,0,.28); transform: rotate(-5deg); }
 .die.is-accent { color: var(--cream); background: var(--arena-blue); box-shadow: 0 14px 0 #041b2b, 0 20px 28px rgba(35,11,0,.28); transform: rotate(7deg); }
-.die.is-rolling { animation: dice-bounce .52s ease-in-out; }
+.die.is-rolling { animation: dice-tumble .7s cubic-bezier(.2,.8,.25,1); }
+.die.is-rolling:nth-child(2) { animation-delay: .07s; }
 .roll-total { display: flex; align-items: baseline; gap: 7px; padding: 3px 12px; color: rgba(255,244,221,.8); font: 900 10px 'Nunito Sans', sans-serif; letter-spacing: .11em; }
 .roll-total strong { color: var(--cream); font: 900 32px 'Barlow Condensed', sans-serif; }
 .roll-button { display: inline-flex; align-items: center; gap: 10px; padding: 13px 22px; border: 0; border-radius: 10px; color: var(--arena-navy); background: var(--cream); font: 900 17px 'Barlow Condensed', sans-serif; letter-spacing: .07em; box-shadow: 0 7px 0 #c7ad7f, 0 14px 24px rgba(60,21,4,.28); cursor: pointer; transition: transform .18s, box-shadow .18s; }
 .roll-button:hover { transform: translateY(-3px); box-shadow: 0 10px 0 #c7ad7f, 0 18px 28px rgba(60,21,4,.32); }
 .roll-button:active { transform: translateY(4px); box-shadow: 0 3px 0 #c7ad7f; }
 .roll-button:disabled { opacity: .7; cursor: wait; }
-.ball-icon { width: 27px; height: 27px; }
+.dice-button-icon { display: inline-grid; place-items: center; width: 27px; height: 27px; font-size: 25px; line-height: 1; }
 .payment-callout { position: absolute; z-index: 7; right: clamp(12px, 2vw, 28px); bottom: clamp(12px, 2vw, 28px); display: grid; grid-template-columns: auto auto; align-items: center; gap: 2px 12px; min-width: 230px; padding: 13px 16px; border: 1px solid color-mix(in srgb, var(--recipient-color) 60%, white); border-left: 6px solid var(--payer-color); border-radius: 14px; opacity: 0; color: var(--white); background: rgba(3,15,27,.94); box-shadow: 0 18px 48px rgba(0,0,0,.45), 0 0 28px color-mix(in srgb, var(--recipient-color) 24%, transparent); pointer-events: none; transform: translateY(16px) scale(.94); }
 .payment-callout.is-visible { opacity: 1; transform: translateY(0) scale(1); animation: payment-pop .48s cubic-bezier(.16,1,.3,1); }
 .card-draw-overlay { position: absolute; z-index: 9; inset: 0; display: grid; place-items: center; opacity: 0; background: rgba(2,10,18,.66); backdrop-filter: blur(4px); pointer-events: none; transition: opacity .2s ease; }
@@ -547,11 +548,12 @@ button { font: inherit; }
 .pip { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: currentColor; transform: translate(-50%,-50%); }
 .pip-tl{left:16%;top:16%}.pip-tr{left:84%;top:16%}.pip-ml{left:16%;top:50%}.pip-mr{left:84%;top:50%}.pip-c{left:50%;top:50%}.pip-bl{left:16%;top:84%}.pip-br{left:84%;top:84%}
 
-@keyframes dice-bounce {
-  0% { transform: translateY(0) rotate(0); }
-  35% { transform: translateY(-24px) rotate(110deg) scale(1.08); }
-  70% { transform: translateY(3px) rotate(220deg); }
-  100% { transform: translateY(0) rotate(360deg); }
+@keyframes dice-tumble {
+  0% { transform: translateY(0) rotate(0) scale(1); }
+  24% { transform: translateY(-28px) rotate(95deg) scale(1.08); }
+  48% { transform: translate(9px, -12px) rotate(190deg) scale(.96); }
+  72% { transform: translate(-5px, 3px) rotate(285deg) scale(1.03); }
+  100% { transform: translateY(0) rotate(360deg) scale(1); }
 }
 
 @keyframes history-line-drop {
