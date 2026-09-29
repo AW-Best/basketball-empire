@@ -453,7 +453,7 @@ function renderAuction() {
 
 function renderDie(element, value) {
   const positions = { 1: ['c'], 2: ['tl', 'br'], 3: ['tl', 'c', 'br'], 4: ['tl', 'tr', 'bl', 'br'], 5: ['tl', 'tr', 'c', 'bl', 'br'], 6: ['tl', 'tr', 'ml', 'mr', 'bl', 'br'] };
-  element.innerHTML = `<span class="die-pips" aria-hidden="true">${positions[value].map((position) => `<i class="pip pip-${position}"></i>`).join('')}</span><span class="die-number">${value}</span>`;
+  element.innerHTML = `<span class="die-pips" aria-hidden="true">${positions[value].map((position) => `<i class="pip pip-${position}"></i>`).join('')}</span>`;
   element.setAttribute('aria-label', `Die rolled ${value}`);
 }
 
@@ -696,7 +696,11 @@ function renderRoom() {
     return asset?.ownerId === local?.id && !asset.mortgaged && !asset.championship && asset.stars === 0;
   });
   const bankruptButton = document.querySelector('#bankrupt-button');
-  bankruptButton.classList.toggle('is-hidden', !local?.active || local.points !== 0 || canMortgage || room.status !== 'playing');
+  const canDeclareBankruptcy = Boolean(local?.active && local.points === 0 && !canMortgage && room.status === 'playing');
+  bankruptButton.disabled = !canDeclareBankruptcy;
+  bankruptButton.title = canDeclareBankruptcy
+    ? 'Leave the match and return your assets to the bank.'
+    : (canMortgage ? 'Mortgage available assets first.' : 'Bankruptcy is available only when you have 0 PTS.');
   renderPlayers(); renderBoard(); renderTurn(); renderAuction(); renderFeed();
 }
 

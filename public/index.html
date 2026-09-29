@@ -16,7 +16,7 @@
       href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Nunito+Sans:wght@600;700;800;900&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20260930q" />
+    <link rel="stylesheet" href="styles.css?v=20260930r" />
   </head>
   <body>
     <div class="arena-shell">
@@ -123,8 +123,8 @@
 
               <div class="possession">
                 <div class="dice-tray" aria-live="polite">
-                  <div class="die" id="die-one">3</div>
-                  <div class="die is-accent" id="die-two">5</div>
+                  <div class="die" id="die-one" aria-label="Die showing one"></div>
+                  <div class="die is-accent" id="die-two" aria-label="Die showing one"></div>
                 </div>
                 <div class="roll-total"><span>MOVE</span><strong id="roll-total">8</strong><span>SPACES</span></div>
                 <button class="roll-button" id="roll-button" type="button" aria-label="Roll the dice">
@@ -191,7 +191,7 @@
             <button type="button" data-office-tab="trade"><span>⇄</span> Trade</button>
             <button type="button" data-office-tab="teams"><span>▣</span> My Teams</button>
           </div>
-          <button class="bankrupt-button is-hidden" id="bankrupt-button" type="button">DECLARE BANKRUPTCY</button>
+          <button class="bankrupt-button" id="bankrupt-button" type="button" disabled>DECLARE BANKRUPTCY</button>
           <button class="end-game-button is-hidden" id="end-game-button" type="button">END GAME</button>
           <button class="leave-game-button" id="leave-game-button" type="button">LEAVE GAME / NEW GAME</button>
         </aside>
@@ -289,7 +289,7 @@
     <script>
       if (window.location.protocol !== 'file:') {
         const gameScript = document.createElement('script');
-        gameScript.src = 'app.js?v=20260930q';
+        gameScript.src = 'app.js?v=20260930r';
         document.body.append(gameScript);
       }
     </script>

@@ -358,8 +358,8 @@ test('Tip-Off guide explains the exact-landing 300 point bonus', () => {
 test('deployed browsers receive the current interface assets instead of stale cached files', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
 
-  assert.match(html, /styles\.css\?v=20260930q/);
-  assert.match(html, /app\.js\?v=20260930q/);
+  assert.match(html, /styles\.css\?v=20260930r/);
+  assert.match(html, /app\.js\?v=20260930r/);
 });
 
 test('API requests report an understandable connection error when a tunnel returns HTML', () => {
@@ -409,11 +409,11 @@ test('interface reveals shared event cards with a broadcast animation', () => {
   assert.match(css, /@keyframes card-reveal/);
 });
 
-test('dice render pips and a readable number', () => {
+test('dice render accessible pips without a printed number', () => {
   const script = fs.readFileSync(path.join(projectRoot, 'public/app.js'), 'utf8');
   assert.match(script, /function renderDie/);
   assert.match(script, /die-pips/);
-  assert.match(script, /die-number/);
+  assert.doesNotMatch(script, /die-number/);
 });
 
 test('routes and labs expose price and revenue details', () => {
@@ -512,7 +512,7 @@ test('franchise controls say My Teams and expose bankruptcy when insolvent', () 
   assert.match(html, /> My Teams</);
   assert.match(html, /id="bankrupt-button"/);
   assert.match(script, /type: 'bankrupt'/);
-  assert.match(script, /local\.points !== 0/);
+  assert.match(script, /local\.points === 0/);
 });
 
 test('brand mark uses an accessible basketball svg with curved seams', () => {
@@ -527,4 +527,22 @@ test('doubles clearly tell the current player to roll again', () => {
   assert.match(script, /extraRollPending/);
   assert.match(script, /ROLL AGAIN/);
   assert.match(script, /entry\.type === 'extra_roll'/);
+});
+
+test('dice mimic tactile white 3D dice and contain pips only', () => {
+  const script = fs.readFileSync(path.join(projectRoot, 'public/app.js'), 'utf8');
+  const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
+  assert.doesNotMatch(script, /die-number/);
+  assert.match(css, /\.die::before/);
+  assert.match(css, /\.die::after/);
+  assert.match(css, /\.die\.is-accent[^}]*background:\s*linear-gradient/s);
+  assert.match(css, /\.pip[^}]*background:\s*#111/s);
+});
+
+test('bankruptcy remains visible but disabled until the player is insolvent', () => {
+  const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
+  const script = fs.readFileSync(path.join(projectRoot, 'public/app.js'), 'utf8');
+  assert.match(html, /class="bankrupt-button" id="bankrupt-button"/);
+  assert.match(script, /bankruptButton\.disabled = !canDeclareBankruptcy/);
+  assert.match(script, /Mortgage available assets first/);
 });

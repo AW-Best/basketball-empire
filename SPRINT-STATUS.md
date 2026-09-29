@@ -57,3 +57,9 @@
 - [x] GREEN: preserve and consume the server-authoritative extra-roll state.
 - [x] Show `ROLL AGAIN` and record the bonus in game history.
 - [x] Verify the full automated test suite and commit the completed feature.
+
+## Sprint 014 — 3D Dice and Visible Bankruptcy Control
+
+- [x] RED: specify pip-only 3D dice and an always-visible bankruptcy control.
+- [x] GREEN: implement tactile white dice and disabled-state bankruptcy guidance.
+- [x] Verify the full automated test suite and commit the completed feature.
