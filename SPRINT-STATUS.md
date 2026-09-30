@@ -82,3 +82,10 @@
 - [x] RED: specify the mode hub, Basketnopoly entry, and invite/session bypass.
 - [x] GREEN: add the responsive mode selector and lobby navigation.
 - [x] Run the full suite, publish, and verify the live page.
+
+## Sprint 018 — Weighted 3D Dice Motion
+
+- [x] Record the observed movement pattern and acceptance criteria.
+- [x] RED: specify face cycling, separate trajectories, bounce, and settle timing.
+- [x] GREEN: implement the improved dice throw.
+- [ ] Run the full suite, publish, and verify the live game.

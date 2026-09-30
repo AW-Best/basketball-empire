@@ -92,6 +92,9 @@ let matchRefreshRequested = false;
 let lastPurchaseKey = '';
 let purchaseTimer = null;
 let auctionClockTimer = null;
+let diceFaceTimer = null;
+let diceResultTimer = null;
+let diceSettleTimer = null;
 const selectedAvatars = new Map();
 
 const board = document.querySelector('#board');
@@ -171,8 +174,8 @@ function saveSession(nextSession) {
 function leaveCurrentRoom() {
   eventSource?.close();
   eventSource = null;
-  [pollTimer, movementTimer, shotClockTimer, auctionClockTimer].forEach((timer) => clearInterval(timer));
-  [paymentTimer, cardDrawTimer, purchaseTimer].forEach((timer) => clearTimeout(timer));
+  [pollTimer, movementTimer, shotClockTimer, auctionClockTimer, diceFaceTimer].forEach((timer) => clearInterval(timer));
+  [paymentTimer, cardDrawTimer, purchaseTimer, diceResultTimer, diceSettleTimer].forEach((timer) => clearTimeout(timer));
   pollTimer = null;
   movementTimer = null;
   shotClockTimer = null;
@@ -576,10 +579,40 @@ function showPurchaseHighlight(entry) {
   purchaseTimer = setTimeout(() => cell.classList.remove('is-purchased'), 2600);
 }
 
-function animateDice() {
+function animateDice(finalValues, onSettled) {
   const dice = [document.querySelector('#die-one'), document.querySelector('#die-two')];
-  dice.forEach((die) => die.classList.remove('is-rolling'));
-  requestAnimationFrame(() => dice.forEach((die) => die.classList.add('is-rolling')));
+  const tray = document.querySelector('.dice-tray');
+  clearInterval(diceFaceTimer);
+  clearTimeout(diceResultTimer);
+  clearTimeout(diceSettleTimer);
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduceMotion) {
+    dice.forEach((die, index) => renderDie(die, finalValues[index]));
+    onSettled?.();
+    return;
+  }
+  dice.forEach((die) => die.classList.remove('is-rolling', 'is-settling'));
+  tray.classList.remove('is-rolling');
+  requestAnimationFrame(() => {
+    tray.classList.add('is-rolling');
+    dice.forEach((die) => die.classList.add('is-rolling'));
+  });
+  diceFaceTimer = setInterval(() => {
+    dice.forEach((die) => renderDie(die, 1 + Math.floor(Math.random() * 6)));
+  }, 82);
+  diceResultTimer = setTimeout(() => {
+    clearInterval(diceFaceTimer);
+    diceFaceTimer = null;
+    dice.forEach((die, index) => {
+      renderDie(dice[index], finalValues[index]);
+      die.classList.add('is-settling');
+    });
+  }, 760);
+  diceSettleTimer = setTimeout(() => {
+    dice.forEach((die) => die.classList.remove('is-rolling', 'is-settling'));
+    tray.classList.remove('is-rolling');
+    onSettled?.();
+  }, 1080);
 }
 
 function teamDisplaySpace(space) {
@@ -764,8 +797,7 @@ function applyRoom(nextRoom) {
   const rollKey = rollEntry ? `${rollIndex}:${rollEntry.playerId}:${rollEntry.path?.join('-')}` : '';
   if (rollEntry?.path && rollKey !== lastAnimatedRollKey) {
     lastAnimatedRollKey = rollKey;
-    animateDice();
-    animateMovement(rollEntry);
+    animateDice(rollEntry.dice, () => animateMovement(rollEntry));
   }
 
   const paymentIndex = room.log.findLastIndex((entry) => entry.type === 'payment');

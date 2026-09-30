@@ -303,10 +303,25 @@ test('new rolls replay a standard dice tumble animation without basketball effec
 
   assert.match(script, /function animateDice/);
   assert.match(script, /die\.classList\.add\('is-rolling'\)/);
-  assert.match(script, /animateDice\(\);[\s\S]{0,100}animateMovement\(rollEntry\)/);
+  assert.match(script, /animateDice\(rollEntry\.dice, \(\) => animateMovement\(rollEntry\)\)/);
   assert.match(css, /\.die\.is-rolling\s*\{[^}]*animation:\s*dice-tumble/s);
   assert.match(css, /@keyframes dice-tumble/);
   assert.doesNotMatch(script, /dice-hoop|is-shooting/i);
+});
+
+test('dice throw with changing faces, staggered 3D bounces, and settle before movement', () => {
+  const script = fs.readFileSync(path.join(projectRoot, 'public/app.js'), 'utf8');
+  const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
+
+  assert.match(script, /function animateDice\(finalValues, onSettled\)/);
+  assert.match(script, /diceFaceTimer = setInterval/);
+  assert.match(script, /renderDie\(die, 1 \+ Math\.floor\(Math\.random\(\) \* 6\)\)/);
+  assert.match(script, /renderDie\(dice\[index\], finalValues\[index\]\)/);
+  assert.match(script, /animateDice\(rollEntry\.dice, \(\) => animateMovement\(rollEntry\)\)/);
+  assert.match(css, /transform-style:\s*preserve-3d/);
+  assert.match(css, /@keyframes dice-throw-left/);
+  assert.match(css, /@keyframes dice-throw-right/);
+  assert.match(css, /@keyframes dice-shadow-pulse/);
 });
 
 test('live updates fall back to polling when server-sent events are unavailable', () => {
@@ -383,8 +398,8 @@ test('Tip-Off guide explains the exact-landing 300 point bonus', () => {
 test('deployed browsers receive the current interface assets instead of stale cached files', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
 
-  assert.match(html, /styles\.css\?v=20260930u/);
-  assert.match(html, /app\.js\?v=20260930u/);
+  assert.match(html, /styles\.css\?v=20260930v/);
+  assert.match(html, /app\.js\?v=20260930v/);
 });
 
 test('API requests report an understandable connection error when a tunnel returns HTML', () => {
