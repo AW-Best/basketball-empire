@@ -75,3 +75,10 @@
 - [x] RED: specify a local close control for Team Ops and Game Time cards.
 - [x] GREEN: add the accessible × button and cancel the reveal timer when used.
 - [x] Run the full suite and commit.
+
+## Sprint 017 — Basketball Empire Game-Mode Hub
+
+- [x] Record acceptance criteria and the single-page screen-state design.
+- [x] RED: specify the mode hub, Basketnopoly entry, and invite/session bypass.
+- [x] GREEN: add the responsive mode selector and lobby navigation.
+- [ ] Run the full suite, publish, and verify the live page.

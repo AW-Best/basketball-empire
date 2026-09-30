@@ -102,8 +102,25 @@ const frontOfficeDialog = document.querySelector('#front-office-dialog');
 const tradeDialog = document.querySelector('#trade-dialog');
 const spaceGuideDialog = document.querySelector('#space-guide-dialog');
 const rulebookDialog = document.querySelector('#rulebook-dialog');
+const modeScreen = document.querySelector('#mode-screen');
 const lobbyScreen = document.querySelector('#lobby-screen');
 const gameStage = document.querySelector('#game-stage');
+
+function openBasketnopoly({ join = false } = {}) {
+  modeScreen.classList.add('is-hidden');
+  lobbyScreen.classList.remove('is-hidden');
+  gameStage.classList.add('is-hidden');
+  document.querySelector('#header-game-status').textContent = 'BASKETNOPOLY';
+  if (join) document.querySelector('#join-tab').click();
+}
+
+function showModeSelection() {
+  modeScreen.classList.remove('is-hidden');
+  lobbyScreen.classList.add('is-hidden');
+  gameStage.classList.add('is-hidden');
+  document.querySelector('#header-room-code').textContent = '—';
+  document.querySelector('#header-game-status').textContent = 'CHOOSE A MODE';
+}
 
 function escapeHtml(value) {
   return String(value ?? '').replace(/[&<>'"]/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[character]);
@@ -167,12 +184,12 @@ function leaveCurrentRoom() {
   cleanUrl.searchParams.delete('room');
   history.replaceState(null, '', cleanUrl);
   gameStage.classList.add('is-hidden');
-  lobbyScreen.classList.remove('is-hidden');
   document.querySelector('#room-lobby').classList.add('is-hidden');
   document.querySelector('#entry-panel').classList.remove('is-hidden');
   document.querySelector('#header-room-code').textContent = '—';
   document.querySelector('#header-game-status').textContent = 'WAITING FOR TIP-OFF';
   document.querySelector('#form-status').textContent = '';
+  showModeSelection();
 }
 
 async function api(path, options = {}) {
@@ -692,7 +709,7 @@ function openSpaceGuide(space, index) {
 }
 
 function renderLobby() {
-  lobbyScreen.classList.remove('is-hidden'); gameStage.classList.add('is-hidden');
+  modeScreen.classList.add('is-hidden'); lobbyScreen.classList.remove('is-hidden'); gameStage.classList.add('is-hidden');
   document.querySelector('#entry-panel').classList.add('is-hidden');
   document.querySelector('#room-lobby').classList.remove('is-hidden');
   document.querySelector('#lobby-room-code').textContent = room.roomCode;
@@ -718,7 +735,7 @@ function renderRoom() {
   document.querySelector('#header-game-status').textContent = room.status === 'playing' ? `TURN ${room.turn + 1}` : 'WAITING FOR TIP-OFF';
   syncShotClock();
   if (room.status === 'lobby') { renderLobby(); return; }
-  lobbyScreen.classList.add('is-hidden'); gameStage.classList.remove('is-hidden');
+  modeScreen.classList.add('is-hidden'); lobbyScreen.classList.add('is-hidden'); gameStage.classList.remove('is-hidden');
   const endGameButton = document.querySelector('#end-game-button');
   endGameButton.classList.toggle('is-hidden', session?.playerId !== room.hostId || room.status !== 'playing');
   const local = localPlayer();
@@ -902,6 +919,12 @@ document.querySelector('#bankrupt-button').addEventListener('click', () => {
 document.querySelector('#leave-game-button').addEventListener('click', () => {
   if (window.confirm('Leave this game and return to Create / Join?')) leaveCurrentRoom();
 });
+document.querySelector('[data-game-mode="basketnopoly"]').addEventListener('click', () => openBasketnopoly());
+document.querySelector('#back-to-modes').addEventListener('click', showModeSelection);
+document.querySelector('#brand-home').addEventListener('click', (event) => {
+  event.preventDefault();
+  if (!session) showModeSelection();
+});
 document.querySelectorAll('[data-avatar-picker]').forEach((picker) => {
   const formId = picker.dataset.avatarPicker;
   const preview = picker.querySelector('.avatar-preview');
@@ -1004,9 +1027,10 @@ if (invitedRoom && session && invitedRoom.toUpperCase() !== session.roomCode) {
   localStorage.removeItem(SESSION_KEY);
   session = null;
 }
-if (invitedRoom && !session) { document.querySelector('#join-tab').click(); document.querySelector('#room-code').value = invitedRoom.toUpperCase(); }
+if (invitedRoom && !session) { openBasketnopoly({ join: true }); document.querySelector('#room-code').value = invitedRoom.toUpperCase(); }
 if (session) {
+  modeScreen.classList.add('is-hidden');
   api(`/api/rooms/${encodeURIComponent(session.roomCode)}`).then((result) => { applyRoom(result.room); connectEvents(); }).catch(() => {
-    localStorage.removeItem(SESSION_KEY); session = null;
+    localStorage.removeItem(SESSION_KEY); session = null; showModeSelection();
   });
-}
+} else if (!invitedRoom) showModeSelection();

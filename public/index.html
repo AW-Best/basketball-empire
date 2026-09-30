@@ -16,12 +16,12 @@
       href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Nunito+Sans:wght@600;700;800;900&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20260930t" />
+    <link rel="stylesheet" href="styles.css?v=20260930u" />
   </head>
   <body>
     <div class="arena-shell">
       <header class="topbar">
-        <a class="brand" href="#" aria-label="Basketball Empire home">
+        <a class="brand" id="brand-home" href="#" aria-label="Basketball Empire home">
           <svg class="brand-ball" viewBox="0 0 48 48" aria-hidden="true">
             <circle cx="24" cy="24" r="21"></circle>
             <path d="M4 20c10 1 17 8 20 24M44 28c-10-1-17-8-20-24M6 34c11-8 25-12 37-10M5 15c12 2 26-2 36-9"></path>
@@ -36,9 +36,32 @@
         <button class="icon-button" type="button" aria-label="Open game menu">•••</button>
       </header>
 
-      <section class="lobby-screen" id="lobby-screen" aria-labelledby="lobby-title">
+      <section class="mode-screen" id="mode-screen" aria-labelledby="mode-title">
+        <div class="mode-hero">
+          <span class="eyebrow">BASKETBALL EMPIRE ARCADE</span>
+          <h1 id="mode-title">PICK YOUR<br /><em>GAME MODE.</em></h1>
+          <p>One basketball universe. Different ways to build your legend. Choose a mode and bring your friends to the court.</p>
+          <div class="mode-stat-line"><span><b>4</b> MAX PLAYERS</span><span><b>1</b> LIVE MODE</span></div>
+        </div>
+        <div class="mode-grid" aria-label="Game modes">
+          <button class="mode-card is-playable" type="button" data-game-mode="basketnopoly">
+            <span class="mode-status">PLAY NOW</span>
+            <span class="mode-board-art" aria-hidden="true"><i></i><i></i><i></i><i></i><b>BE</b><i></i><i></i><i></i><i></i></span>
+            <span class="mode-copy"><small>FRANCHISE BOARD GAME</small><strong>BASKETNOPOLY</strong><span>Buy teams, recruit stars, trade assets, and outscore your rivals.</span></span>
+            <span class="mode-enter">ENTER MODE <b>→</b></span>
+          </button>
+          <article class="mode-card is-coming-soon" aria-disabled="true">
+            <span class="mode-status">COMING SOON</span>
+            <span class="mode-shot-art" aria-hidden="true"><i></i></span>
+            <span class="mode-copy"><small>SKILL CHALLENGE</small><strong>BUZZER BEATER</strong><span>A fast head-to-head shooting challenge is warming up.</span></span>
+          </article>
+        </div>
+      </section>
+
+      <section class="lobby-screen is-hidden" id="lobby-screen" aria-labelledby="lobby-title">
+        <button class="back-to-modes" id="back-to-modes" type="button">← ALL GAME MODES</button>
         <div class="lobby-hero">
-          <span class="eyebrow">BUILD YOUR DYNASTY</span>
+          <span class="eyebrow">BASKETNOPOLY · BUILD YOUR DYNASTY</span>
           <h1 id="lobby-title">OWN THE COURT.<br /><em>RULE THE LEAGUE.</em></h1>
           <p>Create a private room, invite up to three friends, and turn fictional teams into a basketball empire.</p>
           <div class="lobby-feature-row" aria-label="Game features">
@@ -306,7 +329,7 @@
     <script>
       if (window.location.protocol !== 'file:') {
         const gameScript = document.createElement('script');
-        gameScript.src = 'app.js?v=20260930t';
+        gameScript.src = 'app.js?v=20260930u';
         document.body.append(gameScript);
       }
     </script>

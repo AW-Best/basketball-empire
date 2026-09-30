@@ -5,6 +5,31 @@ const path = require('node:path');
 
 const projectRoot = path.resolve(__dirname, '..');
 
+test('Basketball Empire opens on a game-mode hub with Basketnopoly as a playable mode', () => {
+  const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
+  const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
+
+  assert.match(html, /id="mode-screen"/);
+  assert.match(html, /data-game-mode="basketnopoly"/);
+  assert.match(html, /BASKETNOPOLY/);
+  assert.match(html, /PLAY NOW/);
+  assert.match(html, /id="back-to-modes"/);
+  assert.match(css, /\.mode-screen/);
+  assert.match(css, /\.mode-card\.is-playable/);
+  assert.match(css, /@media \(max-width: 900px\)[\s\S]*\.mode-grid/s);
+});
+
+test('mode navigation opens Basketnopoly while room invites and saved sessions bypass the hub', () => {
+  const script = fs.readFileSync(path.join(projectRoot, 'public/app.js'), 'utf8');
+
+  assert.match(script, /function showModeSelection/);
+  assert.match(script, /function openBasketnopoly/);
+  assert.match(script, /\[data-game-mode="basketnopoly"\]/);
+  assert.match(script, /invitedRoom && !session[\s\S]{0,180}openBasketnopoly/);
+  assert.match(script, /function renderLobby\(\)[\s\S]{0,140}modeScreen\.classList\.add\('is-hidden'\)/);
+  assert.match(script, /function leaveCurrentRoom\(\)[\s\S]{0,1300}showModeSelection\(\)/);
+});
+
 test('game screen contains the board, four-player scoreboard, court action area, and activity feed', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
 
@@ -358,8 +383,8 @@ test('Tip-Off guide explains the exact-landing 300 point bonus', () => {
 test('deployed browsers receive the current interface assets instead of stale cached files', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
 
-  assert.match(html, /styles\.css\?v=20260930t/);
-  assert.match(html, /app\.js\?v=20260930t/);
+  assert.match(html, /styles\.css\?v=20260930u/);
+  assert.match(html, /app\.js\?v=20260930u/);
 });
 
 test('API requests report an understandable connection error when a tunnel returns HTML', () => {
