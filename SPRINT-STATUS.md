@@ -89,3 +89,10 @@
 - [x] RED: specify face cycling, separate trajectories, bounce, and settle timing.
 - [x] GREEN: implement the improved dice throw.
 - [x] Run the full suite, publish, and verify the live game.
+
+## Sprint 019 — Auction Layer Regression Fix
+
+- [x] Diagnose the nested stacking-context collision from the supplied screenshot.
+- [x] RED: require the auction to live at the page modal root.
+- [x] GREEN: move and isolate the auction overlay above all game content.
+- [ ] Run the full suite, publish, and verify the live auction.
