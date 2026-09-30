@@ -22,4 +22,4 @@ Keep authoritative dice values unchanged. The browser temporarily renders cosmet
 - [x] RED: specify changing faces, asymmetric 3D throws, settle, and movement ordering.
 - [x] GREEN: implement the timed render sequence and physical CSS motion.
 - [x] Verify the complete automated suite.
-- [ ] Verify the live game.
+- [x] Verify the live game.

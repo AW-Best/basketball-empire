@@ -88,4 +88,4 @@
 - [x] Record the observed movement pattern and acceptance criteria.
 - [x] RED: specify face cycling, separate trajectories, bounce, and settle timing.
 - [x] GREEN: implement the improved dice throw.
-- [ ] Run the full suite, publish, and verify the live game.
+- [x] Run the full suite, publish, and verify the live game.
