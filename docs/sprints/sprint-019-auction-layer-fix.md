@@ -16,4 +16,4 @@
 - [x] Give the fixed overlay an isolated, page-level modal layer.
 - [x] Verify history, cards, and balance callouts remain below the auction.
 - [x] Run the complete suite.
-- [ ] Publish the fix.
+- [x] Publish the fix.

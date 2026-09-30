@@ -95,4 +95,4 @@
 - [x] Diagnose the nested stacking-context collision from the supplied screenshot.
 - [x] RED: require the auction to live at the page modal root.
 - [x] GREEN: move and isolate the auction overlay above all game content.
-- [ ] Run the full suite, publish, and verify the live auction.
+- [x] Run the full suite, publish, and verify the live auction.
