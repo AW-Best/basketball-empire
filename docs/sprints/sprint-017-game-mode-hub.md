@@ -24,4 +24,4 @@ Keep the existing single-page application and add a lightweight client-side scre
 - [x] RED: add failing mode-hub and navigation contract tests.
 - [x] GREEN: implement the hub, navigation, and invite/session bypass.
 - [x] Verify targeted and full automated tests.
-- [ ] Publish and verify the live page.
+- [x] Publish and verify the live page.

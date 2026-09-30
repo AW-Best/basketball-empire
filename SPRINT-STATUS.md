@@ -81,4 +81,4 @@
 - [x] Record acceptance criteria and the single-page screen-state design.
 - [x] RED: specify the mode hub, Basketnopoly entry, and invite/session bypass.
 - [x] GREEN: add the responsive mode selector and lobby navigation.
-- [ ] Run the full suite, publish, and verify the live page.
+- [x] Run the full suite, publish, and verify the live page.
