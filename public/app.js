@@ -523,6 +523,14 @@ function showCardDraw(entry) {
   cardDrawTimer = setTimeout(() => { overlay.classList.remove('is-visible'); overlay.setAttribute('aria-hidden', 'true'); }, 4200);
 }
 
+function closeCardDraw() {
+  clearTimeout(cardDrawTimer);
+  cardDrawTimer = null;
+  const overlay = document.querySelector('#card-draw-overlay');
+  overlay.classList.remove('is-visible');
+  overlay.setAttribute('aria-hidden', 'true');
+}
+
 function showPaymentCallout(entry) {
   const payer = room.players.find((player) => player.id === entry.playerId);
   const recipient = room.players.find((player) => player.id === entry.recipientId);
@@ -932,6 +940,7 @@ document.querySelector('#mortgage-team-button').addEventListener('click', async 
   await performAction({ type: 'mortgage', assetId: selectedTeamId });
 });
 document.querySelector('#mute-feed').addEventListener('click', (event) => { event.currentTarget.textContent = event.currentTarget.textContent === 'Sound on' ? 'Sound off' : 'Sound on'; });
+document.querySelector('#card-draw-close').addEventListener('click', closeCardDraw);
 board.addEventListener('click', (event) => {
   const teamButton = event.target.closest('.team-logo-button');
   if (teamButton) openTeamCard(room.board[Number(teamButton.dataset.teamIndex)], Number(teamButton.dataset.teamIndex));

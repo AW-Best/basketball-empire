@@ -16,7 +16,7 @@
       href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Nunito+Sans:wght@600;700;800;900&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20260930s" />
+    <link rel="stylesheet" href="styles.css?v=20260930t" />
   </head>
   <body>
     <div class="arena-shell">
@@ -181,6 +181,7 @@
               <div class="payment-callout" id="payment-callout" role="status" aria-live="assertive"></div>
               <div class="card-draw-overlay" id="card-draw-overlay" role="status" aria-live="assertive" aria-hidden="true">
                 <article class="drawn-card">
+                  <button class="drawn-card-close" id="card-draw-close" type="button" aria-label="Close event card">×</button>
                   <span id="drawn-card-deck">TEAM OPERATIONS</span>
                   <strong id="drawn-card-title">SPONSORSHIP DEAL</strong>
                   <p id="drawn-card-description"></p>
@@ -305,7 +306,7 @@
     <script>
       if (window.location.protocol !== 'file:') {
         const gameScript = document.createElement('script');
-        gameScript.src = 'app.js?v=20260930s';
+        gameScript.src = 'app.js?v=20260930t';
         document.body.append(gameScript);
       }
     </script>

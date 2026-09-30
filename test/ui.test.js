@@ -358,8 +358,8 @@ test('Tip-Off guide explains the exact-landing 300 point bonus', () => {
 test('deployed browsers receive the current interface assets instead of stale cached files', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
 
-  assert.match(html, /styles\.css\?v=20260930s/);
-  assert.match(html, /app\.js\?v=20260930s/);
+  assert.match(html, /styles\.css\?v=20260930t/);
+  assert.match(html, /app\.js\?v=20260930t/);
 });
 
 test('API requests report an understandable connection error when a tunnel returns HTML', () => {
@@ -560,4 +560,15 @@ test('auction uses a full overlay with bid progress and an asset card', () => {
   assert.match(script, /auction_bid/);
   assert.match(css, /\.auction-panel[^}]*position:\s*fixed/s);
   assert.match(css, /\.auction-layout[^}]*grid-template-columns/s);
+});
+
+test('event card reveals include a local close button', () => {
+  const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
+  const script = fs.readFileSync(path.join(projectRoot, 'public/app.js'), 'utf8');
+  const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
+  assert.match(html, /id="card-draw-close"/);
+  assert.match(html, /aria-label="Close event card"/);
+  assert.match(script, /function closeCardDraw/);
+  assert.match(script, /#card-draw-close/);
+  assert.match(css, /\.drawn-card-close/);
 });

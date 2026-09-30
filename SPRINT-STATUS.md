@@ -69,3 +69,9 @@
 - [x] RED: specify the synchronized auction overlay and asset details.
 - [x] GREEN: implement current bid, countdown progress, bid totals, history, and asset card.
 - [x] Verify responsive behavior, run the full suite, and commit.
+
+## Sprint 016 — Dismiss Event Cards
+
+- [x] RED: specify a local close control for Team Ops and Game Time cards.
+- [x] GREEN: add the accessible × button and cancel the reveal timer when used.
+- [x] Run the full suite and commit.
