@@ -22,6 +22,7 @@ test('Cloudflare configuration binds static assets and a SQLite Durable Object',
   assert.equal(fs.existsSync(configPath), true, 'wrangler.jsonc must exist');
   const config = fs.readFileSync(configPath, 'utf8');
 
+  assert.match(config, /"name"\s*:\s*"play"/);
   assert.match(config, /"main"\s*:\s*"cloudflare\/worker\.mjs"/);
   assert.match(config, /"directory"\s*:\s*"\.\/public"/);
   assert.match(config, /"run_worker_first"\s*:\s*\[\s*"\/api\/\*"\s*\]/);

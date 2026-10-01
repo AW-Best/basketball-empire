@@ -106,3 +106,11 @@
 - [x] Add Wrangler local-development and deployment commands.
 - [x] Verify static assets plus create/join room behavior in `wrangler dev`.
 - [x] Deploy to the user's Cloudflare account and verify the public URL.
+
+## Sprint 021 — Short Cloudflare Worker URL
+
+- [x] Record requirements, acceptance criteria, and the service-rename approach.
+- [x] RED: require the Wrangler Worker name to be `play`.
+- [x] Rename the existing Worker service without replacing its Durable Object storage.
+- [x] GREEN: update Wrangler and pass the deployment plus full test suites.
+- [ ] Publish through GitHub and verify the shortened public URL.
