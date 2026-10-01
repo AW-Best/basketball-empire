@@ -16,7 +16,7 @@
       href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Nunito+Sans:wght@600;700;800;900&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20260930w" />
+    <link rel="stylesheet" href="styles.css?v=20261001x" />
   </head>
   <body>
     <div class="arena-shell">
@@ -74,7 +74,8 @@
             <button class="is-active" id="create-tab" type="button" role="tab">Create room</button>
             <button id="join-tab" type="button" role="tab">Join room</button>
           </div>
-          <button class="rulebook-launch" id="open-rulebook-button" type="button"><span aria-hidden="true">▤</span><strong>PLAYER RULEBOOK</strong><small>Learn the game before tip-off</small></button>
+          <button class="rulebook-launch quick-guide-launch" id="open-quick-guide-button" type="button"><span aria-hidden="true">▶</span><strong>HOW TO PLAY · 60 SEC</strong><small>Five quick plays before tip-off</small></button>
+          <button class="rulebook-text-link" id="open-rulebook-button" type="button">Or read the full Player Rulebook →</button>
           <form id="create-room-form">
             <label for="player-name">Your player name</label>
             <input id="player-name" name="name" maxlength="32" autocomplete="name" placeholder="e.g. Aaron Wang" required />
@@ -122,6 +123,7 @@
       </section>
 
       <main class="game-stage is-hidden" id="game-stage">
+        <button class="game-how-to-play" id="game-how-to-play" type="button"><span>?</span> HOW TO PLAY</button>
         <section class="player-rail" id="player-rail" aria-label="Players"></section>
         <div id="balance-change-layer" class="balance-change-layer" aria-live="polite"></div>
 
@@ -240,6 +242,45 @@
       </div>
     </section>
 
+    <dialog class="quick-guide-dialog" id="quick-guide-dialog" aria-labelledby="quick-guide-title">
+      <button class="card-close" id="quick-guide-close" type="button" aria-label="Close quick start guide">×</button>
+      <header class="quick-guide-header">
+        <div><span class="eyebrow">BASKETBALL EMPIRE · QUICK START</span><h2 id="quick-guide-title">LEARN THE GAME IN 60 SECONDS</h2></div>
+        <span class="quick-guide-clock"><b>00:</b><strong id="quick-guide-seconds">60</strong></span>
+      </header>
+      <div class="quick-guide-progress" id="quick-guide-progress" aria-label="Guide progress">
+        <button class="is-active" type="button" data-guide-step="0" aria-label="Step 1"></button><button type="button" data-guide-step="1" aria-label="Step 2"></button><button type="button" data-guide-step="2" aria-label="Step 3"></button><button type="button" data-guide-step="3" aria-label="Step 4"></button><button type="button" data-guide-step="4" aria-label="Step 5"></button>
+      </div>
+      <div class="quick-guide-stage">
+        <article class="quick-guide-slide is-active" data-guide-slide="0">
+          <div class="quick-guide-visual guide-scoreboard" aria-hidden="true"><span>10:00</span><b>1,500</b><small>PTS</small><i>🏆</i></div>
+          <div class="quick-guide-copy"><span>PLAY 01</span><h3>WIN THE CLOCK</h3><p>Build your basketball empire before time expires. When the game clock hits zero, the active player with the most available <strong>PTS</strong> becomes Champion.</p><em>Assets help you earn—but only available PTS decide the winner.</em></div>
+        </article>
+        <article class="quick-guide-slide" data-guide-slide="1" hidden>
+          <div class="quick-guide-visual guide-dice" aria-hidden="true"><i>⚄</i><i>⚂</i><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span></div>
+          <div class="quick-guide-copy"><span>PLAY 02</span><h3>ROLL &amp; MOVE</h3><p>On your turn, roll two dice. Your piece travels clockwise, one block at a time, then resolves the block where it lands.</p><em>Roll doubles? You get another roll after resolving the block.</em></div>
+        </article>
+        <article class="quick-guide-slide" data-guide-slide="2" hidden>
+          <div class="quick-guide-visual guide-assets" aria-hidden="true"><span>TEAM<br><b>240</b></span><span>ROUTE<br><b>200</b></span><span>LAB<br><b>150</b></span><i>+PTS</i></div>
+          <div class="quick-guide-copy"><span>PLAY 03</span><h3>BUILD YOUR EMPIRE</h3><p>Land on an unsigned Team, Route, Offense Lab, or Defense Lab to buy it. Rivals who land there pay you the displayed landing fee.</p><em>Complete a color division to unlock star recruiting.</em></div>
+        </article>
+        <article class="quick-guide-slide" data-guide-slide="3" hidden>
+          <div class="quick-guide-visual guide-trade" aria-hidden="true"><span>YOU</span><b>⇄</b><span>RIVAL</span><i>★</i><i>★</i><i>★</i></div>
+          <div class="quick-guide-copy"><span>PLAY 04</span><h3>RECRUIT &amp; TRADE</h3><p>Own a full division to recruit star players and raise landing fees. Use the Trade Desk to exchange PTS and eligible assets with another player.</p><em>A rival must accept your offer before anything moves.</em></div>
+        </article>
+        <article class="quick-guide-slide" data-guide-slide="4" hidden>
+          <div class="quick-guide-visual guide-auction" aria-hidden="true"><small>LIVE BID</small><strong>352</strong><span>+2</span><span>+50</span><span>+100</span><b>05</b></div>
+          <div class="quick-guide-copy"><span>PLAY 05</span><h3>PAY OR BID</h3><p>Land on a rival’s asset and you pay its owner. Pass on an unsigned asset and a five-second auction opens for every active player.</p><em>Every valid bid restarts the five-second countdown.</em></div>
+          <div class="quick-guide-room-actions"><button id="quick-guide-create" type="button">CREATE ROOM</button><button id="quick-guide-join" type="button">JOIN ROOM</button></div>
+        </article>
+      </div>
+      <footer class="quick-guide-footer">
+        <label><input id="quick-guide-dont-show" type="checkbox" /> Don't show automatically again</label>
+        <div><button id="quick-guide-skip" type="button">SKIP</button><button id="quick-guide-back" type="button">← BACK</button><button class="card-primary" id="quick-guide-next" type="button">NEXT PLAY →</button></div>
+      </footer>
+      <button class="quick-guide-rulebook" id="quick-guide-rulebook" type="button">Need every detail? Open the full Player Rulebook</button>
+    </dialog>
+
     <dialog class="rulebook-dialog" id="rulebook-dialog" aria-labelledby="rulebook-title">
       <button class="card-close" id="rulebook-close" type="button" aria-label="Close rulebook">×</button>
       <header class="rulebook-heading">
@@ -330,7 +371,7 @@
     <script>
       if (window.location.protocol !== 'file:') {
         const gameScript = document.createElement('script');
-        gameScript.src = 'app.js?v=20260930w';
+        gameScript.src = 'app.js?v=20261001x';
         document.body.append(gameScript);
       }
     </script>

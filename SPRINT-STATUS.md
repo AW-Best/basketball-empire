@@ -114,3 +114,10 @@
 - [x] Rename the existing Worker service without replacing its Durable Object storage.
 - [x] GREEN: update Wrangler and pass the deployment plus full test suites.
 - [x] Publish through GitHub and verify the shortened public URL.
+
+## Sprint 022 — 60-Second Quick Start Guide
+
+- [x] Record acceptance criteria, architecture, and the arena-tunnel visual direction.
+- [x] RED: specify the five-step guide, navigation, persistence, and mobile behavior.
+- [x] GREEN: implement the lobby and live-game How to Play experience.
+- [ ] Verify the full suite, publish, and check the Cloudflare deployment.

@@ -170,6 +170,44 @@ test('create and join screen includes an in-page player rulebook', () => {
   assert.match(css, /\.rulebook-content/);
 });
 
+test('lobby offers a five-step quick start guide with complete rulebook access', () => {
+  const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
+  const script = fs.readFileSync(path.join(projectRoot, 'public/app.js'), 'utf8');
+
+  assert.match(html, /id="open-quick-guide-button"/);
+  assert.match(html, /id="quick-guide-dialog"/);
+  assert.equal((html.match(/class="quick-guide-slide/g) || []).length, 5);
+  assert.match(html, /WIN THE CLOCK/);
+  assert.match(html, /ROLL &amp; MOVE/);
+  assert.match(html, /BUILD YOUR EMPIRE/);
+  assert.match(html, /RECRUIT &amp; TRADE/);
+  assert.match(html, /PAY OR BID/);
+  assert.match(html, /id="quick-guide-rulebook"/);
+  assert.match(script, /openQuickGuide/);
+  assert.match(script, /renderQuickGuide/);
+});
+
+test('quick start guide supports navigation, dismissal persistence, and room shortcuts', () => {
+  const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
+  const script = fs.readFileSync(path.join(projectRoot, 'public/app.js'), 'utf8');
+  const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
+
+  assert.match(html, /id="quick-guide-back"/);
+  assert.match(html, /id="quick-guide-next"/);
+  assert.match(html, /id="quick-guide-skip"/);
+  assert.match(html, /id="quick-guide-dont-show"/);
+  assert.match(html, /id="quick-guide-create"/);
+  assert.match(html, /id="quick-guide-join"/);
+  assert.match(html, /id="game-how-to-play"/);
+  assert.match(script, /basketballEmpireQuickGuideDismissed/);
+  assert.match(script, /localStorage\.setItem/);
+  assert.match(script, /quickGuideIndex/);
+  assert.match(css, /\.quick-guide-dialog/);
+  assert.match(css, /\.quick-guide-progress/);
+  assert.match(css, /@media \(max-width: 600px\)[\s\S]*\.quick-guide-dialog/s);
+  assert.match(css, /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.quick-guide/s);
+});
+
 test('entry forms support photo upload, camera capture, preview, compression, and initials fallback', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
   const script = fs.readFileSync(path.join(projectRoot, 'public/app.js'), 'utf8');
@@ -398,8 +436,8 @@ test('Tip-Off guide explains the exact-landing 300 point bonus', () => {
 test('deployed browsers receive the current interface assets instead of stale cached files', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
 
-  assert.match(html, /styles\.css\?v=20260930w/);
-  assert.match(html, /app\.js\?v=20260930w/);
+  assert.match(html, /styles\.css\?v=20261001x/);
+  assert.match(html, /app\.js\?v=20261001x/);
 });
 
 test('API requests report an understandable connection error when a tunnel returns HTML', () => {

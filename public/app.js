@@ -105,16 +105,47 @@ const frontOfficeDialog = document.querySelector('#front-office-dialog');
 const tradeDialog = document.querySelector('#trade-dialog');
 const spaceGuideDialog = document.querySelector('#space-guide-dialog');
 const rulebookDialog = document.querySelector('#rulebook-dialog');
+const quickGuideDialog = document.querySelector('#quick-guide-dialog');
 const modeScreen = document.querySelector('#mode-screen');
 const lobbyScreen = document.querySelector('#lobby-screen');
 const gameStage = document.querySelector('#game-stage');
+const QUICK_GUIDE_DISMISSED_KEY = 'basketballEmpireQuickGuideDismissed';
+let quickGuideIndex = 0;
 
-function openBasketnopoly({ join = false } = {}) {
+function renderQuickGuide() {
+  const slides = [...document.querySelectorAll('[data-guide-slide]')];
+  const progress = [...document.querySelectorAll('[data-guide-step]')];
+  slides.forEach((slide, index) => {
+    slide.classList.toggle('is-active', index === quickGuideIndex);
+    slide.hidden = index !== quickGuideIndex;
+  });
+  progress.forEach((button, index) => button.classList.toggle('is-active', index === quickGuideIndex));
+  document.querySelector('#quick-guide-back').disabled = quickGuideIndex === 0;
+  document.querySelector('#quick-guide-next').textContent = quickGuideIndex === slides.length - 1 ? 'READY FOR TIP-OFF' : 'NEXT PLAY →';
+  document.querySelector('#quick-guide-seconds').textContent = String(Math.max(0, 60 - (quickGuideIndex * 12))).padStart(2, '0');
+}
+
+function openQuickGuide({ reset = true } = {}) {
+  if (reset) quickGuideIndex = 0;
+  document.querySelector('#quick-guide-dont-show').checked = localStorage.getItem(QUICK_GUIDE_DISMISSED_KEY) === '1';
+  renderQuickGuide();
+  quickGuideDialog.showModal();
+}
+
+function closeQuickGuide() {
+  const dismissed = document.querySelector('#quick-guide-dont-show').checked;
+  if (dismissed) localStorage.setItem(QUICK_GUIDE_DISMISSED_KEY, '1');
+  else localStorage.removeItem(QUICK_GUIDE_DISMISSED_KEY);
+  quickGuideDialog.close();
+}
+
+function openBasketnopoly({ join = false, guide = false } = {}) {
   modeScreen.classList.add('is-hidden');
   lobbyScreen.classList.remove('is-hidden');
   gameStage.classList.add('is-hidden');
   document.querySelector('#header-game-status').textContent = 'BASKETNOPOLY';
   if (join) document.querySelector('#join-tab').click();
+  if (guide && localStorage.getItem(QUICK_GUIDE_DISMISSED_KEY) !== '1') setTimeout(() => openQuickGuide(), 120);
 }
 
 function showModeSelection() {
@@ -913,6 +944,20 @@ document.querySelector('#open-rulebook-button').addEventListener('click', () => 
 document.querySelector('#rulebook-close').addEventListener('click', () => rulebookDialog.close());
 document.querySelector('#rulebook-done').addEventListener('click', () => rulebookDialog.close());
 rulebookDialog.addEventListener('click', (event) => { if (event.target === rulebookDialog) rulebookDialog.close(); });
+document.querySelector('#open-quick-guide-button').addEventListener('click', () => openQuickGuide());
+document.querySelector('#game-how-to-play').addEventListener('click', () => openQuickGuide());
+document.querySelector('#quick-guide-close').addEventListener('click', closeQuickGuide);
+document.querySelector('#quick-guide-skip').addEventListener('click', closeQuickGuide);
+document.querySelector('#quick-guide-back').addEventListener('click', () => { quickGuideIndex = Math.max(0, quickGuideIndex - 1); renderQuickGuide(); });
+document.querySelector('#quick-guide-next').addEventListener('click', () => {
+  if (quickGuideIndex === 4) closeQuickGuide();
+  else { quickGuideIndex += 1; renderQuickGuide(); }
+});
+document.querySelectorAll('[data-guide-step]').forEach((button) => button.addEventListener('click', () => { quickGuideIndex = Number(button.dataset.guideStep); renderQuickGuide(); }));
+document.querySelector('#quick-guide-rulebook').addEventListener('click', () => { quickGuideDialog.close(); rulebookDialog.showModal(); });
+document.querySelector('#quick-guide-create').addEventListener('click', () => { closeQuickGuide(); document.querySelector('#create-tab').click(); document.querySelector('#player-name').focus(); });
+document.querySelector('#quick-guide-join').addEventListener('click', () => { closeQuickGuide(); document.querySelector('#join-tab').click(); document.querySelector('#join-player-name').focus(); });
+quickGuideDialog.addEventListener('click', (event) => { if (event.target === quickGuideDialog) closeQuickGuide(); });
 document.querySelector('#create-room-form').addEventListener('submit', async (event) => {
   event.preventDefault();
   try { await enterRoom(await api('/api/rooms', { method: 'POST', body: { name: event.currentTarget.elements.name.value, avatarDataUrl: selectedAvatars.get(event.currentTarget.id) || null } }), true); } catch (error) { showError(error); }
@@ -951,7 +996,7 @@ document.querySelector('#bankrupt-button').addEventListener('click', () => {
 document.querySelector('#leave-game-button').addEventListener('click', () => {
   if (window.confirm('Leave this game and return to Create / Join?')) leaveCurrentRoom();
 });
-document.querySelector('[data-game-mode="basketnopoly"]').addEventListener('click', () => openBasketnopoly());
+document.querySelector('[data-game-mode="basketnopoly"]').addEventListener('click', () => openBasketnopoly({ guide: true }));
 document.querySelector('#back-to-modes').addEventListener('click', showModeSelection);
 document.querySelector('#brand-home').addEventListener('click', (event) => {
   event.preventDefault();
