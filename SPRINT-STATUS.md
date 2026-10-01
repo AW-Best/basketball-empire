@@ -120,4 +120,4 @@
 - [x] Record acceptance criteria, architecture, and the arena-tunnel visual direction.
 - [x] RED: specify the five-step guide, navigation, persistence, and mobile behavior.
 - [x] GREEN: implement the lobby and live-game How to Play experience.
-- [ ] Verify the full suite, publish, and check the Cloudflare deployment.
+- [x] Verify the full suite, publish, and check the Cloudflare deployment.

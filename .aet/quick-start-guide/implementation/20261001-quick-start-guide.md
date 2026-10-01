@@ -18,3 +18,5 @@ Added a five-step visual onboarding dialog to Basketball Empire while preserving
 - Two new UI tests failed before implementation and passed afterward.
 - JavaScript syntax validation passed.
 - All 120 automated tests passed.
+- The deployed desktop and 390 × 844 mobile layouts were visually verified.
+- The production health endpoint remained healthy after deployment.
