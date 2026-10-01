@@ -2,6 +2,8 @@
 
 Basketball Empire is a private, non-commercial, real-time basketball board game for 2–4 friends. Players create or join a room, enter their full names, ready up, and play synchronized turns from a phone or desktop browser.
 
+Public game: https://basketball-empire.basketball-empire.workers.dev
+
 ## Run locally
 
 Requirements: Node.js 20 or newer. There are no third-party runtime dependencies.

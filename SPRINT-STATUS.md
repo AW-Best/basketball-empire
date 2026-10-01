@@ -105,4 +105,4 @@
 - [x] GREEN: implement the Worker and SQLite-backed `BasketballRoom` Durable Object.
 - [x] Add Wrangler local-development and deployment commands.
 - [x] Verify static assets plus create/join room behavior in `wrangler dev`.
-- [ ] Deploy to the user's Cloudflare account and verify the public URL.
+- [x] Deploy to the user's Cloudflare account and verify the public URL.
