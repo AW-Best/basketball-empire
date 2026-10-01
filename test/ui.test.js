@@ -138,11 +138,13 @@ test('player interface supports creating, joining, readying, and sharing a live 
   assert.match(script, /localStorage/);
 });
 
-test('host can choose 10, 15, 20 minutes, or an unlimited match', () => {
+test('host can choose 3, 5, 10, 15, 20 minutes, or an unlimited match', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
   const script = fs.readFileSync(path.join(projectRoot, 'public/app.js'), 'utf8');
 
   assert.match(html, /id="match-duration"/);
+  assert.match(html, /value="3"/);
+  assert.match(html, /value="5"/);
   assert.match(html, /value="10"/);
   assert.match(html, /value="15"/);
   assert.match(html, /value="20"/);
@@ -362,6 +364,19 @@ test('dice throw with changing faces, staggered 3D bounces, and settle before mo
   assert.match(css, /@keyframes dice-shadow-pulse/);
 });
 
+test('dice use a launch, court-impact, rebound, and final settle sequence', () => {
+  const script = fs.readFileSync(path.join(projectRoot, 'public/app.js'), 'utf8');
+  const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
+
+  assert.match(script, /tray\.classList\.add\('is-launching'\)/);
+  assert.match(script, /tray\.classList\.add\('is-impacting'\)/);
+  assert.match(script, /classList\.remove\('is-rolling', 'is-impact', 'is-settling'\)/);
+  assert.match(css, /\.dice-tray\.is-impacting::before/);
+  assert.match(css, /@keyframes dice-court-impact/);
+  assert.match(css, /@keyframes dice-impact-flash/);
+  assert.match(css, /cubic-bezier\(\.16,\.84,\.2,1\)/);
+});
+
 test('live updates fall back to polling when server-sent events are unavailable', () => {
   const script = fs.readFileSync(path.join(projectRoot, 'public/app.js'), 'utf8');
 
@@ -436,8 +451,8 @@ test('Tip-Off guide explains the exact-landing 300 point bonus', () => {
 test('deployed browsers receive the current interface assets instead of stale cached files', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
 
-  assert.match(html, /styles\.css\?v=20261001x/);
-  assert.match(html, /app\.js\?v=20261001x/);
+  assert.match(html, /styles\.css\?v=20261001y/);
+  assert.match(html, /app\.js\?v=20261001y/);
 });
 
 test('API requests report an understandable connection error when a tunnel returns HTML', () => {
@@ -582,6 +597,21 @@ test('trade desk creates real point and asset offers after selecting a rival', (
   assert.match(script, /trade_respond/);
   assert.match(script, /offeredPoints/);
   assert.match(script, /requestedAssetIds/);
+});
+
+test('trade recipients receive a synchronized actionable offer alert', () => {
+  const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
+  const script = fs.readFileSync(path.join(projectRoot, 'public/app.js'), 'utf8');
+  const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
+
+  assert.match(html, /id="trade-offer-alert"/);
+  assert.match(html, /id="trade-alert-open"/);
+  assert.match(script, /function showIncomingTradeAlert/);
+  assert.match(script, /offer\.recipientId === session\?\.playerId/);
+  assert.match(script, /lastTradeNoticeKey/);
+  assert.match(script, /openFrontOffice\('trade'\)/);
+  assert.match(css, /\.trade-offer-alert\.is-visible/);
+  assert.match(css, /@keyframes trade-alert-enter/);
 });
 
 test('franchise controls say My Teams and expose bankruptcy when insolvent', () => {

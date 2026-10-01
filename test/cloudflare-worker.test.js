@@ -114,12 +114,12 @@ test('Cloudflare room keeps the existing authenticated ready and start API', asy
 
   assert.equal((await post(worker, env, `/api/rooms/${code}/ready`, { ready: true }, host.token)).status, 200);
   assert.equal((await post(worker, env, `/api/rooms/${code}/ready`, { ready: true }, guest.token)).status, 200);
-  const started = await post(worker, env, `/api/rooms/${code}/start`, { durationMinutes: 10 }, host.token);
+  const started = await post(worker, env, `/api/rooms/${code}/start`, { durationMinutes: 5 }, host.token);
   const payload = await started.json();
 
   assert.equal(started.status, 200);
   assert.equal(payload.room.status, 'playing');
-  assert.equal(payload.room.matchDurationSeconds, 600);
+  assert.equal(payload.room.matchDurationSeconds, 300);
 });
 
 test('Cloudflare events endpoint tells the browser to use polling', async () => {
