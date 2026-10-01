@@ -22,7 +22,7 @@ Rename the production Worker from `basketball-empire` to `play` so the public ga
 - [x] **Step 2: Run the deployment test and verify the expected failure**
 - [x] **Step 3: Rename the existing Cloudflare Worker service and update Wrangler**
 - [x] **Step 4: Run the deployment test and full suite**
-- [ ] **Step 5: Commit the tested configuration change**
+- [x] **Step 5: Commit the tested configuration change**
 
 ## Task 2: Publish and document the new URL
 
@@ -31,7 +31,7 @@ Rename the production Worker from `basketball-empire` to `play` so the public ga
 - Modify: `SPRINT-STATUS.md`
 - Modify: `docs/sprints/sprint-021-cloudflare-worker-url.md`
 
-- [ ] **Step 1: Update the public URL documentation**
+- [x] **Step 1: Update the public URL documentation**
 - [ ] **Step 2: Push `main` and verify the GitHub deployment**
 - [ ] **Step 3: Verify the public page and health endpoint**
 - [ ] **Step 4: Commit the completed sprint record**
