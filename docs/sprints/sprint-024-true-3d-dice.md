@@ -26,4 +26,4 @@ Replace the flat-card dice illusion with tactile six-sided cubes inspired by the
 - [x] New 3D cube contract failed before implementation.
 - [x] UI suite passes after implementation.
 - [x] Full suite passes (123/123).
-- [ ] Production assets and health endpoint verified.
+- [x] Production assets verified on both Tailscale and Cloudflare.

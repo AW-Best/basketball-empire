@@ -134,4 +134,4 @@
 - [x] Define six-face cube structure and physical motion acceptance criteria.
 - [x] RED: prove the flat dice fail the six-face 3D contract.
 - [x] GREEN: implement perspective cubes, independent rotation, lighting, and impact depth.
-- [ ] Verify, publish, and check production.
+- [x] Verify, publish, and check production.
