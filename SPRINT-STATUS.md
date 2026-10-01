@@ -127,4 +127,4 @@
 - [x] Record acceptance criteria, architecture, and court-impact motion direction.
 - [x] RED: specify dice phases, recipient alerts, and 3/5-minute validation.
 - [x] GREEN: implement all three features across UI, Node, and Cloudflare.
-- [ ] Verify, publish, and check production.
+- [x] Verify, publish, and check production.

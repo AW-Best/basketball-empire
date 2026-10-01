@@ -45,4 +45,4 @@ Make rolling feel physical and exciting, ensure trade recipients cannot miss an 
 - [x] Implement recipient-only synchronized trade alerts.
 - [x] Add and enforce 3- and 5-minute game lengths.
 - [x] Run the full suite and verify desktop/mobile layout contracts.
-- [ ] Commit, publish, and verify production.
+- [x] Commit, publish, and verify production.
