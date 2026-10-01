@@ -90,6 +90,7 @@ let lastCardKey = '';
 let cardDrawTimer = null;
 let matchRefreshRequested = false;
 let lastPurchaseKey = '';
+let lastTradeNoticeKey = '';
 let purchaseTimer = null;
 let auctionClockTimer = null;
 let diceFaceTimer = null;
@@ -622,28 +623,53 @@ function animateDice(finalValues, onSettled) {
     onSettled?.();
     return;
   }
-  dice.forEach((die) => die.classList.remove('is-rolling', 'is-settling'));
-  tray.classList.remove('is-rolling');
+  dice.forEach((die) => die.classList.remove('is-rolling', 'is-impact', 'is-settling'));
+  tray.classList.remove('is-rolling', 'is-launching', 'is-impacting');
   requestAnimationFrame(() => {
     tray.classList.add('is-rolling');
+    tray.classList.add('is-launching');
     dice.forEach((die) => die.classList.add('is-rolling'));
   });
   diceFaceTimer = setInterval(() => {
     dice.forEach((die) => renderDie(die, 1 + Math.floor(Math.random() * 6)));
-  }, 82);
+  }, 62);
   diceResultTimer = setTimeout(() => {
     clearInterval(diceFaceTimer);
     diceFaceTimer = null;
+    tray.classList.remove('is-launching');
+    tray.classList.add('is-impacting');
     dice.forEach((die, index) => {
       renderDie(dice[index], finalValues[index]);
-      die.classList.add('is-settling');
+      die.classList.add('is-impact', 'is-settling');
     });
-  }, 760);
+  }, 890);
   diceSettleTimer = setTimeout(() => {
-    dice.forEach((die) => die.classList.remove('is-rolling', 'is-settling'));
-    tray.classList.remove('is-rolling');
+    dice.forEach((die) => die.classList.remove('is-rolling', 'is-impact', 'is-settling'));
+    tray.classList.remove('is-rolling', 'is-launching', 'is-impacting');
     onSettled?.();
-  }, 1080);
+  }, 1360);
+}
+
+function showIncomingTradeAlert() {
+  const alert = document.querySelector('#trade-offer-alert');
+  const offer = [...(room.tradeOffers || [])].reverse().find((candidate) => (
+    candidate.status === 'pending' && candidate.recipientId === session?.playerId
+  ));
+  const isIncomingOffer = offer && offer.recipientId === session?.playerId;
+  if (!isIncomingOffer) {
+    alert.classList.remove('is-visible');
+    return;
+  }
+  const offerKey = `${room.roomCode}:${offer.id}`;
+  if (offerKey === lastTradeNoticeKey) return;
+  lastTradeNoticeKey = offerKey;
+  const sender = room.players.find((player) => player.id === offer.senderId);
+  const offered = tradeSideText(offer.offeredPoints, offer.offeredAssetIds);
+  const requested = tradeSideText(offer.requestedPoints, offer.requestedAssetIds);
+  document.querySelector('#trade-alert-title').textContent = `${sender?.name || 'A rival'} sent you a trade`;
+  document.querySelector('#trade-alert-summary').textContent = `${offered} for ${requested}`;
+  alert.classList.remove('is-visible');
+  requestAnimationFrame(() => alert.classList.add('is-visible'));
 }
 
 function teamDisplaySpace(space) {
@@ -813,7 +839,7 @@ function renderRoom() {
   bankruptButton.title = canDeclareBankruptcy
     ? 'Leave the match and return your assets to the bank.'
     : (canMortgage ? 'Mortgage available assets first.' : 'Bankruptcy is available only when you have 0 PTS.');
-  renderPlayers(); renderBoard(); renderTurn(); renderAuction(); renderFeed();
+  renderPlayers(); renderBoard(); renderTurn(); renderAuction(); renderFeed(); showIncomingTradeAlert();
 }
 
 function applyRoom(nextRoom) {
@@ -1090,6 +1116,11 @@ document.querySelector('#trade-form').addEventListener('submit', async (event) =
 });
 document.querySelector('#trade-close').addEventListener('click', () => tradeDialog.close());
 tradeDialog.addEventListener('click', (event) => { if (event.target === tradeDialog) tradeDialog.close(); });
+document.querySelector('#trade-alert-open').addEventListener('click', () => {
+  document.querySelector('#trade-offer-alert').classList.remove('is-visible');
+  openFrontOffice('trade');
+});
+document.querySelector('#trade-alert-close').addEventListener('click', () => document.querySelector('#trade-offer-alert').classList.remove('is-visible'));
 document.querySelector('#front-office-close').addEventListener('click', () => frontOfficeDialog.close());
 frontOfficeDialog.addEventListener('click', (event) => { if (event.target === frontOfficeDialog) frontOfficeDialog.close(); });
 document.querySelector('#space-guide-close').addEventListener('click', () => spaceGuideDialog.close());

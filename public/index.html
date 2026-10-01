@@ -16,7 +16,7 @@
       href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Nunito+Sans:wght@600;700;800;900&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20261001x" />
+    <link rel="stylesheet" href="styles.css?v=20261001y" />
   </head>
   <body>
     <div class="arena-shell">
@@ -114,7 +114,7 @@
           <button class="share-room-button" id="share-room-button" type="button">COPY INVITE LINK</button>
           <p>Everyone enters their own name. The host starts when all players are ready.</p>
           <div class="lobby-player-list" id="lobby-player-list"></div>
-          <label class="match-duration-control" for="match-duration"><span>HOST GAME LENGTH</span><select id="match-duration"><option value="10">10 minutes</option><option value="15">15 minutes</option><option value="20">20 minutes</option><option value="unlimited">Unlimited</option></select><small id="match-duration-note">The host chooses before starting.</small></label>
+          <label class="match-duration-control" for="match-duration"><span>HOST GAME LENGTH</span><select id="match-duration"><option value="3">3 minutes · Sprint</option><option value="5">5 minutes · Quick</option><option value="10" selected>10 minutes</option><option value="15">15 minutes</option><option value="20">20 minutes</option><option value="unlimited">Unlimited</option></select><small id="match-duration-note">The host chooses before starting.</small></label>
           <div class="lobby-controls">
             <button id="ready-button" type="button">I'M READY</button>
             <button class="lobby-primary" id="start-button" type="button" disabled>START MATCH</button>
@@ -126,6 +126,12 @@
         <button class="game-how-to-play" id="game-how-to-play" type="button"><span>?</span> HOW TO PLAY</button>
         <section class="player-rail" id="player-rail" aria-label="Players"></section>
         <div id="balance-change-layer" class="balance-change-layer" aria-live="polite"></div>
+        <aside class="trade-offer-alert" id="trade-offer-alert" role="status" aria-live="assertive" aria-atomic="true">
+          <span class="trade-alert-icon" aria-hidden="true">⇄</span>
+          <div><small>NEW TRADE OFFER</small><strong id="trade-alert-title">A rival wants to deal</strong><p id="trade-alert-summary">Open the Trade Desk to review it.</p></div>
+          <button id="trade-alert-open" type="button">REVIEW</button>
+          <button class="trade-alert-close" id="trade-alert-close" type="button" aria-label="Dismiss trade offer notification">×</button>
+        </aside>
 
         <p class="board-scroll-hint"><span aria-hidden="true">↔</span> Swipe the court to explore all 40 spaces</p>
         <section class="board-wrap" aria-label="Basketball Empire board" tabindex="0">
@@ -371,7 +377,7 @@
     <script>
       if (window.location.protocol !== 'file:') {
         const gameScript = document.createElement('script');
-        gameScript.src = 'app.js?v=20261001x';
+        gameScript.src = 'app.js?v=20261001y';
         document.body.append(gameScript);
       }
     </script>

@@ -178,7 +178,7 @@ function addPlayer(game, playerInput) {
 function startGame(game, { firstPlayerIndex = 0, now = Date.now(), matchDurationSeconds = MATCH_DURATION_SECONDS } = {}) {
   if (game.players.length < 2) throw new Error('At least two players are required to start.');
   if (firstPlayerIndex < 0 || firstPlayerIndex >= game.players.length) throw new Error('Invalid first player.');
-  if (![600, 900, 1200, null].includes(matchDurationSeconds)) throw new Error('Choose a valid game length.');
+  if (![180, 300, 600, 900, 1200, null].includes(matchDurationSeconds)) throw new Error('Choose a valid game length.');
   const next = clone(game);
   next.status = 'playing';
   next.phase = 'roll';

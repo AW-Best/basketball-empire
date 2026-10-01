@@ -121,3 +121,10 @@
 - [x] RED: specify the five-step guide, navigation, persistence, and mobile behavior.
 - [x] GREEN: implement the lobby and live-game How to Play experience.
 - [x] Verify the full suite, publish, and check the Cloudflare deployment.
+
+## Sprint 023 — Dice Motion, Trade Alerts, and Short Games
+
+- [x] Record acceptance criteria, architecture, and court-impact motion direction.
+- [x] RED: specify dice phases, recipient alerts, and 3/5-minute validation.
+- [x] GREEN: implement all three features across UI, Node, and Cloudflare.
+- [ ] Verify, publish, and check production.

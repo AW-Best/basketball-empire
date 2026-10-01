@@ -161,7 +161,7 @@ export class BasketballRoom {
     const playerId = this.authenticate(token);
     if (playerId !== record.hostId) throw new Error('Only the host can start the match.');
     if (!record.game.players.every((player) => player.ready)) throw new Error('Every player must be ready.');
-    const durations = { 10: 600, 15: 900, 20: 1200, unlimited: null };
+    const durations = { 3: 180, 5: 300, 10: 600, 15: 900, 20: 1200, unlimited: null };
     const durationKey = String(body.durationMinutes ?? 10);
     if (!Object.hasOwn(durations, durationKey)) throw new Error('Choose a valid game length.');
     record.game = startGame(record.game, {
