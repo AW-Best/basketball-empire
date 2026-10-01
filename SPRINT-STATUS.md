@@ -128,3 +128,10 @@
 - [x] RED: specify dice phases, recipient alerts, and 3/5-minute validation.
 - [x] GREEN: implement all three features across UI, Node, and Cloudflare.
 - [x] Verify, publish, and check production.
+
+## Sprint 024 — True 3D Dice
+
+- [x] Define six-face cube structure and physical motion acceptance criteria.
+- [x] RED: prove the flat dice fail the six-face 3D contract.
+- [x] GREEN: implement perspective cubes, independent rotation, lighting, and impact depth.
+- [ ] Verify, publish, and check production.

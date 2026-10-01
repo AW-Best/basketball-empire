@@ -528,7 +528,19 @@ function renderAuction() {
 
 function renderDie(element, value) {
   const positions = { 1: ['c'], 2: ['tl', 'br'], 3: ['tl', 'c', 'br'], 4: ['tl', 'tr', 'bl', 'br'], 5: ['tl', 'tr', 'c', 'bl', 'br'], 6: ['tl', 'tr', 'ml', 'mr', 'bl', 'br'] };
-  element.innerHTML = `<span class="die-pips" aria-hidden="true">${positions[value].map((position) => `<i class="pip pip-${position}"></i>`).join('')}</span>`;
+  const opposite = 7 - value;
+  const sideValues = [1, 2, 3, 4, 5, 6].filter((candidate) => candidate !== value && candidate !== opposite);
+  const values = [value, opposite, sideValues[0], 7 - sideValues[0], sideValues[1], 7 - sideValues[1]];
+  const faceNames = ['front', 'back', 'right', 'left', 'top', 'bottom'];
+  const pipMarkup = (faceValue) => `<span class="die-pips" aria-hidden="true">${positions[faceValue].map((position) => `<i class="pip pip-${position}"></i>`).join('')}</span>`;
+  let cube = element.querySelector('.die-cube');
+  if (!cube) {
+    element.innerHTML = `<span class="die-cube"><span class="die-face die-face-front"></span><span class="die-face die-face-back"></span><span class="die-face die-face-right"></span><span class="die-face die-face-left"></span><span class="die-face die-face-top"></span><span class="die-face die-face-bottom"></span></span>`;
+    cube = element.querySelector('.die-cube');
+  }
+  faceNames.forEach((faceName, index) => {
+    cube.querySelector(`.die-face-${faceName}`).innerHTML = pipMarkup(values[index]);
+  });
   element.setAttribute('aria-label', `Die rolled ${value}`);
 }
 
