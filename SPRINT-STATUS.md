@@ -113,4 +113,4 @@
 - [x] RED: require the Wrangler Worker name to be `play`.
 - [x] Rename the existing Worker service without replacing its Durable Object storage.
 - [x] GREEN: update Wrangler and pass the deployment plus full test suites.
-- [ ] Publish through GitHub and verify the shortened public URL.
+- [x] Publish through GitHub and verify the shortened public URL.
