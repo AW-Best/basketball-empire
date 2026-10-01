@@ -29,6 +29,33 @@ npm test
 
 The test suite covers rules, room authorization, HTTP endpoints, live SSE state delivery, and responsive UI structure.
 
+## Run the Cloudflare version locally
+
+Install the development dependency once, then start Cloudflare's local Workers and Durable Objects simulator:
+
+```bash
+npm install
+npm run dev:cloudflare
+```
+
+Open `http://localhost:8787`. To test two players on one computer, create a room in one normal browser window and open its invite link in a private/incognito window or a different browser. Each window keeps separate player credentials.
+
+Useful checks:
+
+```bash
+curl http://localhost:8787/api/health
+npx wrangler deploy --dry-run
+```
+
+The Cloudflare version uses the same frontend and REST API as the Node.js version. Each room is stored in its own SQLite-backed Durable Object. The browser falls back to a two-second state poll on Cloudflare; the Node.js server continues to use server-sent events.
+
+To publish after signing in to Cloudflare:
+
+```bash
+npx wrangler login
+npm run deploy:cloudflare
+```
+
 ## Share with friends
 
 The current private-play URL is `https://macpro.tail86c614.ts.net/`, exposed through Tailscale Funnel. Keep this Mac awake with both Tailscale and `npm start` running while friends play.

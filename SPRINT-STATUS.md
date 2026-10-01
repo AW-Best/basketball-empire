@@ -96,3 +96,13 @@
 - [x] RED: require the auction to live at the page modal root.
 - [x] GREEN: move and isolate the auction overlay above all game content.
 - [x] Run the full suite, publish, and verify the live auction.
+
+## Sprint 020 — Cloudflare Workers Runtime
+
+- [x] Tag the current Node.js baseline as `v0.1.0-node`.
+- [x] Record the Workers, Assets, and Durable Objects architecture.
+- [x] RED: specify Cloudflare routing, persistent rooms, API compatibility, and polling fallback.
+- [x] GREEN: implement the Worker and SQLite-backed `BasketballRoom` Durable Object.
+- [x] Add Wrangler local-development and deployment commands.
+- [x] Verify static assets plus create/join room behavior in `wrangler dev`.
+- [ ] Deploy to the user's Cloudflare account and verify the public URL.
