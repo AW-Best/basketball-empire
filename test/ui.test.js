@@ -288,7 +288,7 @@ test('dice use a standard dice presentation without the basketball-shot treatmen
   assert.doesNotMatch(html, /class="dice-hoop"/);
   assert.doesNotMatch(script, /is-shooting/);
   assert.doesNotMatch(css, /@keyframes basketball-shot/);
-  assert.match(css, /\.die\s*\{[^}]*border-radius:\s*18px/s);
+  assert.match(css, /\.die-face\s*\{[^}]*border-radius:/s);
 });
 
 test('team cards show recruited players and the current landing payment', () => {
@@ -377,6 +377,26 @@ test('dice use a launch, court-impact, rebound, and final settle sequence', () =
   assert.match(css, /cubic-bezier\(\.16,\.84,\.2,1\)/);
 });
 
+test('dice are real six-sided CSS 3D cubes instead of flat cards', () => {
+  const script = fs.readFileSync(path.join(projectRoot, 'public/app.js'), 'utf8');
+  const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
+
+  assert.match(script, /class="die-cube"/);
+  assert.match(script, /class="die-face die-face-front"/);
+  assert.match(script, /class="die-face die-face-back"/);
+  assert.match(script, /class="die-face die-face-right"/);
+  assert.match(script, /class="die-face die-face-left"/);
+  assert.match(script, /class="die-face die-face-top"/);
+  assert.match(script, /class="die-face die-face-bottom"/);
+  assert.match(css, /\.die-cube\s*\{[^}]*transform-style:\s*preserve-3d/s);
+  assert.match(css, /\.die-face\s*\{[^}]*backface-visibility:\s*hidden/s);
+  assert.match(css, /\.die-face-front\s*\{[^}]*translateZ\(var\(--die-depth\)\)/s);
+  assert.match(css, /\.die-face-right\s*\{[^}]*rotateY\(90deg\)[^}]*translateZ\(var\(--die-depth\)\)/s);
+  assert.match(css, /\.die-face-top\s*\{[^}]*rotateX\(90deg\)[^}]*translateZ\(var\(--die-depth\)\)/s);
+  assert.match(css, /@keyframes dice-cube-spin-left/);
+  assert.match(css, /@keyframes dice-cube-spin-right/);
+});
+
 test('live updates fall back to polling when server-sent events are unavailable', () => {
   const script = fs.readFileSync(path.join(projectRoot, 'public/app.js'), 'utf8');
 
@@ -451,8 +471,8 @@ test('Tip-Off guide explains the exact-landing 300 point bonus', () => {
 test('deployed browsers receive the current interface assets instead of stale cached files', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
 
-  assert.match(html, /styles\.css\?v=20261001y/);
-  assert.match(html, /app\.js\?v=20261001y/);
+  assert.match(html, /styles\.css\?v=20261001z/);
+  assert.match(html, /app\.js\?v=20261001z/);
 });
 
 test('API requests report an understandable connection error when a tunnel returns HTML', () => {
@@ -641,9 +661,9 @@ test('dice mimic tactile white 3D dice and contain pips only', () => {
   const script = fs.readFileSync(path.join(projectRoot, 'public/app.js'), 'utf8');
   const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
   assert.doesNotMatch(script, /die-number/);
-  assert.match(css, /\.die::before/);
-  assert.match(css, /\.die::after/);
-  assert.match(css, /\.die\.is-accent[^}]*background:\s*linear-gradient/s);
+  assert.match(css, /\.die-face[^}]*background:\s*radial-gradient/s);
+  assert.match(css, /\.die-face-right[^}]*background:\s*linear-gradient/s);
+  assert.match(css, /\.die-face-top[^}]*background:\s*linear-gradient/s);
   assert.match(css, /\.pip[^}]*background:\s*#111/s);
 });
 
