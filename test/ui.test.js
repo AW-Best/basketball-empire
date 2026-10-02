@@ -435,7 +435,7 @@ test('dice use a WebGL canvas with rounded solid geometry and retain accessible 
   const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
 
   assert.match(html, /<canvas[^>]+id="dice-webgl"/);
-  assert.match(html, /type="module" src="dice-3d\.js\?v=20261002j"/);
+  assert.match(html, /type="module" src="dice-3d\.js\?v=20261002k"/);
   assert.match(dice3d, /RoundedBoxGeometry/);
   assert.match(dice3d, /new THREE\.WebGLRenderer\(\{ alpha: true, antialias: true \}\)/);
   assert.match(dice3d, /function createRoundedDie/);
@@ -499,10 +499,10 @@ test('the two dice collide and settle onto their authoritative results', () => {
   const dice3d = fs.readFileSync(path.join(projectRoot, 'public/dice-3d.js'), 'utf8');
 
   assert.match(dice3d, /function resolveDiceCollision\(bodies\)/);
-  assert.match(dice3d, /const minimumDistance = bodyRadius \* 2/);
+  assert.match(dice3d, /const minimumDistance = firstRadius \+ secondRadius/);
   assert.match(dice3d, /resolveDiceCollision\(bodies\)/);
   assert.match(dice3d, /const settleBlend = THREE\.MathUtils\.smoothstep/);
-  assert.match(dice3d, /slerp\(targets\[index\], settleBlend\)/);
+  assert.match(dice3d, /slerp\(targets\[index\], correctionRate\)/);
 });
 
 test('rigid dice use height-reactive contact shadows', () => {
@@ -522,6 +522,33 @@ test('rigid dice vary launch and spin deterministically for each result', () => 
   assert.match(dice3d, /finalValues\[0\] \* 17 \+ finalValues\[1\] \* 31/);
   assert.match(dice3d, /createRigidBody\(index, die\.quaternion, variation\)/);
   assert.match(dice3d, /angularVelocity\.multiplyScalar\(1 \+ \(variation \* 0\.12\)\)/);
+});
+
+test('rigid dice land on faces, edges, and corners using oriented cube support', () => {
+  const dice3d = fs.readFileSync(path.join(projectRoot, 'public/dice-3d.js'), 'utf8');
+
+  assert.match(dice3d, /function cubeSupportHeight\(quaternion\)/);
+  assert.match(dice3d, /Math\.abs\(axis\.y\)/);
+  assert.match(dice3d, /const contactY = FLOOR_Y \+ cubeSupportHeight\(body\.quaternion\)/);
+  assert.match(dice3d, /body\.position\.y <= contactY/);
+});
+
+test('dice collision uses each rotated cube footprint instead of a fixed sphere', () => {
+  const dice3d = fs.readFileSync(path.join(projectRoot, 'public/dice-3d.js'), 'utf8');
+
+  assert.match(dice3d, /function orientedSupportRadius\(quaternion, direction\)/);
+  assert.match(dice3d, /orientedSupportRadius\(bodies\[0\]\.quaternion, normal\)/);
+  assert.match(dice3d, /orientedSupportRadius\(bodies\[1\]\.quaternion, normal\)/);
+  assert.doesNotMatch(dice3d, /const bodyRadius = 0\.61 \* responsiveDiceScale\(\)/);
+});
+
+test('authoritative face correction starts late and settles at a stable frame rate', () => {
+  const dice3d = fs.readFileSync(path.join(projectRoot, 'public/dice-3d.js'), 'utf8');
+
+  assert.match(dice3d, /smoothstep\(dieProgress, 0\.82, 1\)/);
+  assert.match(dice3d, /const correctionRate = 1 - Math\.exp\(-delta \* 18 \* settleBlend\)/);
+  assert.match(dice3d, /bodies\[index\]\.quaternion\.slerp\(targets\[index\], correctionRate\)/);
+  assert.match(dice3d, /angularVelocity\.multiplyScalar\(1 - \(correctionRate \* 0\.65\)\)/);
 });
 
 test('live updates fall back to polling when server-sent events are unavailable', () => {
@@ -598,8 +625,8 @@ test('Tip-Off guide explains the exact-landing 300 point bonus', () => {
 test('deployed browsers receive the current interface assets instead of stale cached files', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
 
-  assert.match(html, /styles\.css\?v=20261002j/);
-  assert.match(html, /app\.js\?v=20261002j/);
+  assert.match(html, /styles\.css\?v=20261002k/);
+  assert.match(html, /app\.js\?v=20261002k/);
 });
 
 test('API requests report an understandable connection error when a tunnel returns HTML', () => {

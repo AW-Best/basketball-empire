@@ -6,6 +6,7 @@ const tray = canvas?.closest('.dice-tray');
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const GRAVITY = -5.8;
 const FLOOR_Y = -0.82;
+const DIE_HALF_EXTENT = 0.71;
 
 const PIP_LAYOUTS = {
   1: [[0, 0]],
@@ -92,7 +93,33 @@ function responsiveDiceScale() {
 }
 
 function restingY() {
-  return FLOOR_Y + (0.71 * responsiveDiceScale());
+  return FLOOR_Y + (DIE_HALF_EXTENT * responsiveDiceScale());
+}
+
+function cubeSupportHeight(quaternion) {
+  const halfExtent = DIE_HALF_EXTENT * responsiveDiceScale();
+  const axes = [
+    new THREE.Vector3(1, 0, 0),
+    new THREE.Vector3(0, 1, 0),
+    new THREE.Vector3(0, 0, 1),
+  ];
+  return axes.reduce((height, axis) => {
+    axis.applyQuaternion(quaternion);
+    return height + (Math.abs(axis.y) * halfExtent);
+  }, 0);
+}
+
+function orientedSupportRadius(quaternion, direction) {
+  const halfExtent = DIE_HALF_EXTENT * responsiveDiceScale();
+  const axes = [
+    new THREE.Vector3(1, 0, 0),
+    new THREE.Vector3(0, 1, 0),
+    new THREE.Vector3(0, 0, 1),
+  ];
+  return axes.reduce((radius, axis) => {
+    axis.applyQuaternion(quaternion);
+    return radius + (Math.abs(axis.dot(direction)) * halfExtent);
+  }, 0);
 }
 
 function seededVariation(seed) {
@@ -153,8 +180,9 @@ function integrateRigidBody(body, delta, floorY) {
     );
     body.quaternion.premultiply(rotation).normalize();
   }
-  if (body.position.y <= floorY) {
-    body.position.y = floorY;
+  const contactY = FLOOR_Y + cubeSupportHeight(body.quaternion);
+  if (body.position.y <= contactY) {
+    body.position.y = contactY;
     if (body.velocity.y < -0.18) body.velocity.y *= -0.34;
     else body.velocity.y = 0;
     body.velocity.x *= Math.pow(0.18, delta);
@@ -164,13 +192,15 @@ function integrateRigidBody(body, delta, floorY) {
 }
 
 function resolveDiceCollision(bodies) {
-  const bodyRadius = 0.61 * responsiveDiceScale();
-  const minimumDistance = bodyRadius * 2;
   const offset = bodies[1].position.clone().sub(bodies[0].position);
   offset.y = 0;
   const distance = offset.length();
-  if (!distance || distance >= minimumDistance) return;
+  if (!distance) return;
   const normal = offset.multiplyScalar(1 / distance);
+  const firstRadius = orientedSupportRadius(bodies[0].quaternion, normal);
+  const secondRadius = orientedSupportRadius(bodies[1].quaternion, normal);
+  const minimumDistance = firstRadius + secondRadius;
+  if (distance >= minimumDistance) return;
   const overlap = minimumDistance - distance;
   bodies[0].position.addScaledVector(normal, -overlap / 2);
   bodies[1].position.addScaledVector(normal, overlap / 2);
@@ -237,12 +267,15 @@ function roll(finalValues = [1, 1]) {
       resolveDiceCollision(bodies);
       dice.forEach((die, index) => {
         const dieProgress = Math.min(1, (now - startedAt) / settleTimes[index]);
-        const settleBlend = THREE.MathUtils.smoothstep(dieProgress, 0.7, 1);
+        const settleBlend = THREE.MathUtils.smoothstep(dieProgress, 0.82, 1);
+        const correctionRate = 1 - Math.exp(-delta * 18 * settleBlend);
         die.position.copy(bodies[index].position);
         die.position.x = THREE.MathUtils.lerp(die.position.x, index ? 0.72 : -0.72, settleBlend);
         die.position.y = THREE.MathUtils.lerp(die.position.y, restingY(), settleBlend);
         die.position.z = THREE.MathUtils.lerp(die.position.z, index ? -0.06 : 0.06, settleBlend);
-        die.quaternion.copy(bodies[index].quaternion).slerp(targets[index], settleBlend);
+        bodies[index].quaternion.slerp(targets[index], correctionRate);
+        bodies[index].angularVelocity.multiplyScalar(1 - (correctionRate * 0.65));
+        die.quaternion.copy(bodies[index].quaternion);
         die.scale.setScalar(responsiveDiceScale());
         updateContactShadow(die, die.position.y);
       });

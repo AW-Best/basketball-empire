@@ -177,3 +177,10 @@
 - [x] RED: specify dynamic contact shadows and deterministic variation.
 - [x] GREEN: implement shadows and seeded motion.
 - [x] Publish and visually check production.
+
+## Sprint 031 — Dice Edge Contact and Natural Settling
+
+- [x] Define architecture and acceptance criteria.
+- [x] RED: specify oriented cube contact and late result settling.
+- [x] GREEN: implement quaternion-aware support and progressive correction.
+- [ ] Verify, publish, and visually check production.
