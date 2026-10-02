@@ -142,3 +142,10 @@
 - [x] RED: protect against competing wrapper rotations and 3D-flattening filters.
 - [x] GREEN: isolate trajectory motion from cube rotation and preserve the 3D subtree.
 - [x] Publish and verify both hosted versions.
+
+## Sprint 026 — WebGL Rounded Dice
+
+- [x] Define architecture and acceptance criteria.
+- [x] RED: add WebGL integration and settlement contract tests.
+- [ ] GREEN: implement rounded dice geometry, pips, lighting, and animation.
+- [ ] Verify the full suite, publish, and visually check both hosted versions.
