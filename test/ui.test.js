@@ -397,6 +397,23 @@ test('dice are real six-sided CSS 3D cubes instead of flat cards', () => {
   assert.match(css, /@keyframes dice-cube-spin-right/);
 });
 
+test('dice trajectory never flattens the cube with competing X or Y rotation', () => {
+  const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
+  const leftTrajectory = css.match(/@keyframes dice-throw-left\s*\{([\s\S]*?)\n\}/)?.[1] || '';
+  const rightTrajectory = css.match(/@keyframes dice-throw-right\s*\{([\s\S]*?)\n\}/)?.[1] || '';
+
+  assert.doesNotMatch(leftTrajectory, /rotate[XY]\(/);
+  assert.doesNotMatch(rightTrajectory, /rotate[XY]\(/);
+  assert.doesNotMatch(leftTrajectory, /blur\(/);
+  assert.doesNotMatch(rightTrajectory, /blur\(/);
+  assert.match(css, /\.dice-tray\s*\{[^}]*perspective-origin:/s);
+  const cubeRule = css.match(/\.die-cube\s*\{([^}]*)\}/)?.[1] || '';
+  const settlingRule = css.match(/\.die\.is-settling\s*\{([^}]*)\}/)?.[1] || '';
+  assert.doesNotMatch(cubeRule, /filter:/);
+  assert.doesNotMatch(settlingRule, /filter:/);
+  assert.match(css, /\.die-face\s*\{[^}]*box-shadow:/s);
+});
+
 test('live updates fall back to polling when server-sent events are unavailable', () => {
   const script = fs.readFileSync(path.join(projectRoot, 'public/app.js'), 'utf8');
 
@@ -471,8 +488,8 @@ test('Tip-Off guide explains the exact-landing 300 point bonus', () => {
 test('deployed browsers receive the current interface assets instead of stale cached files', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
 
-  assert.match(html, /styles\.css\?v=20261001z/);
-  assert.match(html, /app\.js\?v=20261001z/);
+  assert.match(html, /styles\.css\?v=20261002b/);
+  assert.match(html, /app\.js\?v=20261002b/);
 });
 
 test('API requests report an understandable connection error when a tunnel returns HTML', () => {
