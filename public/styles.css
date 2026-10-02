@@ -990,6 +990,21 @@ button { font: inherit; }
   .quick-actions { grid-template-columns: repeat(3, 1fr); }
 }
 
+.site-legal {
+  display: grid;
+  gap: 5px;
+  max-width: 1120px;
+  margin: 18px auto 0;
+  padding: 16px 20px calc(16px + env(safe-area-inset-bottom));
+  border-top: 1px solid rgba(255,255,255,.09);
+  color: rgba(219,229,239,.58);
+  font-size: 11px;
+  line-height: 1.55;
+  text-align: center;
+}
+.site-legal strong { color: rgba(255,255,255,.75); font-size: 11px; letter-spacing: .04em; text-transform: uppercase; }
+.site-legal p { max-width: 900px; margin: 0 auto; }
+
 @media (max-width: 560px) {
   .topbar { min-height: 58px; }
   .brand strong { font-size: 20px; }
@@ -1060,6 +1075,8 @@ button { font: inherit; }
   .auction-asset-card { min-height: 0; }
   .auction-revenue-list { grid-template-columns: 1fr 1fr; }
   .auction-actions button strong { font-size: 17px; }
+  .site-legal { margin-top: 12px; padding: 14px 10px calc(14px + env(safe-area-inset-bottom)); font-size: 10px; text-align: left; }
+  .site-legal strong { font-size: 10px; }
 }
 
 @media (max-width: 900px) and (orientation: landscape) {

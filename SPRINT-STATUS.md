@@ -218,6 +218,7 @@
 
 - [x] Record the observed dice-to-token movement sequence and acceptance criteria.
 - [x] RED: specify the shared motion profile, hop/trail states, and corner pacing.
+
 - [x] GREEN: implement block-by-block movement polish.
 - [x] Verify the full automated test suite and commit.
 
@@ -227,3 +228,11 @@
 - [x] RED: specify reduced spin and wider separation.
 - [x] GREEN: implement WebGL dice motion tuning.
 - [x] Verify the full automated test suite and commit.
+
+## Sprint 038 — Copyright and Fan-Project Notice
+
+- [x] Record acceptance criteria and the semantic-footer approach.
+- [x] RED: specify the copyright, independence, and fictional-content notice.
+- [x] GREEN: add the global responsive legal footer.
+- [x] Verify the complete 143-test suite.
+- [ ] Commit and publish the notice.

@@ -435,7 +435,7 @@ test('dice use a WebGL canvas with rounded solid geometry and retain accessible 
   const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
 
   assert.match(html, /<canvas[^>]+id="dice-webgl"/);
-  assert.match(html, /type="module" src="dice-3d\.js\?v=20261002t"/);
+  assert.match(html, /type="module" src="dice-3d\.js\?v=20261002u"/);
   assert.match(dice3d, /RoundedBoxGeometry/);
   assert.match(dice3d, /new THREE\.WebGLRenderer\(\{ alpha: true, antialias: true \}\)/);
   assert.match(dice3d, /function createRoundedDie/);
@@ -686,8 +686,8 @@ test('Tip-Off guide explains the exact-landing 300 point bonus', () => {
 test('deployed browsers receive the current interface assets instead of stale cached files', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
 
-  assert.match(html, /styles\.css\?v=20261002t/);
-  assert.match(html, /app\.js\?v=20261002t/);
+  assert.match(html, /styles\.css\?v=20261002u/);
+  assert.match(html, /app\.js\?v=20261002u/);
 });
 
 test('API requests report an understandable connection error when a tunnel returns HTML', () => {
@@ -925,4 +925,17 @@ test('event card reveals include a local close button', () => {
   assert.match(script, /function closeCardDraw/);
   assert.match(script, /#card-draw-close/);
   assert.match(css, /\.drawn-card-close/);
+});
+
+test('site footer shows Basketball Empire copyright and independent fan-project notice', () => {
+  const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
+  const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
+
+  assert.match(html, /class="site-legal"/);
+  assert.match(html, /© 2026 Basketball Empire/);
+  assert.match(html, /independent fan-made game/i);
+  assert.match(html, /not affiliated with, endorsed by, or licensed by the NBA, NBPA, or any NBA team/i);
+  assert.match(html, /in-game teams, events, and results are fictional/i);
+  assert.match(css, /\.site-legal\s*\{/);
+  assert.match(css, /@media \(max-width: 560px\)[\s\S]*\.site-legal/);
 });
