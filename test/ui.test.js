@@ -435,7 +435,7 @@ test('dice use a WebGL canvas with rounded solid geometry and retain accessible 
   const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
 
   assert.match(html, /<canvas[^>]+id="dice-webgl"/);
-  assert.match(html, /type="module" src="dice-3d\.js\?v=20261002f"/);
+  assert.match(html, /type="module" src="dice-3d\.js\?v=20261002g"/);
   assert.match(dice3d, /RoundedBoxGeometry/);
   assert.match(dice3d, /new THREE\.WebGLRenderer\(\{ alpha: true, antialias: true \}\)/);
   assert.match(dice3d, /function createRoundedDie/);
@@ -471,6 +471,17 @@ test('WebGL pips include a recessed shadow well instead of one flat disc', () =>
   assert.match(dice3d, /pipWellMaterial/);
   assert.match(dice3d, /pipWell\.renderOrder = 1/);
   assert.match(dice3d, /pip\.renderOrder = 2/);
+});
+
+test('WebGL dice scale down responsively on phones and tablets', () => {
+  const dice3d = fs.readFileSync(path.join(projectRoot, 'public/dice-3d.js'), 'utf8');
+  const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
+
+  assert.match(dice3d, /function responsiveDiceScale\(\)/);
+  assert.match(dice3d, /window\.innerWidth <= 720\) return 0\.68/);
+  assert.match(dice3d, /window\.innerWidth <= 1024\) return 0\.84/);
+  assert.match(dice3d, /die\.scale\.setScalar\(responsiveDiceScale\(\)\)/);
+  assert.match(css, /@media \(max-width: 720px\)[\s\S]*\.dice-tray\s*\{[^}]*min-width:\s*160px/s);
 });
 
 test('live updates fall back to polling when server-sent events are unavailable', () => {
@@ -547,8 +558,8 @@ test('Tip-Off guide explains the exact-landing 300 point bonus', () => {
 test('deployed browsers receive the current interface assets instead of stale cached files', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
 
-  assert.match(html, /styles\.css\?v=20261002f/);
-  assert.match(html, /app\.js\?v=20261002f/);
+  assert.match(html, /styles\.css\?v=20261002g/);
+  assert.match(html, /app\.js\?v=20261002g/);
 });
 
 test('API requests report an understandable connection error when a tunnel returns HTML', () => {

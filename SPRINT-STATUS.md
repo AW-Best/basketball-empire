@@ -156,3 +156,10 @@
 - [x] RED: specify compact rigid motion, staggered settling, and inset pips.
 - [x] GREEN: implement the revised geometry and motion.
 - [x] Verify, publish, and visually check the hosted versions.
+
+## Sprint 028 — Mobile Dice Sizing
+
+- [x] Define architecture and acceptance criteria.
+- [x] RED: specify phone/tablet WebGL scaling and a smaller phone tray.
+- [x] GREEN: implement responsive sizing.
+- [ ] Verify, publish, and visually check production.

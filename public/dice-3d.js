@@ -83,6 +83,12 @@ function finalQuaternion(value, yaw = 0) {
   return turn.multiply(target);
 }
 
+function responsiveDiceScale() {
+  if (window.innerWidth <= 720) return 0.68;
+  if (window.innerWidth <= 1024) return 0.84;
+  return 1;
+}
+
 function resize() {
   if (!renderer || !canvas) return;
   const width = Math.max(1, canvas.clientWidth);
@@ -92,13 +98,15 @@ function resize() {
   renderer.setSize(width, height, false);
   camera.aspect = width / height;
   camera.updateProjectionMatrix();
+  dice.forEach((die) => die.scale.setScalar(responsiveDiceScale()));
+  renderer.render(scene, camera);
 }
 
 function setValues(values = [1, 1]) {
   dice.forEach((die, index) => {
     die.position.set(index ? 0.9 : -0.9, -0.08, index ? -0.06 : 0.06);
     die.quaternion.copy(finalQuaternion(values[index], index ? 0.23 : -0.23));
-    die.scale.setScalar(1);
+    die.scale.setScalar(responsiveDiceScale());
   });
   renderer?.render(scene, camera);
 }
@@ -142,7 +150,7 @@ function roll(finalValues = [1, 1]) {
           spins[index].z * (1 - eased),
         ));
         die.quaternion.copy(starts[index]).multiply(tumble).slerp(targets[index], eased);
-        die.scale.setScalar(1);
+        die.scale.setScalar(responsiveDiceScale());
       });
       renderer.render(scene, camera);
       if (progress < 1) {
