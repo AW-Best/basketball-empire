@@ -3,6 +3,7 @@ import { RoundedBoxGeometry } from './vendor/RoundedBoxGeometry.js';
 
 let canvas = document.querySelector('#dice-webgl');
 const tray = canvas?.closest('.dice-tray');
+const fallbackDice = [...document.querySelectorAll('.dice-tray .die')];
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const GRAVITY = -5.8;
 const FLOOR_Y = -0.82;
@@ -52,10 +53,10 @@ function createRoundedDie() {
   body.receiveShadow = true;
   group.add(body);
 
-  const pipWellGeometry = new THREE.CircleGeometry(0.119, 28);
-  const pipWellMaterial = new THREE.MeshBasicMaterial({ color: 0x55534d, transparent: true, opacity: 0.72, side: THREE.DoubleSide });
-  const pipGeometry = new THREE.CircleGeometry(0.091, 28);
-  const pipMaterial = new THREE.MeshStandardMaterial({ color: 0x0a0c10, roughness: 0.82, side: THREE.DoubleSide });
+  const pipWellGeometry = new THREE.CircleGeometry(0.132, 28);
+  const pipWellMaterial = new THREE.MeshBasicMaterial({ color: 0x55534d, transparent: true, opacity: 0.9, side: THREE.DoubleSide });
+  const pipGeometry = new THREE.CircleGeometry(0.108, 28);
+  const pipMaterial = new THREE.MeshStandardMaterial({ color: 0x030303, roughness: 0.82, side: THREE.DoubleSide });
   const half = 0.713;
   const spacing = 0.285;
   FACE_LAYOUT.forEach((face) => {
@@ -84,6 +85,11 @@ function finalQuaternion(value, yaw = 0) {
   const target = new THREE.Quaternion().setFromEuler(TOP_ROTATIONS[value] || TOP_ROTATIONS[1]);
   const turn = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), yaw);
   return turn.multiply(target);
+}
+
+function smootherStep(value, start, end) {
+  const progress = THREE.MathUtils.clamp((value - start) / (end - start), 0, 1);
+  return progress * progress * progress * (progress * ((progress * 6) - 15) + 10);
 }
 
 function responsiveDiceScale() {
@@ -267,15 +273,14 @@ function roll(finalValues = [1, 1]) {
       resolveDiceCollision(bodies);
       dice.forEach((die, index) => {
         const dieProgress = Math.min(1, (now - startedAt) / settleTimes[index]);
-        const settleBlend = THREE.MathUtils.smoothstep(dieProgress, 0.82, 1);
-        const correctionRate = 1 - Math.exp(-delta * 18 * settleBlend);
+        const settleBlend = smootherStep(dieProgress, 0.58, 1);
+        const orientationBlend = smootherStep(dieProgress, 0.58, 1);
         die.position.copy(bodies[index].position);
         die.position.x = THREE.MathUtils.lerp(die.position.x, index ? 0.72 : -0.72, settleBlend);
         die.position.y = THREE.MathUtils.lerp(die.position.y, restingY(), settleBlend);
         die.position.z = THREE.MathUtils.lerp(die.position.z, index ? -0.06 : 0.06, settleBlend);
-        bodies[index].quaternion.slerp(targets[index], correctionRate);
-        bodies[index].angularVelocity.multiplyScalar(1 - (correctionRate * 0.65));
-        die.quaternion.copy(bodies[index].quaternion);
+        bodies[index].angularVelocity.multiplyScalar(1 - (orientationBlend * 0.35));
+        die.quaternion.copy(bodies[index].quaternion).slerp(targets[index], orientationBlend);
         die.scale.setScalar(responsiveDiceScale());
         updateContactShadow(die, die.position.y);
       });
@@ -337,7 +342,8 @@ function initialize() {
       scene.add(die);
     });
     resize();
-    setValues([1, 1]);
+    const initialValues = fallbackDice.map((die) => Number(die.dataset.value) || 1);
+    setValues(initialValues);
     tray?.classList.add('is-webgl-ready');
     window.addEventListener('resize', resize, { passive: true });
     return true;

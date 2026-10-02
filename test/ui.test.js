@@ -435,7 +435,7 @@ test('dice use a WebGL canvas with rounded solid geometry and retain accessible 
   const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
 
   assert.match(html, /<canvas[^>]+id="dice-webgl"/);
-  assert.match(html, /type="module" src="dice-3d\.js\?v=20261002n"/);
+  assert.match(html, /type="module" src="dice-3d\.js\?v=20261002o"/);
   assert.match(dice3d, /RoundedBoxGeometry/);
   assert.match(dice3d, /new THREE\.WebGLRenderer\(\{ alpha: true, antialias: true \}\)/);
   assert.match(dice3d, /function createRoundedDie/);
@@ -501,8 +501,8 @@ test('the two dice collide and settle onto their authoritative results', () => {
   assert.match(dice3d, /function resolveDiceCollision\(bodies\)/);
   assert.match(dice3d, /const minimumDistance = firstRadius \+ secondRadius/);
   assert.match(dice3d, /resolveDiceCollision\(bodies\)/);
-  assert.match(dice3d, /const settleBlend = THREE\.MathUtils\.smoothstep/);
-  assert.match(dice3d, /slerp\(targets\[index\], correctionRate\)/);
+  assert.match(dice3d, /const settleBlend = smootherStep/);
+  assert.match(dice3d, /slerp\(targets\[index\], orientationBlend\)/);
 });
 
 test('rigid dice use height-reactive contact shadows', () => {
@@ -545,10 +545,28 @@ test('dice collision uses each rotated cube footprint instead of a fixed sphere'
 test('authoritative face correction starts late and settles at a stable frame rate', () => {
   const dice3d = fs.readFileSync(path.join(projectRoot, 'public/dice-3d.js'), 'utf8');
 
-  assert.match(dice3d, /smoothstep\(dieProgress, 0\.82, 1\)/);
-  assert.match(dice3d, /const correctionRate = 1 - Math\.exp\(-delta \* 18 \* settleBlend\)/);
-  assert.match(dice3d, /bodies\[index\]\.quaternion\.slerp\(targets\[index\], correctionRate\)/);
-  assert.match(dice3d, /angularVelocity\.multiplyScalar\(1 - \(correctionRate \* 0\.65\)\)/);
+  assert.match(dice3d, /function smootherStep\(value, start, end\)/);
+  assert.match(dice3d, /const orientationBlend = smootherStep\(dieProgress, 0\.58, 1\)/);
+  assert.match(dice3d, /die\.quaternion\.copy\(bodies\[index\]\.quaternion\)\.slerp\(targets\[index\], orientationBlend\)/);
+  assert.doesNotMatch(dice3d, /correctionRate/);
+});
+
+test('WebGL dice initialize and refresh from the real room result instead of hard-coded ones', () => {
+  const dice3d = fs.readFileSync(path.join(projectRoot, 'public/dice-3d.js'), 'utf8');
+  const script = fs.readFileSync(path.join(projectRoot, 'public/app.js'), 'utf8');
+
+  assert.doesNotMatch(dice3d, /setValues\(\[1, 1\]\)/);
+  assert.match(dice3d, /const initialValues = fallbackDice\.map/);
+  assert.match(script, /element\.dataset\.value = String\(value\)/);
+  assert.match(script, /window\.Dice3D\?\.setValues\(dice\)/);
+});
+
+test('compact WebGL dice use larger high-contrast pip discs', () => {
+  const dice3d = fs.readFileSync(path.join(projectRoot, 'public/dice-3d.js'), 'utf8');
+
+  assert.match(dice3d, /new THREE\.CircleGeometry\(0\.108, 28\)/);
+  assert.match(dice3d, /color: 0x030303/);
+  assert.match(dice3d, /opacity: 0\.9/);
 });
 
 test('live updates fall back to polling when server-sent events are unavailable', () => {
@@ -625,8 +643,8 @@ test('Tip-Off guide explains the exact-landing 300 point bonus', () => {
 test('deployed browsers receive the current interface assets instead of stale cached files', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
 
-  assert.match(html, /styles\.css\?v=20261002n/);
-  assert.match(html, /app\.js\?v=20261002n/);
+  assert.match(html, /styles\.css\?v=20261002o/);
+  assert.match(html, /app\.js\?v=20261002o/);
 });
 
 test('API requests report an understandable connection error when a tunnel returns HTML', () => {

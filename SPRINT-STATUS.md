@@ -205,3 +205,11 @@
 - [x] RED: specify the exact 30% scale reduction.
 - [x] GREEN: implement the new responsive scales.
 - [x] Verify, publish, and visually check production.
+
+## Sprint 035 — Stable Dice Faces
+
+- [x] Define architecture and acceptance criteria.
+- [x] RED: specify result synchronization, smooth correction, and compact pips.
+- [x] GREEN: implement stable face presentation.
+- [x] Verify locally and visually check the synchronized result.
+- [ ] Publish and verify production.

@@ -438,6 +438,7 @@ function renderTurn() {
   const dice = room.lastRoll || [1, 1];
   renderDie(document.querySelector('#die-one'), dice[0]);
   renderDie(document.querySelector('#die-two'), dice[1]);
+  window.Dice3D?.setValues(dice);
   document.querySelector('#roll-total').textContent = dice[0] + dice[1];
   const ownDecision = IS_LOCAL_PLAYERS_TURN && room.phase === 'decision' && room.pendingDecision?.playerId === session.playerId;
   document.querySelector('#decision-panel').classList.toggle('is-hidden', !ownDecision);
@@ -527,6 +528,7 @@ function renderAuction() {
 }
 
 function renderDie(element, value) {
+  element.dataset.value = String(value);
   const positions = { 1: ['c'], 2: ['tl', 'br'], 3: ['tl', 'c', 'br'], 4: ['tl', 'tr', 'bl', 'br'], 5: ['tl', 'tr', 'c', 'bl', 'br'], 6: ['tl', 'tr', 'ml', 'mr', 'bl', 'br'] };
   const opposite = 7 - value;
   const sideValues = [1, 2, 3, 4, 5, 6].filter((candidate) => candidate !== value && candidate !== opposite);
