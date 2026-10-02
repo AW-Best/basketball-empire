@@ -148,4 +148,4 @@
 - [x] Define architecture and acceptance criteria.
 - [x] RED: add WebGL integration and settlement contract tests.
 - [x] GREEN: implement rounded dice geometry, pips, lighting, and animation.
-- [ ] Verify the full suite, publish, and visually check both hosted versions.
+- [x] Verify the full suite, publish, and visually check both hosted versions.
