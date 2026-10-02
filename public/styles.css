@@ -798,12 +798,10 @@ button { font: inherit; }
 
 @keyframes dice-cube-spin-left {
   0% { transform: rotateX(-16deg) rotateY(24deg) rotateZ(-2deg); }
-  22% { transform: rotateX(245deg) rotateY(198deg) rotateZ(112deg); }
-  48% { transform: rotateX(580deg) rotateY(465deg) rotateZ(248deg); }
-  72% { transform: rotateX(824deg) rotateY(702deg) rotateZ(358deg); }
-  82% { transform: rotateX(786deg) rotateY(674deg) rotateZ(342deg); }
-  92% { transform: rotateX(812deg) rotateY(696deg) rotateZ(355deg); }
-  100% { transform: rotateX(704deg) rotateY(744deg) rotateZ(358deg); }
+  30% { transform: rotateX(118deg) rotateY(112deg) rotateZ(42deg); }
+  62% { transform: rotateX(242deg) rotateY(218deg) rotateZ(88deg); }
+  82% { transform: rotateX(286deg) rotateY(260deg) rotateZ(104deg); }
+  100% { transform: rotateX(270deg) rotateY(288deg) rotateZ(108deg); }
 }
 
 @keyframes dice-cube-spin-right {

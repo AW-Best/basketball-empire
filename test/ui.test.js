@@ -435,7 +435,7 @@ test('dice use a WebGL canvas with rounded solid geometry and retain accessible 
   const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
 
   assert.match(html, /<canvas[^>]+id="dice-webgl"/);
-  assert.match(html, /type="module" src="dice-3d\.js\?v=20261002s"/);
+  assert.match(html, /type="module" src="dice-3d\.js\?v=20261002t"/);
   assert.match(dice3d, /RoundedBoxGeometry/);
   assert.match(dice3d, /new THREE\.WebGLRenderer\(\{ alpha: true, antialias: true \}\)/);
   assert.match(dice3d, /function createRoundedDie/);
@@ -538,6 +538,15 @@ test('WebGL dice use calmer spin and wider separation', () => {
   assert.match(dice3d, /impulse \* COLLISION_SPIN/);
   assert.match(css, /\.dice-tray\s*\{[^}]*min-width:\s*clamp\(230px, 24vw, 320px\)[^}]*gap:\s*62px/s);
   assert.match(css, /@media \(max-width: 720px\)[\s\S]*\.dice-tray\s*\{[^}]*min-width:\s*200px[^}]*gap:\s*52px/s);
+});
+
+test('CSS fallback left die uses one controlled Richup-style tumble', () => {
+  const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
+  const leftSpin = css.match(/@keyframes dice-cube-spin-left\s*\{([\s\S]*?)\n\}/)?.[1] || '';
+
+  assert.match(leftSpin, /30%\s*\{ transform: rotateX\(118deg\) rotateY\(112deg\) rotateZ\(42deg\); \}/);
+  assert.match(leftSpin, /100%\s*\{ transform: rotateX\(270deg\) rotateY\(288deg\) rotateZ\(108deg\); \}/);
+  assert.doesNotMatch(leftSpin, /rotate[XYZ]\([+-]?(?:[4-9]\d\d|\d{4,})deg\)/);
 });
 
 test('rigid dice land on faces, edges, and corners using oriented cube support', () => {
@@ -677,8 +686,8 @@ test('Tip-Off guide explains the exact-landing 300 point bonus', () => {
 test('deployed browsers receive the current interface assets instead of stale cached files', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
 
-  assert.match(html, /styles\.css\?v=20261002s/);
-  assert.match(html, /app\.js\?v=20261002s/);
+  assert.match(html, /styles\.css\?v=20261002t/);
+  assert.match(html, /app\.js\?v=20261002t/);
 });
 
 test('API requests report an understandable connection error when a tunnel returns HTML', () => {
