@@ -21,4 +21,4 @@ Reduce the current WebGL dice by exactly 30% at every responsive breakpoint.
 - [x] RED: specify the exact 30% reduction.
 - [x] GREEN: implement the new responsive scales.
 - [x] Run the full suite and visually verify the replay.
-- [ ] Publish and verify production.
+- [x] Publish and verify production.

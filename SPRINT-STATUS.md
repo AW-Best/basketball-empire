@@ -204,4 +204,4 @@
 - [x] Define architecture and acceptance criteria.
 - [x] RED: specify the exact 30% scale reduction.
 - [x] GREEN: implement the new responsive scales.
-- [ ] Verify, publish, and visually check production.
+- [x] Verify, publish, and visually check production.
