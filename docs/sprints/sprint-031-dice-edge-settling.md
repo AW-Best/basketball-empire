@@ -24,4 +24,4 @@ Make the WebGL dice land and collide as rounded cubes instead of invisible balls
 - [x] RED: specify oriented floor and dice contact plus late settling.
 - [x] GREEN: implement oriented support and progressive result correction.
 - [x] Run the full suite and visually verify the replay.
-- [ ] Publish and verify production.
+- [x] Publish and verify production.

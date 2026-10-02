@@ -183,4 +183,4 @@
 - [x] Define architecture and acceptance criteria.
 - [x] RED: specify oriented cube contact and late result settling.
 - [x] GREEN: implement quaternion-aware support and progressive correction.
-- [ ] Verify, publish, and visually check production.
+- [x] Verify, publish, and visually check production.
