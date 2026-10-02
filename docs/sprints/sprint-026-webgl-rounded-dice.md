@@ -25,6 +25,6 @@ Replace the visually flat CSS dice with compact, rounded, solid dice rendered in
 
 - [x] Define architecture and acceptance criteria.
 - [x] RED: add WebGL integration and settlement contract tests.
-- [ ] GREEN: implement rounded dice geometry, pips, lighting, and animation.
-- [ ] Verify responsive behavior and the full automated test suite.
+- [x] GREEN: implement rounded dice geometry, pips, lighting, and animation.
+- [x] Verify responsive behavior and the full automated test suite.
 - [ ] Commit, publish, and visually verify the hosted result.
