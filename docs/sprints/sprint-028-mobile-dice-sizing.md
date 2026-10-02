@@ -12,8 +12,9 @@ Keep both WebGL dice comfortably inside the central court on phones without redu
 
 ## Acceptance criteria
 
-- Phones at 720px or below render dice at 68% of desktop size.
-- Tablets render dice at 84% of desktop size.
+- All breakpoint sizes are reduced by a further 20% after visual review.
+- Phones at 720px or below render dice at 54.4% of the original desktop size.
+- Tablets render dice at 67.2%; desktop renders them at 80%.
 - The two dice remain fully visible with space around their edges.
 - Resize, reduced-motion, and animated states use the same responsive scale.
 
