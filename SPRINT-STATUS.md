@@ -191,3 +191,10 @@
 - [x] RED: specify a further 15% responsive size reduction.
 - [x] GREEN: update the shared dice scale.
 - [x] Verify, publish, and visually check production.
+
+## Sprint 033 — Compact Responsive Dice
+
+- [x] Define architecture and acceptance criteria.
+- [x] RED: specify compact responsive scales.
+- [x] GREEN: implement the compact scales.
+- [ ] Verify, publish, and visually check production.

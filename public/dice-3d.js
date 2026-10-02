@@ -87,9 +87,9 @@ function finalQuaternion(value, yaw = 0) {
 }
 
 function responsiveDiceScale() {
-  if (window.innerWidth <= 720) return 0.462;
-  if (window.innerWidth <= 1024) return 0.571;
-  return 0.68;
+  if (window.innerWidth <= 720) return 0.41;
+  if (window.innerWidth <= 1024) return 0.5;
+  return 0.6;
 }
 
 function restingY() {
