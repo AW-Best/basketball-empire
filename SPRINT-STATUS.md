@@ -135,3 +135,10 @@
 - [x] RED: prove the flat dice fail the six-face 3D contract.
 - [x] GREEN: implement perspective cubes, independent rotation, lighting, and impact depth.
 - [x] Verify, publish, and check production.
+
+## Sprint 025 — 3D Dice Flattening Fix
+
+- [x] Reproduce the paper-thin mid-roll frame in the live browser.
+- [x] RED: protect against competing wrapper rotations and 3D-flattening filters.
+- [x] GREEN: isolate trajectory motion from cube rotation and preserve the 3D subtree.
+- [ ] Publish and verify both hosted versions.
