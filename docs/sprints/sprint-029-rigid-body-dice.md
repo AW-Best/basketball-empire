@@ -26,4 +26,4 @@ Close the remaining gap with Richup.io by replacing the scripted dice path with 
 - [x] RED: specify rigid-body integration, floor contact, friction, collision, and authoritative settling.
 - [x] GREEN: implement lightweight dice physics.
 - [x] Run the full suite and visually verify the roll.
-- [ ] Publish and verify production.
+- [x] Publish and verify production.

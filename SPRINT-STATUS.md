@@ -169,4 +169,4 @@
 - [x] Define architecture and acceptance criteria.
 - [x] RED: specify gravity, floor contact, friction, collision, and authoritative settling.
 - [x] GREEN: implement lightweight rigid-body dice physics.
-- [ ] Verify, publish, and visually check production.
+- [x] Verify, publish, and visually check production.
