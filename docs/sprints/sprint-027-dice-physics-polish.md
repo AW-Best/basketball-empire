@@ -26,4 +26,4 @@ Refine the WebGL dice from a showy airborne animation into a compact, rigid tabl
 - [x] RED: specify compact geometry, rigid motion, staggered settling, and inset pips.
 - [x] GREEN: implement the revised geometry and motion.
 - [x] Run the full suite and visually verify desktop and mobile.
-- [ ] Publish and verify the hosted version.
+- [x] Publish and verify the hosted version.

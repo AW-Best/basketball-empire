@@ -155,4 +155,4 @@
 - [x] Define architecture and acceptance criteria.
 - [x] RED: specify compact rigid motion, staggered settling, and inset pips.
 - [x] GREEN: implement the revised geometry and motion.
-- [ ] Verify, publish, and visually check the hosted versions.
+- [x] Verify, publish, and visually check the hosted versions.
