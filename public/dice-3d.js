@@ -95,14 +95,51 @@ function restingY() {
   return FLOOR_Y + (0.71 * responsiveDiceScale());
 }
 
-function createRigidBody(index, quaternion) {
+function seededVariation(seed) {
+  const raw = Math.sin(seed * 12.9898) * 43758.5453;
+  return ((raw - Math.floor(raw)) * 2) - 1;
+}
+
+function createContactShadow() {
+  const shadow = new THREE.Mesh(
+    new THREE.CircleGeometry(0.48, 32),
+    new THREE.MeshBasicMaterial({
+      color: 0x000000,
+      transparent: true,
+      opacity: 0.24,
+      depthWrite: false,
+    }),
+  );
+  shadow.rotation.x = -Math.PI / 2;
+  shadow.position.y = FLOOR_Y + 0.008;
+  shadow.renderOrder = 1;
+  return shadow;
+}
+
+function updateContactShadow(die, height) {
+  const shadow = die.userData.contactShadow;
+  if (!shadow) return;
+  const airHeight = Math.max(0, height - restingY());
+  const proximity = 1 - THREE.MathUtils.clamp(airHeight / 1.15, 0, 1);
+  shadow.position.x = die.position.x;
+  shadow.position.z = die.position.z;
+  shadow.material.opacity = 0.07 + (proximity * 0.21);
+  shadow.scale.setScalar((0.72 + (airHeight * 0.48)) * responsiveDiceScale());
+}
+
+function createRigidBody(index, quaternion, variation = 0) {
   const floorY = restingY();
-  return {
+  const body = {
     position: new THREE.Vector3(index ? 0.76 : -0.76, floorY + (index ? 0.62 : 0.48), index ? -0.04 : 0.04),
     velocity: new THREE.Vector3(index ? -1.12 : 1.28, index ? 1.55 : 1.35, index ? 0.09 : -0.08),
     angularVelocity: new THREE.Vector3(index ? -8.2 : 7.4, index ? 6.8 : -7.6, index ? -5.7 : 6.1),
     quaternion: quaternion.clone(),
   };
+  body.velocity.x *= 1 + (variation * 0.08);
+  body.velocity.y *= 1 - (variation * 0.06);
+  body.velocity.z += variation * 0.14;
+  body.angularVelocity.multiplyScalar(1 + (variation * 0.12));
+  return body;
 }
 
 function integrateRigidBody(body, delta, floorY) {
@@ -155,7 +192,10 @@ function resize() {
   renderer.setSize(width, height, false);
   camera.aspect = width / height;
   camera.updateProjectionMatrix();
-  dice.forEach((die) => die.scale.setScalar(responsiveDiceScale()));
+  dice.forEach((die) => {
+    die.scale.setScalar(responsiveDiceScale());
+    updateContactShadow(die, die.position.y);
+  });
   renderer.render(scene, camera);
 }
 
@@ -164,6 +204,7 @@ function setValues(values = [1, 1]) {
     die.position.set(index ? 0.72 : -0.72, restingY(), index ? -0.06 : 0.06);
     die.quaternion.copy(finalQuaternion(values[index], index ? 0.23 : -0.23));
     die.scale.setScalar(responsiveDiceScale());
+    updateContactShadow(die, die.position.y);
   });
   renderer?.render(scene, camera);
 }
@@ -179,7 +220,11 @@ function roll(finalValues = [1, 1]) {
   const duration = Math.max(...settleTimes);
   const startedAt = performance.now();
   const targets = finalValues.map((value, index) => finalQuaternion(value, index ? 0.23 : -0.23));
-  const bodies = dice.map((die, index) => createRigidBody(index, die.quaternion));
+  const variationSeed = finalValues[0] * 17 + finalValues[1] * 31;
+  const bodies = dice.map((die, index) => {
+    const variation = seededVariation(variationSeed + (index * 13));
+    return createRigidBody(index, die.quaternion, variation);
+  });
   let previousFrame = startedAt;
 
   return new Promise((resolve) => {
@@ -199,6 +244,7 @@ function roll(finalValues = [1, 1]) {
         die.position.z = THREE.MathUtils.lerp(die.position.z, index ? -0.06 : 0.06, settleBlend);
         die.quaternion.copy(bodies[index].quaternion).slerp(targets[index], settleBlend);
         die.scale.setScalar(responsiveDiceScale());
+        updateContactShadow(die, die.position.y);
       });
       renderer.render(scene, camera);
       if (progress < 1) {
@@ -251,7 +297,12 @@ function initialize() {
     scene.add(floor);
 
     dice = [createRoundedDie(), createRoundedDie()];
-    dice.forEach((die) => scene.add(die));
+    dice.forEach((die) => {
+      const contactShadow = createContactShadow();
+      die.userData.contactShadow = contactShadow;
+      scene.add(contactShadow);
+      scene.add(die);
+    });
     resize();
     setValues([1, 1]);
     tray?.classList.add('is-webgl-ready');

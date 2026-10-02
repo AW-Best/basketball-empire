@@ -170,3 +170,10 @@
 - [x] RED: specify gravity, floor contact, friction, collision, and authoritative settling.
 - [x] GREEN: implement lightweight rigid-body dice physics.
 - [x] Verify, publish, and visually check production.
+
+## Sprint 030 — Dice Shadow and Roll Variation
+
+- [x] Define architecture and acceptance criteria.
+- [x] RED: specify dynamic contact shadows and deterministic variation.
+- [x] GREEN: implement shadows and seeded motion.
+- [ ] Publish and visually check production.

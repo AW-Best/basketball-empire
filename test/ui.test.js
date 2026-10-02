@@ -435,7 +435,7 @@ test('dice use a WebGL canvas with rounded solid geometry and retain accessible 
   const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
 
   assert.match(html, /<canvas[^>]+id="dice-webgl"/);
-  assert.match(html, /type="module" src="dice-3d\.js\?v=20261002i"/);
+  assert.match(html, /type="module" src="dice-3d\.js\?v=20261002j"/);
   assert.match(dice3d, /RoundedBoxGeometry/);
   assert.match(dice3d, /new THREE\.WebGLRenderer\(\{ alpha: true, antialias: true \}\)/);
   assert.match(dice3d, /function createRoundedDie/);
@@ -503,6 +503,25 @@ test('the two dice collide and settle onto their authoritative results', () => {
   assert.match(dice3d, /resolveDiceCollision\(bodies\)/);
   assert.match(dice3d, /const settleBlend = THREE\.MathUtils\.smoothstep/);
   assert.match(dice3d, /slerp\(targets\[index\], settleBlend\)/);
+});
+
+test('rigid dice use height-reactive contact shadows', () => {
+  const dice3d = fs.readFileSync(path.join(projectRoot, 'public/dice-3d.js'), 'utf8');
+
+  assert.match(dice3d, /function createContactShadow\(\)/);
+  assert.match(dice3d, /function updateContactShadow\(die, height\)/);
+  assert.match(dice3d, /shadow\.material\.opacity =/);
+  assert.match(dice3d, /shadow\.scale\.setScalar/);
+  assert.match(dice3d, /updateContactShadow\(die, die\.position\.y\)/);
+});
+
+test('rigid dice vary launch and spin deterministically for each result', () => {
+  const dice3d = fs.readFileSync(path.join(projectRoot, 'public/dice-3d.js'), 'utf8');
+
+  assert.match(dice3d, /function seededVariation\(seed\)/);
+  assert.match(dice3d, /finalValues\[0\] \* 17 \+ finalValues\[1\] \* 31/);
+  assert.match(dice3d, /createRigidBody\(index, die\.quaternion, variation\)/);
+  assert.match(dice3d, /angularVelocity\.multiplyScalar\(1 \+ \(variation \* 0\.12\)\)/);
 });
 
 test('live updates fall back to polling when server-sent events are unavailable', () => {
@@ -579,8 +598,8 @@ test('Tip-Off guide explains the exact-landing 300 point bonus', () => {
 test('deployed browsers receive the current interface assets instead of stale cached files', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
 
-  assert.match(html, /styles\.css\?v=20261002i/);
-  assert.match(html, /app\.js\?v=20261002i/);
+  assert.match(html, /styles\.css\?v=20261002j/);
+  assert.match(html, /app\.js\?v=20261002j/);
 });
 
 test('API requests report an understandable connection error when a tunnel returns HTML', () => {
