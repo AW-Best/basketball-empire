@@ -496,7 +496,10 @@ button { font: inherit; }
 .shot-clock.is-expired { color: #fff; background: #b32727; box-shadow: inset 0 0 0 2px #ff7b72, 0 0 24px rgba(255,70,61,.42); }
 
 .possession { align-self: start; justify-self: center; display: grid; place-items: center; gap: 8px; }
-.dice-tray { position: relative; display: flex; gap: 18px; perspective: 430px; perspective-origin: 50% 34%; transform-style: preserve-3d; }
+.dice-tray { position: relative; display: flex; min-width: clamp(190px, 20vw, 270px); min-height: clamp(105px, 11vw, 145px); align-items: center; justify-content: center; gap: 18px; perspective: 430px; perspective-origin: 50% 34%; transform-style: preserve-3d; }
+.dice-webgl { position: absolute; z-index: 1; inset: 0; display: block; width: 100%; height: 100%; opacity: 0; pointer-events: none; transition: opacity .18s ease; }
+.dice-tray.is-webgl-ready .dice-webgl { opacity: 1; }
+.dice-tray.is-webgl-ready .die { visibility: hidden; }
 .dice-tray::before { content: ''; position: absolute; z-index: -2; inset: -34px -46px -24px; border-radius: 50%; opacity: 0; background: radial-gradient(circle, rgba(255,244,221,.42), rgba(242,106,33,.12) 34%, transparent 68%); transform: scale(.35); pointer-events: none; }
 .dice-tray::after { content: ''; position: absolute; z-index: -3; right: 2%; bottom: -19px; left: 2%; height: 18px; border-radius: 50%; opacity: .5; background: radial-gradient(ellipse, rgba(0,0,0,.7), transparent 70%); filter: blur(4px); }
 .dice-tray.is-rolling::after { animation: dice-shadow-pulse 1.36s ease-out; }

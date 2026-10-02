@@ -16,7 +16,7 @@
       href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Nunito+Sans:wght@600;700;800;900&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20261002c" />
+    <link rel="stylesheet" href="styles.css?v=20261002e" />
   </head>
   <body>
     <div class="arena-shell">
@@ -154,6 +154,7 @@
 
               <div class="possession">
                 <div class="dice-tray" aria-live="polite">
+                  <canvas class="dice-webgl" id="dice-webgl" aria-hidden="true"></canvas>
                   <div class="die" id="die-one" aria-label="Die showing one"></div>
                   <div class="die is-accent" id="die-two" aria-label="Die showing one"></div>
                 </div>
@@ -377,9 +378,10 @@
     <script>
       if (window.location.protocol !== 'file:') {
         const gameScript = document.createElement('script');
-        gameScript.src = 'app.js?v=20261002c';
+        gameScript.src = 'app.js?v=20261002e';
         document.body.append(gameScript);
       }
     </script>
+    <script type="module" src="dice-3d.js?v=20261002e"></script>
   </body>
 </html>

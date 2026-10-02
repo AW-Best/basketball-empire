@@ -630,6 +630,12 @@ function animateDice(finalValues, onSettled) {
   clearTimeout(diceResultTimer);
   clearTimeout(diceSettleTimer);
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const diceRenderer = window.Dice3D;
+  if (diceRenderer?.isReady()) {
+    dice.forEach((die, index) => renderDie(die, finalValues[index]));
+    diceRenderer.roll(finalValues).then(() => onSettled?.());
+    return;
+  }
   if (reduceMotion) {
     dice.forEach((die, index) => renderDie(die, finalValues[index]));
     onSettled?.();
