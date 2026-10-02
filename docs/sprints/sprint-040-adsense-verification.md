@@ -15,4 +15,4 @@ Production returned HTTP 200 to Googlebot, Mediapartners-Google, and Google-Disp
 
 - [x] Add failing contracts for the meta tag and crawler rules.
 - [x] Add the minimum verification files.
-- [ ] Verify, commit, deploy, and test using Google crawler user agents.
+- [x] Verify, commit, deploy, and test using Google crawler user agents.
