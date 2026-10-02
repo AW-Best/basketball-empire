@@ -197,4 +197,4 @@
 - [x] Define architecture and acceptance criteria.
 - [x] RED: specify compact responsive scales.
 - [x] GREEN: implement the compact scales.
-- [ ] Verify, publish, and visually check production.
+- [x] Verify, publish, and visually check production.

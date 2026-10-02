@@ -21,4 +21,4 @@ Reduce the WebGL dice one more step so the throw remains readable without domina
 - [x] RED: specify compact responsive scales.
 - [x] GREEN: implement the compact scales.
 - [x] Run the full suite and visually verify the replay.
-- [ ] Publish and verify production.
+- [x] Publish and verify production.
