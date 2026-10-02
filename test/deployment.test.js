@@ -5,6 +5,11 @@ const path = require('node:path');
 
 const projectRoot = path.join(__dirname, '..');
 
+test('ads.txt authorizes the Basketball Empire Google AdSense publisher', () => {
+  const ads = fs.readFileSync(path.join(projectRoot, 'public/ads.txt'), 'utf8');
+  assert.equal(ads.trim(), 'google.com, pub-6603520082677971, DIRECT, f08c47fec0942fa0');
+});
+
 test('Render blueprint deploys the Node server with a health check', () => {
   const blueprintPath = path.join(projectRoot, 'render.yaml');
   assert.equal(fs.existsSync(blueprintPath), true, 'render.yaml must exist');

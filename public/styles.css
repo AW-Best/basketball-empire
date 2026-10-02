@@ -1004,6 +1004,20 @@ button { font: inherit; }
 }
 .site-legal strong { color: rgba(255,255,255,.75); font-size: 11px; letter-spacing: .04em; text-transform: uppercase; }
 .site-legal p { max-width: 900px; margin: 0 auto; }
+.site-legal a { color: var(--court-orange); text-underline-offset: 3px; }
+
+.legal-page { min-height: 100vh; color: var(--cream); background: #06111f; }
+.legal-document { width: min(820px, calc(100% - 32px)); margin: 32px auto; padding: clamp(24px, 5vw, 56px); border: 1px solid rgba(255,255,255,.1); border-radius: 24px; background: rgba(9,27,45,.96); box-shadow: 0 28px 80px rgba(0,0,0,.35); }
+.legal-back { display: inline-block; margin-bottom: 38px; color: var(--court-orange); font-weight: 900; text-decoration: none; }
+.legal-document h1 { margin: 6px 0 0; font: 900 clamp(46px, 8vw, 76px)/.9 'Barlow Condensed', sans-serif; text-transform: uppercase; }
+.legal-updated { margin: 14px 0 34px; color: var(--muted); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.legal-document section { padding: 23px 0; border-top: 1px solid rgba(255,255,255,.08); }
+.legal-document h2 { margin: 0 0 9px; font: 900 25px/1 'Barlow Condensed', sans-serif; text-transform: uppercase; }
+.legal-document p { margin: 0 0 10px; color: rgba(235,241,247,.78); line-height: 1.75; }
+.legal-document p:last-child { margin-bottom: 0; }
+.legal-document a { color: var(--court-orange); }
+.legal-document code { padding: 2px 5px; border-radius: 4px; color: var(--cream); background: rgba(255,255,255,.08); }
+.legal-document-footer { padding-top: 24px; color: var(--muted); font-size: 11px; text-align: center; text-transform: uppercase; }
 
 @media (max-width: 560px) {
   .topbar { min-height: 58px; }
@@ -1077,6 +1091,8 @@ button { font: inherit; }
   .auction-actions button strong { font-size: 17px; }
   .site-legal { margin-top: 12px; padding: 14px 10px calc(14px + env(safe-area-inset-bottom)); font-size: 10px; text-align: left; }
   .site-legal strong { font-size: 10px; }
+  .legal-document { width: calc(100% - 20px); margin: 10px auto; padding: 24px 18px; border-radius: 18px; }
+  .legal-back { margin-bottom: 28px; }
 }
 
 @media (max-width: 900px) and (orientation: landscape) {

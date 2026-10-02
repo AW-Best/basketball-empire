@@ -435,7 +435,7 @@ test('dice use a WebGL canvas with rounded solid geometry and retain accessible 
   const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
 
   assert.match(html, /<canvas[^>]+id="dice-webgl"/);
-  assert.match(html, /type="module" src="dice-3d\.js\?v=20261002u"/);
+  assert.match(html, /type="module" src="dice-3d\.js\?v=20261002v"/);
   assert.match(dice3d, /RoundedBoxGeometry/);
   assert.match(dice3d, /new THREE\.WebGLRenderer\(\{ alpha: true, antialias: true \}\)/);
   assert.match(dice3d, /function createRoundedDie/);
@@ -686,8 +686,8 @@ test('Tip-Off guide explains the exact-landing 300 point bonus', () => {
 test('deployed browsers receive the current interface assets instead of stale cached files', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
 
-  assert.match(html, /styles\.css\?v=20261002u/);
-  assert.match(html, /app\.js\?v=20261002u/);
+  assert.match(html, /styles\.css\?v=20261002v/);
+  assert.match(html, /app\.js\?v=20261002v/);
 });
 
 test('API requests report an understandable connection error when a tunnel returns HTML', () => {
@@ -938,4 +938,18 @@ test('site footer shows Basketball Empire copyright and independent fan-project 
   assert.match(html, /in-game teams, events, and results are fictional/i);
   assert.match(css, /\.site-legal\s*\{/);
   assert.match(css, /@media \(max-width: 560px\)[\s\S]*\.site-legal/);
+});
+
+test('site loads the owner AdSense account and links a complete privacy notice', () => {
+  const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
+  const privacy = fs.readFileSync(path.join(projectRoot, 'public/privacy.html'), 'utf8');
+
+  assert.match(html, /pagead2\.googlesyndication\.com\/pagead\/js\/adsbygoogle\.js\?client=ca-pub-6603520082677971/);
+  assert.match(html, /crossorigin="anonymous"/);
+  assert.match(html, /href="privacy\.html"[^>]*>Privacy</);
+  assert.match(privacy, /Privacy Policy/);
+  assert.match(privacy, /Google AdSense/);
+  assert.match(privacy, /cookies/i);
+  assert.match(privacy, /localStorage/);
+  assert.match(privacy, /uploaded avatar/i);
 });

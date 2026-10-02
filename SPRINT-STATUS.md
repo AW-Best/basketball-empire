@@ -236,3 +236,10 @@
 - [x] GREEN: add the global responsive legal footer.
 - [x] Verify the complete 143-test suite.
 - [x] Commit and publish the notice.
+
+## Sprint 039 — Google AdSense Foundation
+
+- [x] Record acceptance criteria, deployment architecture, and consent responsibility.
+- [x] RED: specify the publisher script, ads.txt, privacy notice, and footer link.
+- [x] GREEN: add the AdSense and privacy assets without changing gameplay.
+- [ ] Verify, commit, deploy, and check the public endpoints.
