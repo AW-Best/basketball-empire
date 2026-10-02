@@ -4,6 +4,8 @@ import { RoundedBoxGeometry } from './vendor/RoundedBoxGeometry.js';
 let canvas = document.querySelector('#dice-webgl');
 const tray = canvas?.closest('.dice-tray');
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+const GRAVITY = -5.8;
+const FLOOR_Y = -0.82;
 
 const PIP_LAYOUTS = {
   1: [[0, 0]],
@@ -89,6 +91,61 @@ function responsiveDiceScale() {
   return 0.8;
 }
 
+function restingY() {
+  return FLOOR_Y + (0.71 * responsiveDiceScale());
+}
+
+function createRigidBody(index, quaternion) {
+  const floorY = restingY();
+  return {
+    position: new THREE.Vector3(index ? 0.76 : -0.76, floorY + (index ? 0.62 : 0.48), index ? -0.04 : 0.04),
+    velocity: new THREE.Vector3(index ? -1.12 : 1.28, index ? 1.55 : 1.35, index ? 0.09 : -0.08),
+    angularVelocity: new THREE.Vector3(index ? -8.2 : 7.4, index ? 6.8 : -7.6, index ? -5.7 : 6.1),
+    quaternion: quaternion.clone(),
+  };
+}
+
+function integrateRigidBody(body, delta, floorY) {
+  body.velocity.y += GRAVITY * delta;
+  body.position.addScaledVector(body.velocity, delta);
+  const angularSpeed = body.angularVelocity.length();
+  if (angularSpeed > 0.001) {
+    const rotation = new THREE.Quaternion().setFromAxisAngle(
+      body.angularVelocity.clone().normalize(),
+      angularSpeed * delta,
+    );
+    body.quaternion.premultiply(rotation).normalize();
+  }
+  if (body.position.y <= floorY) {
+    body.position.y = floorY;
+    if (body.velocity.y < -0.18) body.velocity.y *= -0.34;
+    else body.velocity.y = 0;
+    body.velocity.x *= Math.pow(0.18, delta);
+    body.velocity.z *= Math.pow(0.18, delta);
+    body.angularVelocity.multiplyScalar(Math.pow(0.13, delta));
+  }
+}
+
+function resolveDiceCollision(bodies) {
+  const bodyRadius = 0.61 * responsiveDiceScale();
+  const minimumDistance = bodyRadius * 2;
+  const offset = bodies[1].position.clone().sub(bodies[0].position);
+  offset.y = 0;
+  const distance = offset.length();
+  if (!distance || distance >= minimumDistance) return;
+  const normal = offset.multiplyScalar(1 / distance);
+  const overlap = minimumDistance - distance;
+  bodies[0].position.addScaledVector(normal, -overlap / 2);
+  bodies[1].position.addScaledVector(normal, overlap / 2);
+  const relativeSpeed = bodies[1].velocity.clone().sub(bodies[0].velocity).dot(normal);
+  if (relativeSpeed >= 0) return;
+  const impulse = -(1.34 * relativeSpeed) / 2;
+  bodies[0].velocity.addScaledVector(normal, -impulse);
+  bodies[1].velocity.addScaledVector(normal, impulse);
+  bodies[0].angularVelocity.z -= impulse * 1.8;
+  bodies[1].angularVelocity.z += impulse * 1.8;
+}
+
 function resize() {
   if (!renderer || !canvas) return;
   const width = Math.max(1, canvas.clientWidth);
@@ -104,15 +161,11 @@ function resize() {
 
 function setValues(values = [1, 1]) {
   dice.forEach((die, index) => {
-    die.position.set(index ? 0.9 : -0.9, -0.08, index ? -0.06 : 0.06);
+    die.position.set(index ? 0.72 : -0.72, restingY(), index ? -0.06 : 0.06);
     die.quaternion.copy(finalQuaternion(values[index], index ? 0.23 : -0.23));
     die.scale.setScalar(responsiveDiceScale());
   });
   renderer?.render(scene, camera);
-}
-
-function easeOutQuint(value) {
-  return 1 - ((1 - value) ** 5);
 }
 
 function roll(finalValues = [1, 1]) {
@@ -125,31 +178,26 @@ function roll(finalValues = [1, 1]) {
   const settleTimes = [1040, 1180];
   const duration = Math.max(...settleTimes);
   const startedAt = performance.now();
-  const starts = dice.map((die) => die.quaternion.clone());
   const targets = finalValues.map((value, index) => finalQuaternion(value, index ? 0.23 : -0.23));
-  const spins = [
-    new THREE.Vector3(4.1 * Math.PI, 5.2 * Math.PI, 3.2 * Math.PI),
-    new THREE.Vector3(-4.8 * Math.PI, 4.4 * Math.PI, -3.6 * Math.PI),
-  ];
+  const bodies = dice.map((die, index) => createRigidBody(index, die.quaternion));
+  let previousFrame = startedAt;
 
   return new Promise((resolve) => {
     resolveActiveRoll = resolve;
     const animate = (now) => {
       const progress = Math.min(1, (now - startedAt) / duration);
+      const delta = Math.min(0.032, Math.max(0.001, (now - previousFrame) / 1000));
+      previousFrame = now;
+      bodies.forEach((body) => integrateRigidBody(body, delta, restingY()));
+      resolveDiceCollision(bodies);
       dice.forEach((die, index) => {
         const dieProgress = Math.min(1, (now - startedAt) / settleTimes[index]);
-        const eased = easeOutQuint(dieProgress);
-        const flight = Math.sin(Math.PI * Math.min(1, dieProgress * 1.24));
-        const rebound = dieProgress > 0.7 ? Math.sin((dieProgress - 0.7) * Math.PI * 8) * (1 - dieProgress) * 0.1 : 0;
-        const slide = dieProgress > 0.76 ? Math.sin((dieProgress - 0.76) * Math.PI * 5) * (1 - dieProgress) * 0.075 : 0;
-        const travel = (index ? -0.28 : 0.28) * Math.sin(Math.PI * dieProgress) + (index ? -slide : slide);
-        die.position.set(index ? 0.9 + travel : -0.9 + travel, -0.08 + flight * 0.34 + Math.abs(rebound), index ? -0.06 : 0.06);
-        const tumble = new THREE.Quaternion().setFromEuler(new THREE.Euler(
-          spins[index].x * (1 - eased),
-          spins[index].y * (1 - eased),
-          spins[index].z * (1 - eased),
-        ));
-        die.quaternion.copy(starts[index]).multiply(tumble).slerp(targets[index], eased);
+        const settleBlend = THREE.MathUtils.smoothstep(dieProgress, 0.7, 1);
+        die.position.copy(bodies[index].position);
+        die.position.x = THREE.MathUtils.lerp(die.position.x, index ? 0.72 : -0.72, settleBlend);
+        die.position.y = THREE.MathUtils.lerp(die.position.y, restingY(), settleBlend);
+        die.position.z = THREE.MathUtils.lerp(die.position.z, index ? -0.06 : 0.06, settleBlend);
+        die.quaternion.copy(bodies[index].quaternion).slerp(targets[index], settleBlend);
         die.scale.setScalar(responsiveDiceScale());
       });
       renderer.render(scene, camera);
@@ -198,7 +246,7 @@ function initialize() {
       new THREE.ShadowMaterial({ color: 0x000000, opacity: 0.36 }),
     );
     floor.rotation.x = -Math.PI / 2;
-    floor.position.y = -0.82;
+    floor.position.y = FLOOR_Y;
     floor.receiveShadow = true;
     scene.add(floor);
 

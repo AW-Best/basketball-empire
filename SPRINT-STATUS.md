@@ -163,3 +163,10 @@
 - [x] RED: specify phone/tablet WebGL scaling and a smaller phone tray.
 - [x] GREEN: implement responsive sizing.
 - [x] Verify, publish, and visually check production.
+
+## Sprint 029 — Rigid-Body Dice Motion
+
+- [x] Define architecture and acceptance criteria.
+- [x] RED: specify gravity, floor contact, friction, collision, and authoritative settling.
+- [x] GREEN: implement lightweight rigid-body dice physics.
+- [ ] Verify, publish, and visually check production.

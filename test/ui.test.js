@@ -435,7 +435,7 @@ test('dice use a WebGL canvas with rounded solid geometry and retain accessible 
   const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
 
   assert.match(html, /<canvas[^>]+id="dice-webgl"/);
-  assert.match(html, /type="module" src="dice-3d\.js\?v=20261002h"/);
+  assert.match(html, /type="module" src="dice-3d\.js\?v=20261002i"/);
   assert.match(dice3d, /RoundedBoxGeometry/);
   assert.match(dice3d, /new THREE\.WebGLRenderer\(\{ alpha: true, antialias: true \}\)/);
   assert.match(dice3d, /function createRoundedDie/);
@@ -457,8 +457,6 @@ test('WebGL dice use a compact rigid tabletop roll with staggered settling', () 
   const dice3d = fs.readFileSync(path.join(projectRoot, 'public/dice-3d.js'), 'utf8');
 
   assert.match(dice3d, /const settleTimes = \[1040, 1180\]/);
-  assert.match(dice3d, /flight \* 0\.34/);
-  assert.match(dice3d, /const slide =/);
   assert.match(dice3d, /camera\.position\.set\(0, 5\.1, 10\.8\)/);
   assert.match(dice3d, /new RoundedBoxGeometry\(1\.42, 1\.42, 1\.42, 8, 0\.26\)/);
   assert.doesNotMatch(dice3d, /squash|scale\.set\(1 \/ Math\.sqrt/);
@@ -483,6 +481,28 @@ test('WebGL dice scale down responsively on phones and tablets', () => {
   assert.match(dice3d, /return 0\.8/);
   assert.match(dice3d, /die\.scale\.setScalar\(responsiveDiceScale\(\)\)/);
   assert.match(css, /@media \(max-width: 720px\)[\s\S]*\.dice-tray\s*\{[^}]*min-width:\s*160px/s);
+});
+
+test('WebGL dice use rigid-body gravity, floor restitution, and rolling friction', () => {
+  const dice3d = fs.readFileSync(path.join(projectRoot, 'public/dice-3d.js'), 'utf8');
+
+  assert.match(dice3d, /const GRAVITY = -5\.8/);
+  assert.match(dice3d, /function createRigidBody/);
+  assert.match(dice3d, /function integrateRigidBody\(body, delta, floorY\)/);
+  assert.match(dice3d, /body\.velocity\.y \+= GRAVITY \* delta/);
+  assert.match(dice3d, /body\.velocity\.y \*= -0\.34/);
+  assert.match(dice3d, /body\.velocity\.x \*= Math\.pow\(0\.18, delta\)/);
+  assert.match(dice3d, /function restingY\(\)/);
+});
+
+test('the two dice collide and settle onto their authoritative results', () => {
+  const dice3d = fs.readFileSync(path.join(projectRoot, 'public/dice-3d.js'), 'utf8');
+
+  assert.match(dice3d, /function resolveDiceCollision\(bodies\)/);
+  assert.match(dice3d, /const minimumDistance = bodyRadius \* 2/);
+  assert.match(dice3d, /resolveDiceCollision\(bodies\)/);
+  assert.match(dice3d, /const settleBlend = THREE\.MathUtils\.smoothstep/);
+  assert.match(dice3d, /slerp\(targets\[index\], settleBlend\)/);
 });
 
 test('live updates fall back to polling when server-sent events are unavailable', () => {
@@ -559,8 +579,8 @@ test('Tip-Off guide explains the exact-landing 300 point bonus', () => {
 test('deployed browsers receive the current interface assets instead of stale cached files', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
 
-  assert.match(html, /styles\.css\?v=20261002h/);
-  assert.match(html, /app\.js\?v=20261002h/);
+  assert.match(html, /styles\.css\?v=20261002i/);
+  assert.match(html, /app\.js\?v=20261002i/);
 });
 
 test('API requests report an understandable connection error when a tunnel returns HTML', () => {
