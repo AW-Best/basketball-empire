@@ -176,4 +176,4 @@
 - [x] Define architecture and acceptance criteria.
 - [x] RED: specify dynamic contact shadows and deterministic variation.
 - [x] GREEN: implement shadows and seeded motion.
-- [ ] Publish and visually check production.
+- [x] Publish and visually check production.

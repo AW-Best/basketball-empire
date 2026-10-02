@@ -24,4 +24,4 @@ Build on the rigid-body dice simulation with height-reactive contact shadows and
 - [x] RED: specify dynamic contact shadows and deterministic variation.
 - [x] GREEN: implement shadows and seeded motion.
 - [x] Run the full suite and visually verify the replay.
-- [ ] Publish and verify production.
+- [x] Publish and verify production.
