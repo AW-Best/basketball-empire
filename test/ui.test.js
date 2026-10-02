@@ -435,7 +435,7 @@ test('dice use a WebGL canvas with rounded solid geometry and retain accessible 
   const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
 
   assert.match(html, /<canvas[^>]+id="dice-webgl"/);
-  assert.match(html, /type="module" src="dice-3d\.js\?v=20261002o"/);
+  assert.match(html, /type="module" src="dice-3d\.js\?v=20261002p"/);
   assert.match(dice3d, /RoundedBoxGeometry/);
   assert.match(dice3d, /new THREE\.WebGLRenderer\(\{ alpha: true, antialias: true \}\)/);
   assert.match(dice3d, /function createRoundedDie/);
@@ -622,6 +622,24 @@ test('player pieces animate block by block and land with their own color', () =>
   assert.match(css, /@keyframes landing-pulse/);
 });
 
+test('token movement follows the recorded Richup-style hop, trail, and corner rhythm', () => {
+  const script = fs.readFileSync(path.join(projectRoot, 'public/app.js'), 'utf8');
+  const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
+
+  assert.match(script, /const TOKEN_MOTION_PROFILE = Object\.freeze/);
+  assert.match(script, /stepDuration:\s*260/);
+  assert.match(script, /cornerPause:\s*90/);
+  assert.match(script, /landingHold:\s*360/);
+  assert.match(script, /CORNER_SPACE_INDEXES\.has\(position\)/);
+  assert.match(script, /piece\.classList\.add\(isFinalStep \? 'is-landing' : 'is-stepping'\)/);
+  assert.match(script, /cell\?\.classList\.add\('is-movement-trail'\)/);
+  assert.match(css, /\.piece\.is-stepping[^{]*\{[^}]*animation:\s*piece-step-hop/s);
+  assert.match(css, /\.piece\.is-landing[^{]*\{[^}]*animation:\s*piece-final-landing/s);
+  assert.match(css, /\.space\.is-movement-trail::before/);
+  assert.match(css, /@keyframes piece-step-hop/);
+  assert.match(css, /@keyframes piece-final-landing/);
+});
+
 test('all special spaces are clickable and open an explanation card', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
   const script = fs.readFileSync(path.join(projectRoot, 'public/app.js'), 'utf8');
@@ -643,8 +661,8 @@ test('Tip-Off guide explains the exact-landing 300 point bonus', () => {
 test('deployed browsers receive the current interface assets instead of stale cached files', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
 
-  assert.match(html, /styles\.css\?v=20261002o/);
-  assert.match(html, /app\.js\?v=20261002o/);
+  assert.match(html, /styles\.css\?v=20261002p/);
+  assert.match(html, /app\.js\?v=20261002p/);
 });
 
 test('API requests report an understandable connection error when a tunnel returns HTML', () => {

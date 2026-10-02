@@ -8,6 +8,12 @@ const PLAYERS = [
 const RECRUIT_COSTS = { cyan: 50, sky: 50, pink: 100, orange: 100, red: 150, yellow: 150, green: 200, navy: 200 };
 const GROUP_BY_SERVER_NAME = { rookie: 'cyan', rising: 'sky', urban: 'pink', elite: 'orange', prime: 'red', allstar: 'yellow', legends: 'green', dynasty: 'navy' };
 const SESSION_KEY = 'basketball-empire-session';
+const TOKEN_MOTION_PROFILE = Object.freeze({
+  stepDuration: 260,
+  cornerPause: 90,
+  landingHold: 360,
+});
+const CORNER_SPACE_INDEXES = new Set([0, 10, 20, 30]);
 const SCOUTING_BOARD = [
   { name: 'Stephen Curry', role: 'Shooter', rating: 96, cost: 200, skill: 'Deep-range boost' },
   { name: 'LeBron James', role: 'Playmaker', rating: 97, cost: 200, skill: 'All-court leadership' },
@@ -392,26 +398,35 @@ function animateMovement(rollEntry) {
   const advance = () => {
     step += 1;
     const position = rollEntry.path[step];
+    const isFinalStep = step >= rollEntry.path.length - 1;
     positions.set(player.id, position);
     syncPlayerPieces(positions);
     board.querySelectorAll('.space.is-moving').forEach((cell) => cell.classList.remove('is-moving'));
     const cell = board.querySelector(`.space[data-index="${position}"]`);
     cell?.classList.add('is-moving');
+    cell?.classList.add('is-movement-trail');
     cell?.style.setProperty('--landing-color', player.color);
-    if (step >= rollEntry.path.length - 1) {
-      clearInterval(movementTimer);
-      movementTimer = null;
-      cell?.classList.remove('is-moving');
-      applyLandingHighlights();
-      renderTurn();
+    const piece = [...(cell?.querySelectorAll('.piece') || [])]
+      .find((candidate) => candidate.dataset.playerId === player.id);
+    if (piece) piece.classList.add(isFinalStep ? 'is-landing' : 'is-stepping');
+    if (isFinalStep) {
+      movementTimer = setTimeout(() => {
+        movementTimer = null;
+        cell?.classList.remove('is-moving');
+        board.querySelectorAll('.space.is-movement-trail').forEach((trail) => trail.classList.remove('is-movement-trail'));
+        applyLandingHighlights();
+        renderTurn();
+      }, TOKEN_MOTION_PROFILE.landingHold);
+      return;
     }
+    const cornerDelay = CORNER_SPACE_INDEXES.has(position) ? TOKEN_MOTION_PROFILE.cornerPause : 0;
+    movementTimer = setTimeout(advance, TOKEN_MOTION_PROFILE.stepDuration + cornerDelay);
   };
   if (reduceMotion) {
     step = rollEntry.path.length - 2;
     advance();
   } else {
     advance();
-    movementTimer = setInterval(advance, 240);
   }
 }
 

@@ -213,3 +213,10 @@
 - [x] GREEN: implement stable face presentation.
 - [x] Verify locally and visually check the synchronized result.
 - [x] Publish and verify production.
+
+## Sprint 036 — Richup-Style Roll and Token Movement
+
+- [x] Record the observed dice-to-token movement sequence and acceptance criteria.
+- [x] RED: specify the shared motion profile, hop/trail states, and corner pacing.
+- [x] GREEN: implement block-by-block movement polish.
+- [x] Verify the full automated test suite and commit.
