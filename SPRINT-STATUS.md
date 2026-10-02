@@ -141,4 +141,4 @@
 - [x] Reproduce the paper-thin mid-roll frame in the live browser.
 - [x] RED: protect against competing wrapper rotations and 3D-flattening filters.
 - [x] GREEN: isolate trajectory motion from cube rotation and preserve the 3D subtree.
-- [ ] Publish and verify both hosted versions.
+- [x] Publish and verify both hosted versions.

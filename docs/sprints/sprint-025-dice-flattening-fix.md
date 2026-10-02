@@ -20,4 +20,4 @@ The mid-roll browser capture showed both dice collapsing into thin white strips.
 - [x] Failing regression test observed before the fix.
 - [x] Mid-roll browser screenshot shows front, top, and side faces simultaneously.
 - [x] Full suite passes (124/124).
-- [ ] Hosted assets verified.
+- [x] Hosted assets verified on Tailscale and Cloudflare.
