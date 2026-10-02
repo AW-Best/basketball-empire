@@ -435,7 +435,7 @@ test('dice use a WebGL canvas with rounded solid geometry and retain accessible 
   const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
 
   assert.match(html, /<canvas[^>]+id="dice-webgl"/);
-  assert.match(html, /type="module" src="dice-3d\.js\?v=20261002m"/);
+  assert.match(html, /type="module" src="dice-3d\.js\?v=20261002n"/);
   assert.match(dice3d, /RoundedBoxGeometry/);
   assert.match(dice3d, /new THREE\.WebGLRenderer\(\{ alpha: true, antialias: true \}\)/);
   assert.match(dice3d, /function createRoundedDie/);
@@ -476,9 +476,9 @@ test('WebGL dice scale down responsively on phones and tablets', () => {
   const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
 
   assert.match(dice3d, /function responsiveDiceScale\(\)/);
-  assert.match(dice3d, /window\.innerWidth <= 720\) return 0\.41/);
-  assert.match(dice3d, /window\.innerWidth <= 1024\) return 0\.5/);
-  assert.match(dice3d, /return 0\.6/);
+  assert.match(dice3d, /window\.innerWidth <= 720\) return 0\.287/);
+  assert.match(dice3d, /window\.innerWidth <= 1024\) return 0\.35/);
+  assert.match(dice3d, /return 0\.42/);
   assert.match(dice3d, /die\.scale\.setScalar\(responsiveDiceScale\(\)\)/);
   assert.match(css, /@media \(max-width: 720px\)[\s\S]*\.dice-tray\s*\{[^}]*min-width:\s*160px/s);
 });
@@ -625,8 +625,8 @@ test('Tip-Off guide explains the exact-landing 300 point bonus', () => {
 test('deployed browsers receive the current interface assets instead of stale cached files', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
 
-  assert.match(html, /styles\.css\?v=20261002m/);
-  assert.match(html, /app\.js\?v=20261002m/);
+  assert.match(html, /styles\.css\?v=20261002n/);
+  assert.match(html, /app\.js\?v=20261002n/);
 });
 
 test('API requests report an understandable connection error when a tunnel returns HTML', () => {
