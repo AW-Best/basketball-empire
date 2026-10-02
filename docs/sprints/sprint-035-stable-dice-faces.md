@@ -24,4 +24,4 @@ Make each physical die face visually stable during a roll, make final-result ali
 - [x] RED: specify result synchronization, smooth orientation blending, and stronger pips.
 - [x] GREEN: implement the minimum synchronization and rendering changes.
 - [x] Run the full suite and visually verify repeated rolls.
-- [ ] Publish and verify production.
+- [x] Publish and verify production.

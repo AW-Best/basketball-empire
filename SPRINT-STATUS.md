@@ -212,4 +212,4 @@
 - [x] RED: specify result synchronization, smooth correction, and compact pips.
 - [x] GREEN: implement stable face presentation.
 - [x] Verify locally and visually check the synchronized result.
-- [ ] Publish and verify production.
+- [x] Publish and verify production.
