@@ -242,4 +242,4 @@
 - [x] Record acceptance criteria, deployment architecture, and consent responsibility.
 - [x] RED: specify the publisher script, ads.txt, privacy notice, and footer link.
 - [x] GREEN: add the AdSense and privacy assets without changing gameplay.
-- [ ] Verify, commit, deploy, and check the public endpoints.
+- [x] Verify all 145 tests, commit, deploy, and check the public endpoints.

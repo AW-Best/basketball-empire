@@ -22,4 +22,4 @@ Use AdSense Auto ads through the single asynchronous script Google supplied. Kee
 - [x] Add failing deployment and UI contracts for the publisher script, `ads.txt`, privacy page, and footer link.
 - [x] Add the minimum static assets and responsive styling.
 - [x] Run the focused and complete test suites.
-- [ ] Commit, deploy, and verify all public URLs.
+- [x] Commit, deploy, and verify all public URLs.
