@@ -220,3 +220,10 @@
 - [x] RED: specify the shared motion profile, hop/trail states, and corner pacing.
 - [x] GREEN: implement block-by-block movement polish.
 - [x] Verify the full automated test suite and commit.
+
+## Sprint 037 — Calmer Dice Spin and Wider Spacing
+
+- [x] Record motion requirements and UI direction.
+- [x] RED: specify reduced spin and wider separation.
+- [x] GREEN: implement WebGL dice motion tuning.
+- [x] Verify the full automated test suite and commit.

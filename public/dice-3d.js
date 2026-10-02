@@ -8,6 +8,10 @@ const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)
 const GRAVITY = -5.8;
 const FLOOR_Y = -0.82;
 const DIE_HALF_EXTENT = 0.71;
+const DICE_REST_X = 1.02;
+const DICE_LAUNCH_X = 1.12;
+const SPIN_STRENGTH = 0.56;
+const COLLISION_SPIN = 0.8;
 
 const PIP_LAYOUTS = {
   1: [[0, 0]],
@@ -163,9 +167,9 @@ function updateContactShadow(die, height) {
 function createRigidBody(index, quaternion, variation = 0) {
   const floorY = restingY();
   const body = {
-    position: new THREE.Vector3(index ? 0.76 : -0.76, floorY + (index ? 0.62 : 0.48), index ? -0.04 : 0.04),
+    position: new THREE.Vector3(index ? DICE_LAUNCH_X : -DICE_LAUNCH_X, floorY + (index ? 0.62 : 0.48), index ? -0.04 : 0.04),
     velocity: new THREE.Vector3(index ? -1.12 : 1.28, index ? 1.55 : 1.35, index ? 0.09 : -0.08),
-    angularVelocity: new THREE.Vector3(index ? -8.2 : 7.4, index ? 6.8 : -7.6, index ? -5.7 : 6.1),
+    angularVelocity: new THREE.Vector3(index ? -8.2 : 7.4, index ? 6.8 : -7.6, index ? -5.7 : 6.1).multiplyScalar(SPIN_STRENGTH),
     quaternion: quaternion.clone(),
   };
   body.velocity.x *= 1 + (variation * 0.08);
@@ -215,8 +219,8 @@ function resolveDiceCollision(bodies) {
   const impulse = -(1.34 * relativeSpeed) / 2;
   bodies[0].velocity.addScaledVector(normal, -impulse);
   bodies[1].velocity.addScaledVector(normal, impulse);
-  bodies[0].angularVelocity.z -= impulse * 1.8;
-  bodies[1].angularVelocity.z += impulse * 1.8;
+  bodies[0].angularVelocity.z -= impulse * COLLISION_SPIN;
+  bodies[1].angularVelocity.z += impulse * COLLISION_SPIN;
 }
 
 function resize() {
@@ -237,7 +241,7 @@ function resize() {
 
 function setValues(values = [1, 1]) {
   dice.forEach((die, index) => {
-    die.position.set(index ? 0.72 : -0.72, restingY(), index ? -0.06 : 0.06);
+    die.position.set(index ? DICE_REST_X : -DICE_REST_X, restingY(), index ? -0.06 : 0.06);
     die.quaternion.copy(finalQuaternion(values[index], index ? 0.23 : -0.23));
     die.scale.setScalar(responsiveDiceScale());
     updateContactShadow(die, die.position.y);
@@ -276,7 +280,7 @@ function roll(finalValues = [1, 1]) {
         const settleBlend = smootherStep(dieProgress, 0.58, 1);
         const orientationBlend = smootherStep(dieProgress, 0.58, 1);
         die.position.copy(bodies[index].position);
-        die.position.x = THREE.MathUtils.lerp(die.position.x, index ? 0.72 : -0.72, settleBlend);
+        die.position.x = THREE.MathUtils.lerp(die.position.x, index ? DICE_REST_X : -DICE_REST_X, settleBlend);
         die.position.y = THREE.MathUtils.lerp(die.position.y, restingY(), settleBlend);
         die.position.z = THREE.MathUtils.lerp(die.position.z, index ? -0.06 : 0.06, settleBlend);
         bodies[index].angularVelocity.multiplyScalar(1 - (orientationBlend * 0.35));
