@@ -42,26 +42,35 @@ let resolveActiveRoll;
 function createRoundedDie() {
   const group = new THREE.Group();
   const body = new THREE.Mesh(
-    new RoundedBoxGeometry(1.52, 1.52, 1.52, 6, 0.23),
-    new THREE.MeshStandardMaterial({ color: 0xf5f2e9, roughness: 0.34, metalness: 0.02 }),
+    new RoundedBoxGeometry(1.42, 1.42, 1.42, 8, 0.26),
+    new THREE.MeshStandardMaterial({ color: 0xf2efe5, roughness: 0.46, metalness: 0.01 }),
   );
   body.castShadow = true;
   body.receiveShadow = true;
   group.add(body);
 
-  const pipGeometry = new THREE.CircleGeometry(0.105, 24);
-  const pipMaterial = new THREE.MeshStandardMaterial({ color: 0x111319, roughness: 0.68, side: THREE.DoubleSide });
-  const half = 0.767;
-  const spacing = 0.31;
+  const pipWellGeometry = new THREE.CircleGeometry(0.119, 28);
+  const pipWellMaterial = new THREE.MeshBasicMaterial({ color: 0x55534d, transparent: true, opacity: 0.72, side: THREE.DoubleSide });
+  const pipGeometry = new THREE.CircleGeometry(0.091, 28);
+  const pipMaterial = new THREE.MeshStandardMaterial({ color: 0x0a0c10, roughness: 0.82, side: THREE.DoubleSide });
+  const half = 0.713;
+  const spacing = 0.285;
   FACE_LAYOUT.forEach((face) => {
     PIP_LAYOUTS[face.value].forEach(([column, row]) => {
+      const positionOnFace = (offset) => [
+        face.normal[0] * offset + face.u[0] * column * spacing + face.v[0] * row * spacing,
+        face.normal[1] * offset + face.u[1] * column * spacing + face.v[1] * row * spacing,
+        face.normal[2] * offset + face.u[2] * column * spacing + face.v[2] * row * spacing,
+      ];
+      const pipWell = new THREE.Mesh(pipWellGeometry, pipWellMaterial);
+      pipWell.position.set(...positionOnFace(half));
+      pipWell.rotation.set(...face.rotation);
+      pipWell.renderOrder = 1;
+      group.add(pipWell);
       const pip = new THREE.Mesh(pipGeometry, pipMaterial);
-      pip.position.set(
-        face.normal[0] * half + face.u[0] * column * spacing + face.v[0] * row * spacing,
-        face.normal[1] * half + face.u[1] * column * spacing + face.v[1] * row * spacing,
-        face.normal[2] * half + face.u[2] * column * spacing + face.v[2] * row * spacing,
-      );
+      pip.position.set(...positionOnFace(half + 0.003));
       pip.rotation.set(...face.rotation);
+      pip.renderOrder = 2;
       group.add(pip);
     });
   });
@@ -87,7 +96,7 @@ function resize() {
 
 function setValues(values = [1, 1]) {
   dice.forEach((die, index) => {
-    die.position.set(index ? 1.02 : -1.02, -0.03, index ? -0.08 : 0.08);
+    die.position.set(index ? 0.9 : -0.9, -0.08, index ? -0.06 : 0.06);
     die.quaternion.copy(finalQuaternion(values[index], index ? 0.23 : -0.23));
     die.scale.setScalar(1);
   });
@@ -105,7 +114,8 @@ function roll(finalValues = [1, 1]) {
   }
   cancelAnimationFrame(animationFrame);
   resolveActiveRoll?.();
-  const duration = 1120;
+  const settleTimes = [1040, 1180];
+  const duration = Math.max(...settleTimes);
   const startedAt = performance.now();
   const starts = dice.map((die) => die.quaternion.clone());
   const targets = finalValues.map((value, index) => finalQuaternion(value, index ? 0.23 : -0.23));
@@ -118,20 +128,21 @@ function roll(finalValues = [1, 1]) {
     resolveActiveRoll = resolve;
     const animate = (now) => {
       const progress = Math.min(1, (now - startedAt) / duration);
-      const eased = easeOutQuint(progress);
       dice.forEach((die, index) => {
-        const flight = Math.sin(Math.PI * Math.min(1, progress * 1.18));
-        const rebound = progress > 0.72 ? Math.sin((progress - 0.72) * Math.PI * 7) * (1 - progress) * 0.28 : 0;
-        const travel = (index ? -0.16 : 0.16) * Math.sin(Math.PI * progress);
-        die.position.set(index ? 1.02 + travel : -1.02 + travel, -0.03 + flight * 0.58 + Math.abs(rebound), index ? -0.08 : 0.08);
+        const dieProgress = Math.min(1, (now - startedAt) / settleTimes[index]);
+        const eased = easeOutQuint(dieProgress);
+        const flight = Math.sin(Math.PI * Math.min(1, dieProgress * 1.24));
+        const rebound = dieProgress > 0.7 ? Math.sin((dieProgress - 0.7) * Math.PI * 8) * (1 - dieProgress) * 0.1 : 0;
+        const slide = dieProgress > 0.76 ? Math.sin((dieProgress - 0.76) * Math.PI * 5) * (1 - dieProgress) * 0.075 : 0;
+        const travel = (index ? -0.28 : 0.28) * Math.sin(Math.PI * dieProgress) + (index ? -slide : slide);
+        die.position.set(index ? 0.9 + travel : -0.9 + travel, -0.08 + flight * 0.34 + Math.abs(rebound), index ? -0.06 : 0.06);
         const tumble = new THREE.Quaternion().setFromEuler(new THREE.Euler(
           spins[index].x * (1 - eased),
           spins[index].y * (1 - eased),
           spins[index].z * (1 - eased),
         ));
         die.quaternion.copy(starts[index]).multiply(tumble).slerp(targets[index], eased);
-        const squash = 1 - Math.max(0, rebound) * 0.08;
-        die.scale.set(1 / Math.sqrt(squash), squash, 1 / Math.sqrt(squash));
+        die.scale.setScalar(1);
       });
       renderer.render(scene, camera);
       if (progress < 1) {
@@ -162,7 +173,7 @@ function initialize() {
 
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(28, 1, 0.1, 100);
-    camera.position.set(0, 4.8, 9.6);
+    camera.position.set(0, 5.1, 10.8);
     camera.lookAt(0, 0.05, 0);
 
     scene.add(new THREE.HemisphereLight(0xffffff, 0x13243a, 2.4));

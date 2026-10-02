@@ -435,7 +435,7 @@ test('dice use a WebGL canvas with rounded solid geometry and retain accessible 
   const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
 
   assert.match(html, /<canvas[^>]+id="dice-webgl"/);
-  assert.match(html, /type="module" src="dice-3d\.js\?v=20261002e"/);
+  assert.match(html, /type="module" src="dice-3d\.js\?v=20261002f"/);
   assert.match(dice3d, /RoundedBoxGeometry/);
   assert.match(dice3d, /new THREE\.WebGLRenderer\(\{ alpha: true, antialias: true \}\)/);
   assert.match(dice3d, /function createRoundedDie/);
@@ -451,6 +451,26 @@ test('game movement waits for the WebGL dice roll to settle', () => {
   assert.match(script, /window\.Dice3D/);
   assert.match(script, /diceRenderer\.roll\(finalValues\)\.then/);
   assert.match(script, /animateDice\(rollEntry\.dice, \(\) => animateMovement\(rollEntry\)\)/);
+});
+
+test('WebGL dice use a compact rigid tabletop roll with staggered settling', () => {
+  const dice3d = fs.readFileSync(path.join(projectRoot, 'public/dice-3d.js'), 'utf8');
+
+  assert.match(dice3d, /const settleTimes = \[1040, 1180\]/);
+  assert.match(dice3d, /flight \* 0\.34/);
+  assert.match(dice3d, /const slide =/);
+  assert.match(dice3d, /camera\.position\.set\(0, 5\.1, 10\.8\)/);
+  assert.match(dice3d, /new RoundedBoxGeometry\(1\.42, 1\.42, 1\.42, 8, 0\.26\)/);
+  assert.doesNotMatch(dice3d, /squash|scale\.set\(1 \/ Math\.sqrt/);
+});
+
+test('WebGL pips include a recessed shadow well instead of one flat disc', () => {
+  const dice3d = fs.readFileSync(path.join(projectRoot, 'public/dice-3d.js'), 'utf8');
+
+  assert.match(dice3d, /pipWellGeometry/);
+  assert.match(dice3d, /pipWellMaterial/);
+  assert.match(dice3d, /pipWell\.renderOrder = 1/);
+  assert.match(dice3d, /pip\.renderOrder = 2/);
 });
 
 test('live updates fall back to polling when server-sent events are unavailable', () => {
@@ -527,8 +547,8 @@ test('Tip-Off guide explains the exact-landing 300 point bonus', () => {
 test('deployed browsers receive the current interface assets instead of stale cached files', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
 
-  assert.match(html, /styles\.css\?v=20261002e/);
-  assert.match(html, /app\.js\?v=20261002e/);
+  assert.match(html, /styles\.css\?v=20261002f/);
+  assert.match(html, /app\.js\?v=20261002f/);
 });
 
 test('API requests report an understandable connection error when a tunnel returns HTML', () => {

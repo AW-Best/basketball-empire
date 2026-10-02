@@ -149,3 +149,10 @@
 - [x] RED: add WebGL integration and settlement contract tests.
 - [x] GREEN: implement rounded dice geometry, pips, lighting, and animation.
 - [x] Verify the full suite, publish, and visually check both hosted versions.
+
+## Sprint 027 — Dice Physics Polish
+
+- [x] Define architecture and acceptance criteria.
+- [x] RED: specify compact rigid motion, staggered settling, and inset pips.
+- [x] GREEN: implement the revised geometry and motion.
+- [ ] Verify, publish, and visually check the hosted versions.
