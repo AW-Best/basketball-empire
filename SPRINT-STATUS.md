@@ -184,3 +184,10 @@
 - [x] RED: specify oriented cube contact and late result settling.
 - [x] GREEN: implement quaternion-aware support and progressive correction.
 - [x] Verify, publish, and visually check production.
+
+## Sprint 032 — Smaller Responsive Dice
+
+- [x] Define architecture and acceptance criteria.
+- [x] RED: specify a further 15% responsive size reduction.
+- [x] GREEN: update the shared dice scale.
+- [ ] Verify, publish, and visually check production.
