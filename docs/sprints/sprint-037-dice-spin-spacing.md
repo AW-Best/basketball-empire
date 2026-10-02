@@ -18,6 +18,7 @@ Make the dice easier to read by reducing excessive rotation and increasing the r
 - Resting dice centers are wider apart than before.
 - Dice launch with enough separation to remain visually distinct during the roll.
 - Final faces and mobile sizing remain unchanged.
+- The rendered resting gap remains clearly visible after perspective projection; the dice edges do not touch.
 
 ## Tasks
 

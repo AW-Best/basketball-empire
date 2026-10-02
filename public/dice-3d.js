@@ -8,8 +8,8 @@ const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)
 const GRAVITY = -5.8;
 const FLOOR_Y = -0.82;
 const DIE_HALF_EXTENT = 0.71;
-const DICE_REST_X = 1.02;
-const DICE_LAUNCH_X = 1.12;
+const DICE_REST_X = 1.45;
+const DICE_LAUNCH_X = 1.65;
 const SPIN_STRENGTH = 0.56;
 const COLLISION_SPIN = 0.8;
 

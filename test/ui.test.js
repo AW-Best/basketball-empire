@@ -435,7 +435,7 @@ test('dice use a WebGL canvas with rounded solid geometry and retain accessible 
   const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
 
   assert.match(html, /<canvas[^>]+id="dice-webgl"/);
-  assert.match(html, /type="module" src="dice-3d\.js\?v=20261002q"/);
+  assert.match(html, /type="module" src="dice-3d\.js\?v=20261002s"/);
   assert.match(dice3d, /RoundedBoxGeometry/);
   assert.match(dice3d, /new THREE\.WebGLRenderer\(\{ alpha: true, antialias: true \}\)/);
   assert.match(dice3d, /function createRoundedDie/);
@@ -480,7 +480,7 @@ test('WebGL dice scale down responsively on phones and tablets', () => {
   assert.match(dice3d, /window\.innerWidth <= 1024\) return 0\.35/);
   assert.match(dice3d, /return 0\.42/);
   assert.match(dice3d, /die\.scale\.setScalar\(responsiveDiceScale\(\)\)/);
-  assert.match(css, /@media \(max-width: 720px\)[\s\S]*\.dice-tray\s*\{[^}]*min-width:\s*160px/s);
+  assert.match(css, /@media \(max-width: 720px\)[\s\S]*\.dice-tray\s*\{[^}]*min-width:\s*200px/s);
 });
 
 test('WebGL dice use rigid-body gravity, floor restitution, and rolling friction', () => {
@@ -526,15 +526,18 @@ test('rigid dice vary launch and spin deterministically for each result', () => 
 
 test('WebGL dice use calmer spin and wider separation', () => {
   const dice3d = fs.readFileSync(path.join(projectRoot, 'public/dice-3d.js'), 'utf8');
+  const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
 
-  assert.match(dice3d, /const DICE_REST_X = 1\.02/);
-  assert.match(dice3d, /const DICE_LAUNCH_X = 1\.12/);
+  assert.match(dice3d, /const DICE_REST_X = 1\.45/);
+  assert.match(dice3d, /const DICE_LAUNCH_X = 1\.65/);
   assert.match(dice3d, /const SPIN_STRENGTH = 0\.56/);
   assert.match(dice3d, /const COLLISION_SPIN = 0\.8/);
   assert.match(dice3d, /angularVelocity: new THREE\.Vector3\([\s\S]*?\)\.multiplyScalar\(SPIN_STRENGTH\)/);
   assert.match(dice3d, /index \? DICE_REST_X : -DICE_REST_X/);
   assert.match(dice3d, /index \? DICE_LAUNCH_X : -DICE_LAUNCH_X/);
   assert.match(dice3d, /impulse \* COLLISION_SPIN/);
+  assert.match(css, /\.dice-tray\s*\{[^}]*min-width:\s*clamp\(230px, 24vw, 320px\)[^}]*gap:\s*62px/s);
+  assert.match(css, /@media \(max-width: 720px\)[\s\S]*\.dice-tray\s*\{[^}]*min-width:\s*200px[^}]*gap:\s*52px/s);
 });
 
 test('rigid dice land on faces, edges, and corners using oriented cube support', () => {
@@ -674,8 +677,8 @@ test('Tip-Off guide explains the exact-landing 300 point bonus', () => {
 test('deployed browsers receive the current interface assets instead of stale cached files', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
 
-  assert.match(html, /styles\.css\?v=20261002q/);
-  assert.match(html, /app\.js\?v=20261002q/);
+  assert.match(html, /styles\.css\?v=20261002s/);
+  assert.match(html, /app\.js\?v=20261002s/);
 });
 
 test('API requests report an understandable connection error when a tunnel returns HTML', () => {
