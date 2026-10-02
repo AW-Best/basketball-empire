@@ -22,4 +22,4 @@ Use a semantic global footer inside the existing arena shell so the notice is av
 - [x] Add a failing UI contract test for the copyright and affiliation wording.
 - [x] Add the semantic footer and responsive styling.
 - [x] Run the UI test and the full suite.
-- [ ] Commit and deploy the completed change.
+- [x] Commit and deploy the completed change.

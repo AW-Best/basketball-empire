@@ -235,4 +235,4 @@
 - [x] RED: specify the copyright, independence, and fictional-content notice.
 - [x] GREEN: add the global responsive legal footer.
 - [x] Verify the complete 143-test suite.
-- [ ] Commit and publish the notice.
+- [x] Commit and publish the notice.
