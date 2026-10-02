@@ -953,3 +953,8 @@ test('site loads the owner AdSense account and links a complete privacy notice',
   assert.match(privacy, /localStorage/);
   assert.match(privacy, /uploaded avatar/i);
 });
+
+test('homepage exposes the AdSense account meta verification tag', () => {
+  const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
+  assert.match(html, /<meta name="google-adsense-account" content="ca-pub-6603520082677971"\s*\/>/);
+});

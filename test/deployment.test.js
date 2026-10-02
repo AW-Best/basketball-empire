@@ -10,6 +10,13 @@ test('ads.txt authorizes the Basketball Empire Google AdSense publisher', () => 
   assert.equal(ads.trim(), 'google.com, pub-6603520082677971, DIRECT, f08c47fec0942fa0');
 });
 
+test('robots.txt explicitly allows Google AdSense verification crawlers', () => {
+  const robots = fs.readFileSync(path.join(projectRoot, 'public/robots.txt'), 'utf8');
+  assert.match(robots, /User-agent: Googlebot\s+Allow: \//);
+  assert.match(robots, /User-agent: Mediapartners-Google\s+Allow: \//);
+  assert.match(robots, /User-agent: Google-Display-Ads-Bot\s+Allow: \//);
+});
+
 test('Render blueprint deploys the Node server with a health check', () => {
   const blueprintPath = path.join(projectRoot, 'render.yaml');
   assert.equal(fs.existsSync(blueprintPath), true, 'render.yaml must exist');

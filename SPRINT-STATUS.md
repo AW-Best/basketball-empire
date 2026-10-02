@@ -243,3 +243,10 @@
 - [x] RED: specify the publisher script, ads.txt, privacy notice, and footer link.
 - [x] GREEN: add the AdSense and privacy assets without changing gameplay.
 - [x] Verify all 145 tests, commit, deploy, and check the public endpoints.
+
+## Sprint 040 — AdSense Verification Hardening
+
+- [x] Confirm production serves the correct script and ads.txt to all Google crawler identities.
+- [x] RED: specify alternate meta verification and explicit crawler access.
+- [x] GREEN: add the verification metadata and robots.txt.
+- [ ] Verify, commit, deploy, and recheck production.
