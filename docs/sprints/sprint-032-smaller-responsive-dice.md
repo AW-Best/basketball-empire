@@ -21,4 +21,4 @@ Reduce the WebGL dice by approximately 15% at every responsive breakpoint so the
 - [x] RED: specify the reduced responsive scale.
 - [x] GREEN: implement the smaller dice scale.
 - [x] Run the full suite and visually verify phone presentation.
-- [ ] Publish and verify production.
+- [x] Publish and verify production.

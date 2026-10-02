@@ -190,4 +190,4 @@
 - [x] Define architecture and acceptance criteria.
 - [x] RED: specify a further 15% responsive size reduction.
 - [x] GREEN: update the shared dice scale.
-- [ ] Verify, publish, and visually check production.
+- [x] Verify, publish, and visually check production.
