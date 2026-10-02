@@ -162,4 +162,4 @@
 - [x] Define architecture and acceptance criteria.
 - [x] RED: specify phone/tablet WebGL scaling and a smaller phone tray.
 - [x] GREEN: implement responsive sizing.
-- [ ] Verify, publish, and visually check production.
+- [x] Verify, publish, and visually check production.

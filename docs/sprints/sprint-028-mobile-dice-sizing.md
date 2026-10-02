@@ -24,4 +24,4 @@ Keep both WebGL dice comfortably inside the central court on phones without redu
 - [x] RED: specify phone/tablet WebGL scaling and the smaller phone tray.
 - [x] GREEN: implement responsive dice sizing.
 - [x] Run all tests and visually verify the phone layout.
-- [ ] Publish and verify production.
+- [x] Publish and verify production.
