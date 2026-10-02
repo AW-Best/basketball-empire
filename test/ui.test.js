@@ -414,6 +414,21 @@ test('dice trajectory never flattens the cube with competing X or Y rotation', (
   assert.match(css, /\.die-face\s*\{[^}]*box-shadow:/s);
 });
 
+test('dice faces overlap into compact rounded edges and the throw stays restrained', () => {
+  const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
+  const faceRule = css.match(/\.die-face\s*\{([^}]*)\}/)?.[1] || '';
+  const leftTrajectory = css.match(/@keyframes dice-throw-left\s*\{([\s\S]*?)\n\}/)?.[1] || '';
+  const rightTrajectory = css.match(/@keyframes dice-throw-right\s*\{([\s\S]*?)\n\}/)?.[1] || '';
+
+  assert.match(faceRule, /inset:\s*-1px/);
+  assert.match(faceRule, /border-radius:\s*clamp\(7px,\.75vw,11px\)/);
+  assert.match(faceRule, /inset 0 0 0 2px/);
+  assert.doesNotMatch(leftTrajectory, /scale\(1\.[12]/);
+  assert.doesNotMatch(rightTrajectory, /scale\(1\.[12]/);
+  assert.doesNotMatch(leftTrajectory, /-9[0-9]px/);
+  assert.doesNotMatch(rightTrajectory, /-9[0-9]px/);
+});
+
 test('live updates fall back to polling when server-sent events are unavailable', () => {
   const script = fs.readFileSync(path.join(projectRoot, 'public/app.js'), 'utf8');
 
@@ -488,8 +503,8 @@ test('Tip-Off guide explains the exact-landing 300 point bonus', () => {
 test('deployed browsers receive the current interface assets instead of stale cached files', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
 
-  assert.match(html, /styles\.css\?v=20261002b/);
-  assert.match(html, /app\.js\?v=20261002b/);
+  assert.match(html, /styles\.css\?v=20261002c/);
+  assert.match(html, /app\.js\?v=20261002c/);
 });
 
 test('API requests report an understandable connection error when a tunnel returns HTML', () => {
