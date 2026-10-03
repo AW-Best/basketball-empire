@@ -250,3 +250,10 @@
 - [x] RED: specify alternate meta verification and explicit crawler access.
 - [x] GREEN: add the verification metadata and robots.txt.
 - [x] Verify all 147 tests, commit, deploy, and recheck production using Google crawler identities.
+
+## Sprint 041 — Hoopire Custom Domain
+
+- [x] Record acceptance criteria and the Cloudflare Custom Domain architecture.
+- [x] RED: require `hoopire.com` in the Wrangler deployment contract.
+- [x] GREEN: bind the apex domain to the Worker while retaining workers.dev.
+- [ ] Verify, commit, deploy, and check HTTPS plus AdSense endpoints.

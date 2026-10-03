@@ -43,6 +43,12 @@ test('Cloudflare configuration binds static assets and a SQLite Durable Object',
   assert.match(config, /"storage"\s*:\s*"sqlite"/);
 });
 
+test('Cloudflare configuration binds hoopire.com as the production custom domain', () => {
+  const config = JSON.parse(fs.readFileSync(path.join(projectRoot, 'wrangler.jsonc'), 'utf8'));
+  assert.deepEqual(config.routes, [{ pattern: 'hoopire.com', custom_domain: true }]);
+  assert.equal(config.workers_dev, true, 'the existing workers.dev address should stay available');
+});
+
 test('package scripts support local Cloudflare verification and deployment', () => {
   const packageJson = JSON.parse(fs.readFileSync(path.join(projectRoot, 'package.json'), 'utf8'));
 
