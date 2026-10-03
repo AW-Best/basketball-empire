@@ -22,6 +22,7 @@ const {
 const PLAYER_COLORS = ['#f26a21', '#3b9dff', '#32d583', '#ffc83d'];
 const CODE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 const RECORD_KEY = 'record';
+const VISITOR_COUNT_KEY = 'visits';
 
 function randomCode() {
   const bytes = crypto.getRandomValues(new Uint8Array(6));
@@ -70,6 +71,31 @@ function errorStatus(error) {
 
 function normalizeCode(value) {
   return String(value || '').trim().toUpperCase();
+}
+
+export class VisitorCounter {
+  constructor(ctx, env) {
+    this.ctx = ctx;
+    this.env = env;
+  }
+
+  async fetch(request) {
+    if (request.method !== 'POST') return json({ error: 'Not found.' }, 404);
+    const today = new Date().toISOString().slice(0, 10);
+    const alreadyCounted = (request.headers.get('cookie') || '')
+      .split(';')
+      .some((part) => part.trim() === `be_visitor_day=${today}`);
+    let visits = Number(await this.ctx.storage.get(VISITOR_COUNT_KEY) || 0);
+    if (!alreadyCounted) {
+      visits += 1;
+      await this.ctx.storage.put(VISITOR_COUNT_KEY, visits);
+    }
+    const headers = { 'cache-control': 'no-store' };
+    if (!alreadyCounted) {
+      headers['set-cookie'] = `be_visitor_day=${today}; Max-Age=86400; Path=/; Secure; SameSite=Lax`;
+    }
+    return Response.json({ visits }, { headers });
+  }
 }
 
 export class BasketballRoom {
@@ -255,6 +281,10 @@ const worker = {
         if (response.status !== 409) return response;
       }
       return json({ error: 'Could not create a unique room code.' }, 503);
+    }
+    if (request.method === 'POST' && url.pathname === '/api/visits') {
+      const id = env.VISITOR_COUNTER.idFromName('global');
+      return env.VISITOR_COUNTER.get(id).fetch(request);
     }
     const roomMatch = url.pathname.match(/^\/api\/rooms\/([A-Za-z0-9]+)(?:\/.*)?$/);
     if (roomMatch) {

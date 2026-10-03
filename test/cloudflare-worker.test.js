@@ -50,15 +50,26 @@ async function createRuntime() {
       return { fetch: (request) => objects.get(id).fetch(request) };
     },
   };
+  const visitorContext = new FakeContext();
+  const visitorCounter = new workerModule.VisitorCounter(visitorContext, {});
   const env = {
     ROOMS: namespace,
+    VISITOR_COUNTER: {
+      idFromName(name) {
+        assert.equal(name, 'global');
+        return name;
+      },
+      get() {
+        return { fetch: (request) => visitorCounter.fetch(request) };
+      },
+    },
     ASSETS: {
       fetch: async () => new Response('Basketball Empire page', {
         headers: { 'content-type': 'text/html; charset=utf-8' },
       }),
     },
   };
-  return { worker: workerModule.default, env, objects };
+  return { worker: workerModule.default, env, objects, visitorContext };
 }
 
 async function post(worker, env, path, body, token) {
@@ -133,4 +144,24 @@ test('Cloudflare events endpoint tells the browser to use polling', async () => 
 
   assert.equal(response.status, 501);
   assert.deepEqual(await response.json(), { error: 'Live events use polling on Cloudflare.' });
+});
+
+test('public visitor counter increments once for a browser each UTC day', async () => {
+  const { worker, env } = await createRuntime();
+
+  const first = await worker.fetch(new Request('https://example.test/api/visits', { method: 'POST' }), env);
+  assert.equal(first.status, 200);
+  assert.deepEqual(await first.clone().json(), { visits: 1 });
+  assert.match(first.headers.get('set-cookie'), /be_visitor_day=\d{4}-\d{2}-\d{2}/);
+
+  const cookie = first.headers.get('set-cookie').split(';')[0];
+  const repeat = await worker.fetch(new Request('https://example.test/api/visits', {
+    method: 'POST',
+    headers: { cookie },
+  }), env);
+  assert.deepEqual(await repeat.json(), { visits: 1 });
+  assert.equal(repeat.headers.get('set-cookie'), null);
+
+  const secondVisitor = await worker.fetch(new Request('https://example.test/api/visits', { method: 'POST' }), env);
+  assert.deepEqual(await secondVisitor.json(), { visits: 2 });
 });

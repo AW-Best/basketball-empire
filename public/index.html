@@ -18,7 +18,7 @@
       href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Nunito+Sans:wght@600;700;800;900&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20261002v" />
+    <link rel="stylesheet" href="styles.css?v=20261003a" />
   </head>
   <body>
     <div class="arena-shell">
@@ -222,6 +222,11 @@
       </main>
 
       <footer class="site-legal" aria-label="Copyright and affiliation notice">
+        <div class="visitor-scoreboard" aria-label="Basketball Empire arena visits">
+          <span class="visitor-pulse" aria-hidden="true"></span>
+          <small>ARENA VISITS</small>
+          <strong id="visitor-count" aria-live="polite">—</strong>
+        </div>
         <strong>© 2026 Basketball Empire. All rights reserved. · <a href="privacy.html">Privacy</a></strong>
         <p>Basketball Empire is an independent fan-made game and is not affiliated with, endorsed by, or licensed by the NBA, NBPA, or any NBA team. Player names are used for entertainment purposes only. All in-game teams, events, and results are fictional.</p>
       </footer>
@@ -385,7 +390,7 @@
     <script>
       if (window.location.protocol !== 'file:') {
         const gameScript = document.createElement('script');
-        gameScript.src = 'app.js?v=20261002v';
+        gameScript.src = 'app.js?v=20261003a';
         document.body.append(gameScript);
       }
     </script>

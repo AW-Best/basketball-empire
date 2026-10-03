@@ -686,8 +686,8 @@ test('Tip-Off guide explains the exact-landing 300 point bonus', () => {
 test('deployed browsers receive the current interface assets instead of stale cached files', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
 
-  assert.match(html, /styles\.css\?v=20261002v/);
-  assert.match(html, /app\.js\?v=20261002v/);
+  assert.match(html, /styles\.css\?v=20261003a/);
+  assert.match(html, /app\.js\?v=20261003a/);
 });
 
 test('API requests report an understandable connection error when a tunnel returns HTML', () => {
@@ -957,4 +957,23 @@ test('site loads the owner AdSense account and links a complete privacy notice',
 test('homepage exposes the AdSense account meta verification tag', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
   assert.match(html, /<meta name="google-adsense-account" content="ca-pub-6603520082677971"\s*\/>/);
+});
+
+test('homepage shows a resilient public arena attendance counter', () => {
+  const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
+  const script = fs.readFileSync(path.join(projectRoot, 'public/app.js'), 'utf8');
+  const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
+
+  assert.match(html, /id="visitor-count"[^>]*>—</);
+  assert.match(html, /ARENA VISITS/);
+  assert.match(script, /fetch\(['"]\/api\/visits['"],\s*\{\s*method:\s*['"]POST['"]/s);
+  assert.match(script, /visitor-count/);
+  assert.match(css, /\.visitor-scoreboard/);
+});
+
+test('privacy notice explains the daily visitor counter cookie and Cloudflare analytics', () => {
+  const privacy = fs.readFileSync(path.join(projectRoot, 'public/privacy.html'), 'utf8');
+  assert.match(privacy, /be_visitor_day/);
+  assert.match(privacy, /Cloudflare Web Analytics/);
+  assert.match(privacy, /once per UTC day/i);
 });

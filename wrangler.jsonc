@@ -21,11 +21,19 @@
       {
         "name": "ROOMS",
         "class_name": "BasketballRoom"
+      },
+      {
+        "name": "VISITOR_COUNTER",
+        "class_name": "VisitorCounter"
       }
     ]
   },
   "exports": {
     "BasketballRoom": {
+      "type": "durable-object",
+      "storage": "sqlite"
+    },
+    "VisitorCounter": {
       "type": "durable-object",
       "storage": "sqlite"
     }

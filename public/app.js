@@ -116,6 +116,20 @@ const quickGuideDialog = document.querySelector('#quick-guide-dialog');
 const modeScreen = document.querySelector('#mode-screen');
 const lobbyScreen = document.querySelector('#lobby-screen');
 const gameStage = document.querySelector('#game-stage');
+
+async function loadVisitorCount() {
+  const counter = document.querySelector('#visitor-count');
+  if (!counter) return;
+  try {
+    const response = await fetch('/api/visits', { method: 'POST' });
+    if (!response.ok) throw new Error('Visitor counter unavailable.');
+    const { visits } = await response.json();
+    counter.textContent = Number(visits).toLocaleString('en-US');
+  } catch {
+    counter.textContent = '—';
+    counter.closest('.visitor-scoreboard')?.classList.add('is-unavailable');
+  }
+}
 const QUICK_GUIDE_DISMISSED_KEY = 'basketballEmpireQuickGuideDismissed';
 let quickGuideIndex = 0;
 
@@ -1177,3 +1191,5 @@ if (session) {
     localStorage.removeItem(SESSION_KEY); session = null; showModeSelection();
   });
 } else if (!invitedRoom) showModeSelection();
+
+loadVisitorCount();

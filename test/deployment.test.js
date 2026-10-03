@@ -49,6 +49,14 @@ test('Cloudflare configuration binds hoopire.com as the production custom domain
   assert.equal(config.workers_dev, true, 'the existing workers.dev address should stay available');
 });
 
+test('Cloudflare deployment binds one global visitor counter', () => {
+  const config = JSON.parse(fs.readFileSync(path.join(projectRoot, 'wrangler.jsonc'), 'utf8'));
+  assert.ok(config.durable_objects.bindings.some((binding) => (
+    binding.name === 'VISITOR_COUNTER' && binding.class_name === 'VisitorCounter'
+  )));
+  assert.equal(config.exports.VisitorCounter.type, 'durable-object');
+});
+
 test('package scripts support local Cloudflare verification and deployment', () => {
   const packageJson = JSON.parse(fs.readFileSync(path.join(projectRoot, 'package.json'), 'utf8'));
 

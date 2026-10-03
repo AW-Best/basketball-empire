@@ -1,5 +1,14 @@
 # Sprint Status — Auction, History, and Team Card Polish
 
+## Sprint 041 — Visitor Analytics
+
+- [x] Record acceptance criteria, architecture, privacy, and UI design.
+- [x] RED: specify global daily-deduplicated visits, homepage display, and deployment bindings.
+- [x] GREEN: implement the Durable Object counter and arena attendance scoreboard.
+- [x] Document the first-party counter cookie and Cloudflare Web Analytics.
+- [x] Run all 152 automated tests successfully.
+- [ ] Deploy and verify the production counter and private Cloudflare analytics.
+
 - [x] Requirements and acceptance criteria recorded
 - [x] Architecture and UI approach approved from the existing game design
 - [x] RED: add failing auction, history, affordability, dice, and card tests
