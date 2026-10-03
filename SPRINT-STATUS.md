@@ -256,4 +256,4 @@
 - [x] Record acceptance criteria and the Cloudflare Custom Domain architecture.
 - [x] RED: require `hoopire.com` in the Wrangler deployment contract.
 - [x] GREEN: bind the apex domain to the Worker while retaining workers.dev.
-- [ ] Verify, commit, deploy, and check HTTPS plus AdSense endpoints.
+- [x] Verify all 148 tests, commit, deploy, and check HTTPS, multiplayer, and AdSense endpoints.
