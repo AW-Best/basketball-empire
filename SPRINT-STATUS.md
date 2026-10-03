@@ -7,7 +7,7 @@
 - [x] GREEN: remove avatar inputs, compression, styles, and payload data.
 - [x] Preserve legacy avatar rendering and initials generation.
 - [x] Run all 152 automated tests successfully.
-- [ ] Deploy and verify the simplified room forms.
+- [x] Deploy and verify the simplified room forms.
 
 ## Sprint 041 — Visitor Analytics
 
