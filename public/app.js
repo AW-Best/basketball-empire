@@ -102,7 +102,6 @@ let auctionClockTimer = null;
 let diceFaceTimer = null;
 let diceResultTimer = null;
 let diceSettleTimer = null;
-const selectedAvatars = new Map();
 
 const board = document.querySelector('#board');
 const playerRail = document.querySelector('#player-rail');
@@ -187,31 +186,6 @@ function avatarMarkup(player, className = 'avatar') {
     ? `<img src="${escapeHtml(player.avatarDataUrl)}" alt="" />`
     : escapeHtml(player?.initials || 'BE');
   return `<span class="${className}"${style}>${content}</span>`;
-}
-
-function resizeAvatar(file) {
-  return new Promise((resolve, reject) => {
-    if (!file?.type?.startsWith('image/')) { reject(new Error('Choose an image file for your avatar.')); return; }
-    const image = new Image();
-    const objectUrl = URL.createObjectURL(file);
-    image.onload = () => {
-      const size = 160;
-      const canvas = document.createElement('canvas');
-      canvas.width = size; canvas.height = size;
-      const context = canvas.getContext('2d');
-      const sourceSize = Math.min(image.naturalWidth, image.naturalHeight);
-      const sourceX = (image.naturalWidth - sourceSize) / 2;
-      const sourceY = (image.naturalHeight - sourceSize) / 2;
-      context.drawImage(image, sourceX, sourceY, sourceSize, sourceSize, 0, 0, size, size);
-      let dataUrl = canvas.toDataURL('image/jpeg', .68);
-      if (dataUrl.length > 50_000) dataUrl = canvas.toDataURL('image/jpeg', .5);
-      URL.revokeObjectURL(objectUrl);
-      if (dataUrl.length > 50_000) reject(new Error('That photo is too detailed. Please choose another one.'));
-      else resolve(dataUrl);
-    };
-    image.onerror = () => { URL.revokeObjectURL(objectUrl); reject(new Error('That photo could not be opened.')); };
-    image.src = objectUrl;
-  });
 }
 
 function readSession() {
@@ -1035,13 +1009,13 @@ document.querySelector('#quick-guide-join').addEventListener('click', () => { cl
 quickGuideDialog.addEventListener('click', (event) => { if (event.target === quickGuideDialog) closeQuickGuide(); });
 document.querySelector('#create-room-form').addEventListener('submit', async (event) => {
   event.preventDefault();
-  try { await enterRoom(await api('/api/rooms', { method: 'POST', body: { name: event.currentTarget.elements.name.value, avatarDataUrl: selectedAvatars.get(event.currentTarget.id) || null } }), true); } catch (error) { showError(error); }
+  try { await enterRoom(await api('/api/rooms', { method: 'POST', body: { name: event.currentTarget.elements.name.value } }), true); } catch (error) { showError(error); }
 });
 document.querySelector('#join-room-form').addEventListener('submit', async (event) => {
   event.preventDefault();
   try {
     const code = event.currentTarget.elements.roomCode.value.trim().toUpperCase();
-    await enterRoom(await api(`/api/rooms/${encodeURIComponent(code)}/join`, { method: 'POST', body: { name: event.currentTarget.elements.name.value, avatarDataUrl: selectedAvatars.get(event.currentTarget.id) || null } }), false);
+    await enterRoom(await api(`/api/rooms/${encodeURIComponent(code)}/join`, { method: 'POST', body: { name: event.currentTarget.elements.name.value } }), false);
   } catch (error) { showError(error); }
 });
 document.querySelector('#ready-button').addEventListener('click', async () => {
@@ -1076,25 +1050,6 @@ document.querySelector('#back-to-modes').addEventListener('click', showModeSelec
 document.querySelector('#brand-home').addEventListener('click', (event) => {
   event.preventDefault();
   if (!session) showModeSelection();
-});
-document.querySelectorAll('[data-avatar-picker]').forEach((picker) => {
-  const formId = picker.dataset.avatarPicker;
-  const preview = picker.querySelector('.avatar-preview');
-  const removeButton = picker.querySelector('[data-avatar-remove]');
-  picker.querySelectorAll('input[type="file"]').forEach((input) => input.addEventListener('change', async () => {
-    try {
-      const avatarDataUrl = await resizeAvatar(input.files[0]);
-      selectedAvatars.set(formId, avatarDataUrl);
-      preview.innerHTML = `<img src="${escapeHtml(avatarDataUrl)}" alt="Selected player avatar" />`;
-      removeButton.classList.remove('is-hidden');
-    } catch (error) { showError(error); }
-    input.value = '';
-  }));
-  removeButton.addEventListener('click', () => {
-    selectedAvatars.delete(formId);
-    preview.textContent = '📷';
-    removeButton.classList.add('is-hidden');
-  });
 });
 document.querySelector('#sign-team-button').addEventListener('click', () => performAction({ type: 'decision', choice: 'sign' }));
 document.querySelector('#decline-team-button').addEventListener('click', () => performAction({ type: 'decision', choice: 'decline' }));

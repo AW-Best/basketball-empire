@@ -216,16 +216,6 @@ button { font: inherit; }
 .lobby-card label { margin-top: 5px; color: var(--muted); font-size: 10px; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; }
 .lobby-card input { width: 100%; min-height: 50px; padding: 0 14px; border: 1px solid var(--line); border-radius: 11px; outline: none; color: var(--white); background: rgba(255,255,255,.06); font-size: 16px; font-weight: 800; }
 .lobby-card input:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(42,210,223,.12); }
-.avatar-picker { display: grid; grid-template-columns: 54px 1fr; align-items: center; gap: 9px 12px; margin: 7px 0 2px; padding: 11px; border: 1px solid var(--line); border-radius: 13px; background: rgba(255,255,255,.035); }
-.avatar-picker legend { padding: 0 5px; color: var(--muted); font-size: 9px; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; }
-.avatar-picker legend small { color: rgba(154,176,193,.65); font-size: 8px; }
-.avatar-preview { grid-row: 1 / span 2; display: grid; place-items: center; width: 54px; height: 54px; overflow: hidden; border: 2px solid var(--cyan); border-radius: 50%; color: var(--cyan); background: rgba(42,210,223,.08); font-size: 20px; }
-.avatar-preview img { width: 100%; height: 100%; object-fit: cover; }
-.avatar-picker > div { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-.avatar-action, .avatar-remove { display: grid; place-items: center; min-height: 34px; padding: 6px; border: 1px solid rgba(255,255,255,.17); border-radius: 8px; color: var(--cream); background: rgba(255,255,255,.06); font: 900 10px 'Barlow Condensed', sans-serif; letter-spacing: .06em; text-align: center; cursor: pointer; }
-.avatar-action:last-child { color: var(--arena-navy); background: var(--cyan); }
-.avatar-action input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
-.avatar-remove { grid-column: 2; justify-self: start; min-height: auto; padding: 4px 7px; border: 0; color: #ffaaa3; background: transparent; }
 .lobby-primary, .share-room-button, .lobby-controls > button { min-height: 48px; border: 0; border-radius: 11px; font: 900 16px 'Barlow Condensed', sans-serif; letter-spacing: .08em; cursor: pointer; }
 .lobby-primary { margin-top: 9px; color: var(--arena-navy); background: var(--cream); box-shadow: 0 6px 0 #c7ad7f; }
 .lobby-primary:disabled, .lobby-controls button:disabled { opacity: .45; cursor: not-allowed; box-shadow: none; }

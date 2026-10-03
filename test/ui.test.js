@@ -210,21 +210,17 @@ test('quick start guide supports navigation, dismissal persistence, and room sho
   assert.match(css, /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.quick-guide/s);
 });
 
-test('entry forms support photo upload, camera capture, preview, compression, and initials fallback', () => {
+test('entry forms use player-name initials without avatar upload controls', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
   const script = fs.readFileSync(path.join(projectRoot, 'public/app.js'), 'utf8');
-  const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
 
-  assert.match(html, /data-avatar-picker="create-room-form"/);
-  assert.match(html, /accept="image\/\*"/);
-  assert.match(html, /capture="user"/);
-  assert.match(html, /UPLOAD PHOTO/);
-  assert.match(html, /TAKE PHOTO/);
-  assert.match(script, /function resizeAvatar/);
-  assert.match(script, /avatarDataUrl/);
+  assert.doesNotMatch(html, /Player avatar/);
+  assert.doesNotMatch(html, /data-avatar-picker/);
+  assert.doesNotMatch(html, /accept="image\/\*"/);
+  assert.doesNotMatch(script, /selectedAvatars/);
+  assert.doesNotMatch(script, /function resizeAvatar/);
+  assert.match(script, /body:\s*\{\s*name:\s*event\.currentTarget\.elements\.name\.value\s*\}/);
   assert.match(script, /function avatarMarkup/);
-  assert.match(css, /\.avatar-picker/);
-  assert.match(css, /\.avatar img/);
 });
 
 test('live game controls cover sign, decline, roll, and end-turn decisions', () => {

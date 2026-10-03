@@ -1,5 +1,14 @@
 # Sprint Status — Auction, History, and Team Card Polish
 
+## Sprint 042 — Initials-Only Avatars
+
+- [x] Record acceptance criteria and compatibility approach.
+- [x] RED: require room forms without photo or camera controls.
+- [x] GREEN: remove avatar inputs, compression, styles, and payload data.
+- [x] Preserve legacy avatar rendering and initials generation.
+- [x] Run all 152 automated tests successfully.
+- [ ] Deploy and verify the simplified room forms.
+
 ## Sprint 041 — Visitor Analytics
 
 - [x] Record acceptance criteria, architecture, privacy, and UI design.

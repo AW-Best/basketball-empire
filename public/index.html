@@ -81,15 +81,6 @@
           <form id="create-room-form">
             <label for="player-name">Your player name</label>
             <input id="player-name" name="name" maxlength="32" autocomplete="name" placeholder="e.g. Aaron Wang" required />
-            <fieldset class="avatar-picker" data-avatar-picker="create-room-form">
-              <legend>Player avatar <small>optional</small></legend>
-              <span class="avatar-preview" aria-hidden="true">📷</span>
-              <div>
-                <label class="avatar-action">UPLOAD PHOTO<input type="file" accept="image/*" data-avatar-upload /></label>
-                <label class="avatar-action">TAKE PHOTO<input type="file" accept="image/*" capture="user" data-avatar-camera /></label>
-              </div>
-              <button class="avatar-remove is-hidden" type="button" data-avatar-remove>USE INITIALS</button>
-            </fieldset>
             <button class="lobby-primary" type="submit">CREATE MY COURT</button>
           </form>
           <form class="is-hidden" id="join-room-form">
@@ -97,15 +88,6 @@
             <input id="join-player-name" name="name" maxlength="32" autocomplete="name" placeholder="e.g. Maya Chen" required />
             <label for="room-code">Room code</label>
             <input id="room-code" name="roomCode" maxlength="6" autocomplete="off" placeholder="DUNK42" required />
-            <fieldset class="avatar-picker" data-avatar-picker="join-room-form">
-              <legend>Player avatar <small>optional</small></legend>
-              <span class="avatar-preview" aria-hidden="true">📷</span>
-              <div>
-                <label class="avatar-action">UPLOAD PHOTO<input type="file" accept="image/*" data-avatar-upload /></label>
-                <label class="avatar-action">TAKE PHOTO<input type="file" accept="image/*" capture="user" data-avatar-camera /></label>
-              </div>
-              <button class="avatar-remove is-hidden" type="button" data-avatar-remove>USE INITIALS</button>
-            </fieldset>
             <button class="lobby-primary" type="submit">JOIN THE GAME</button>
           </form>
           <p class="form-status" id="form-status" role="status"></p>
