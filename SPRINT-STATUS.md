@@ -7,7 +7,7 @@
 - [x] GREEN: implement the Durable Object counter and arena attendance scoreboard.
 - [x] Document the first-party counter cookie and Cloudflare Web Analytics.
 - [x] Run all 152 automated tests successfully.
-- [ ] Deploy and verify the production counter and private Cloudflare analytics.
+- [x] Deploy and verify the production counter and private Cloudflare analytics.
 
 - [x] Requirements and acceptance criteria recorded
 - [x] Architecture and UI approach approved from the existing game design
