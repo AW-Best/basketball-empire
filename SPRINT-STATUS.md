@@ -325,3 +325,11 @@
 - [x] RED: require `hoopire.com` in the Wrangler deployment contract.
 - [x] GREEN: bind the apex domain to the Worker while retaining workers.dev.
 - [x] Verify all 148 tests, commit, deploy, and check HTTPS, multiplayer, and AdSense endpoints.
+
+## Sprint 049 — Floating Rim Levels
+
+- [x] Define architecture, UI direction, acceptance criteria, and test cases.
+- [x] RED: specify four-make progression, Level 2, and a backboard-free rim.
+- [x] GREEN: implement level state, HUD progress, and moving-rim gameplay.
+- [x] Verify the full 169-test automated suite.
+- [ ] Complete browser play-check, commit, and deploy the level challenge.

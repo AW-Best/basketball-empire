@@ -26,6 +26,26 @@
   let calloutTimer = null;
   let gameStartedAt = 0;
   let previousElapsed = 0;
+  let levelTransitioning = false;
+
+  function hoopCenterX() {
+    return (HOOP.left + HOOP.right) / 2;
+  }
+
+  function centerHoop() {
+    HOOP.left = HOOP_CENTER_X - HOOP_HALF_WIDTH;
+    HOOP.right = HOOP_CENTER_X + HOOP_HALF_WIDTH;
+  }
+
+  function updateMovingHoop(now) {
+    if (state.level !== 2 || state.status !== 'playing') {
+      centerHoop();
+      return;
+    }
+    const center = HOOP_CENTER_X + Math.sin((now - gameStartedAt) / 450) * 155;
+    HOOP.left = center - HOOP_HALF_WIDTH;
+    HOOP.right = center + HOOP_HALF_WIDTH;
+  }
 
   function makeBall() {
     const start = positions[positionIndex % positions.length];
@@ -61,6 +81,8 @@
     document.querySelector('#buzzer-shots').textContent = state.shots;
     document.querySelector('#buzzer-streak').textContent = state.streak >= 5 ? `${state.streak} · 2×` : state.streak;
     document.querySelector('#buzzer-best').textContent = state.bestStreak;
+    document.querySelector('#buzzer-level').textContent = state.level;
+    document.querySelector('#buzzer-goal').textContent = `${state.levelMakes} / ${state.levelTarget} MADE${state.level === 2 ? ' · MOVING RIM' : ''}`;
   }
 
   function finishGame() {
@@ -70,12 +92,40 @@
     localStorage.setItem(HIGH_SCORE_KEY, String(highScore));
     const accuracy = state.shots ? Math.round((state.makes / state.shots) * 100) : 0;
     document.querySelector('#buzzer-result-score').textContent = `${state.score} PTS`;
-    document.querySelector('#buzzer-result-summary').textContent = `${state.makes} makes from ${state.shots} shots${state.score > oldBest ? ' · NEW RECORD' : ''}`;
+    const cleared = engine.isLevelComplete(state) && state.level === state.maxLevel;
+    document.querySelector('#buzzer-result-kicker').textContent = cleared ? 'BOTH LEVELS CLEARED' : `LEVEL ${state.level} ENDED`;
+    document.querySelector('#buzzer-result-summary').textContent = `${state.levelMakes}/${state.levelTarget} level makes · ${state.makes} total from ${state.shots} shots${state.score > oldBest ? ' · NEW RECORD' : ''}`;
     document.querySelector('#buzzer-accuracy').textContent = `${accuracy}%`;
     document.querySelector('#buzzer-result-streak').textContent = state.bestStreak;
     document.querySelector('#buzzer-high-score').textContent = highScore;
     document.querySelector('#buzzer-result').classList.remove('is-hidden');
     showCallout('FINAL HORN', 'is-clutch');
+  }
+
+  function startNextLevel() {
+    state = engine.advanceLevel(state);
+    levelTransitioning = false;
+    centerHoop();
+    gameStartedAt = performance.now();
+    previousElapsed = 0;
+    resetBall();
+    showCallout('LEVEL 2 · MOVING RIM', 'is-make');
+    updateHud();
+  }
+
+  function handleLevelClear() {
+    if (!engine.isLevelComplete(state) || levelTransitioning) return;
+    levelTransitioning = true;
+    ball.inFlight = false;
+    clearTimeout(resetTimer);
+    if (state.level < state.maxLevel) {
+      showCallout('LEVEL 1 CLEARED!', 'is-make');
+      resetTimer = setTimeout(startNextLevel, 900);
+      return;
+    }
+    state = { ...state, status: 'finished' };
+    showCallout('LEVEL 2 CLEARED!', 'is-make');
+    resetTimer = setTimeout(finishGame, 650);
   }
 
   function settleShot(made = false) {
@@ -138,6 +188,7 @@
       state = engine.registerShot(state, { made: true, isThreePointer: ball.three });
       showCallout(state.timeLeft <= 10 ? 'BUZZER BUCKET! ×2' : (ball.three ? 'THREE!' : 'SWISH!'), 'is-make');
       updateHud();
+      handleLevelClear();
     }
 
     if (ball.y + BALL_RADIUS > WORLD.floor) {
@@ -245,7 +296,7 @@
     context.strokeStyle = `rgba(255,220,117,${pulse})`;
     context.lineWidth = 3;
     context.beginPath();
-    context.ellipse(HOOP_CENTER_X, HOOP.y + 2, 54, 17, 0, 0, Math.PI * 2);
+    context.ellipse(hoopCenterX(), HOOP.y + 2, 54, 17, 0, 0, Math.PI * 2);
     context.stroke();
     context.fillStyle = 'rgba(4,14,24,.74)';
     context.fillRect(HOOP_CENTER_X - 77, 44, 154, 34);
@@ -269,56 +320,35 @@
     drawStraightOnCourt();
   }
 
-  function drawFrontFacingHoop() {
-    const boardLeft = HOOP_CENTER_X - 112;
-    const boardTop = 80;
-    const boardWidth = 224;
-    const boardHeight = 124;
-
+  function drawFloatingRim() {
+    const centerX = hoopCenterX();
     context.save();
-    context.fillStyle = '#26394a';
-    context.beginPath();
-    context.moveTo(HOOP_CENTER_X - 20, 190);
-    context.lineTo(HOOP_CENTER_X + 20, 190);
-    context.lineTo(HOOP_CENTER_X + 58, COURT_HORIZON);
-    context.lineTo(HOOP_CENTER_X - 58, COURT_HORIZON);
-    context.closePath();
-    context.fill();
-    context.fillStyle = 'rgba(229,241,248,.13)';
-    context.fillRect(boardLeft, boardTop, boardWidth, boardHeight);
-    context.strokeStyle = '#eef7fb';
-    context.lineWidth = 7;
-    context.strokeRect(boardLeft, boardTop, boardWidth, boardHeight);
-    context.strokeStyle = '#f1f7fa';
-    context.lineWidth = 5;
-    context.strokeRect(HOOP_CENTER_X - 42, 133, 84, 54);
-
     context.strokeStyle = 'rgba(241,248,250,.85)';
     context.lineWidth = 2;
     for (let index = 0; index <= 8; index += 1) {
       const x = HOOP.left + index * ((HOOP.right - HOOP.left) / 8);
       context.beginPath();
       context.moveTo(x, HOOP.y + 5);
-      context.lineTo(HOOP_CENTER_X + (x - HOOP_CENTER_X) * 0.55, HOOP.y + 74);
+      context.lineTo(centerX + (x - centerX) * 0.55, HOOP.y + 74);
       context.stroke();
     }
     for (let row = 1; row <= 3; row += 1) {
       const y = HOOP.y + row * 18;
       const inset = row * 6;
       context.beginPath();
-      context.ellipse(HOOP_CENTER_X, y, HOOP_HALF_WIDTH - inset, HOOP_RIM_DEPTH * 0.72, 0, 0, Math.PI * 2);
+      context.ellipse(centerX, y, HOOP_HALF_WIDTH - inset, HOOP_RIM_DEPTH * 0.72, 0, 0, Math.PI * 2);
       context.stroke();
     }
 
     context.strokeStyle = '#f56b25';
     context.lineWidth = 9;
     context.beginPath();
-    context.ellipse(HOOP_CENTER_X, HOOP.y, HOOP_HALF_WIDTH, HOOP_RIM_DEPTH, 0, 0, Math.PI * 2);
+    context.ellipse(hoopCenterX(), HOOP.y, HOOP_HALF_WIDTH, HOOP_RIM_DEPTH, 0, 0, Math.PI * 2);
     context.stroke();
     context.strokeStyle = 'rgba(255,188,122,.9)';
     context.lineWidth = 2;
     context.beginPath();
-    context.ellipse(HOOP_CENTER_X, HOOP.y - 2, HOOP_HALF_WIDTH - 3, HOOP_RIM_DEPTH - 3, 0, Math.PI, Math.PI * 2);
+    context.ellipse(centerX, HOOP.y - 2, HOOP_HALF_WIDTH - 3, HOOP_RIM_DEPTH - 3, 0, Math.PI, Math.PI * 2);
     context.stroke();
     context.restore();
   }
@@ -357,7 +387,7 @@
   function draw() {
     context.setTransform(canvas.width / WORLD.width, 0, 0, canvas.height / WORLD.height, 0, 0);
     drawArena();
-    drawFrontFacingHoop();
+    drawFloatingRim();
     drawShotTarget();
     drawAimGuide();
     drawBall();
@@ -367,6 +397,7 @@
     const delta = Math.min(0.025, Math.max(0, (now - lastFrame) / 1000));
     lastFrame = now;
     if (state.status === 'playing') {
+      updateMovingHoop(now);
       const elapsed = (now - gameStartedAt) / 1000;
       state = engine.tickClock(state, elapsed - previousElapsed);
       previousElapsed = elapsed;
@@ -382,6 +413,8 @@
     clearTimeout(resetTimer);
     state = { ...engine.createGameState(), status: 'playing' };
     positionIndex = 0;
+    levelTransitioning = false;
+    centerHoop();
     ball = makeBall();
     gameStartedAt = performance.now();
     previousElapsed = 0;
@@ -395,6 +428,8 @@
     clearTimeout(resetTimer);
     state = engine.createGameState();
     positionIndex = 0;
+    levelTransitioning = false;
+    centerHoop();
     ball = makeBall();
     dragging = false;
     document.querySelector('#buzzer-power-fill').style.width = '0%';

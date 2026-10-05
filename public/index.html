@@ -114,12 +114,13 @@
             <span class="eyebrow">SIMPLE SHOOTING CHALLENGE</span>
             <h1 id="buzzer-title">BUZZER <em>BEATER</em></h1>
           </div>
-          <p>Pull the ball away from the hoop, aim, and release. Five straight makes ignite a 2× streak. The final 10 seconds are worth double.</p>
+          <p>Make 4 shots in 60 seconds to clear Level 1. Then face a moving rim in Level 2.</p>
         </header>
 
         <div class="buzzer-arena">
           <aside class="buzzer-hud" aria-label="Buzzer Beater scoreboard">
             <div class="buzzer-clock-panel"><small>GAME CLOCK</small><strong id="buzzer-clock">60.0</strong><span>SECONDS</span></div>
+            <div class="buzzer-score-panel"><small>LEVEL</small><strong id="buzzer-level">1</strong><span id="buzzer-goal">0 / 4 MADE</span></div>
             <div class="buzzer-score-panel"><small>SCORE</small><strong id="buzzer-score">0</strong><span>POINTS</span></div>
             <div class="buzzer-stat-grid">
               <div><small>MAKES</small><strong id="buzzer-makes">0</strong></div>
@@ -136,13 +137,13 @@
             <div class="buzzer-callout" id="buzzer-callout" aria-live="assertive">READY?</div>
             <div class="buzzer-start-overlay" id="buzzer-start-overlay">
               <span class="buzzer-ball-mark" aria-hidden="true"></span>
-              <small>ONE BALL · ONE MINUTE · SWIPE TO SHOOT</small>
-              <h2>OWN THE<br /><em>FINAL SHOT.</em></h2>
+              <small>LEVEL 1 · MAKE 4 SHOTS IN 60 SECONDS · SWIPE TO SHOOT</small>
+              <h2>BEAT THE<br /><em>RIM.</em></h2>
               <p>Drag back from the ball and release toward the rim.</p>
-              <button id="buzzer-start" type="button">START 60-SECOND RUN</button>
+              <button id="buzzer-start" type="button">START LEVEL 1</button>
             </div>
             <section class="buzzer-result is-hidden" id="buzzer-result" aria-live="polite">
-              <span>FINAL HORN</span>
+              <span id="buzzer-result-kicker">FINAL HORN</span>
               <h2 id="buzzer-result-score">0 PTS</h2>
               <p id="buzzer-result-summary">0 makes from 0 shots</p>
               <div><span>ACCURACY <b id="buzzer-accuracy">0%</b></span><span>BEST STREAK <b id="buzzer-result-streak">0</b></span><span>HIGH SCORE <b id="buzzer-high-score">0</b></span></div>
@@ -415,8 +416,8 @@
       <button class="card-primary" id="space-guide-done" type="button">GOT IT</button>
     </dialog>
 
-    <script src="buzzer-beater-engine.js?v=20261005g"></script>
-    <script src="buzzer-beater.js?v=20261005g"></script>
+    <script src="buzzer-beater-engine.js?v=20261005h"></script>
+    <script src="buzzer-beater.js?v=20261005h"></script>
     <script>
       if (window.location.protocol !== 'file:') {
         const gameScript = document.createElement('script');

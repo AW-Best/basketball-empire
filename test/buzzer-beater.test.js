@@ -9,6 +9,8 @@ const {
   tickClock,
   crossedHoop,
   calculateLaunchVelocity,
+  isLevelComplete,
+  advanceLevel,
 } = require('../public/buzzer-beater-engine.js');
 
 test('creates a ready 60-second solo challenge', () => {
@@ -21,7 +23,28 @@ test('creates a ready 60-second solo challenge', () => {
     makes: 0,
     streak: 0,
     bestStreak: 0,
+    level: 1,
+    levelMakes: 0,
+    levelTarget: 4,
+    maxLevel: 2,
   });
+});
+
+test('level one is cleared after four made shots', () => {
+  let state = { ...createGameState(), status: 'playing' };
+  for (let shot = 0; shot < 4; shot += 1) state = registerShot(state, { made: true, isThreePointer: false });
+  assert.equal(state.levelMakes, 4);
+  assert.equal(isLevelComplete(state), true);
+});
+
+test('clearing level one starts a fresh 60-second moving-rim level', () => {
+  const cleared = { ...createGameState(), status: 'playing', levelMakes: 4 };
+  const next = advanceLevel(cleared);
+  assert.equal(next.level, 2);
+  assert.equal(next.timeLeft, 60);
+  assert.equal(next.levelMakes, 0);
+  assert.equal(next.status, 'playing');
+  assert.deepEqual(advanceLevel({ ...next, levelMakes: 4 }), { ...next, levelMakes: 4 });
 });
 
 test('scores two or three points and doubles makes in the final ten seconds', () => {

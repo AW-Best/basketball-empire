@@ -15,6 +15,10 @@
       makes: 0,
       streak: 0,
       bestStreak: 0,
+      level: 1,
+      levelMakes: 0,
+      levelTarget: 4,
+      maxLevel: 2,
     };
   }
 
@@ -29,8 +33,25 @@
       score: state.score + (shot.made ? basePoints * streakMultiplier * clutchMultiplier : 0),
       shots: state.shots + 1,
       makes: state.makes + (shot.made ? 1 : 0),
+      levelMakes: state.levelMakes + (shot.made ? 1 : 0),
       streak: nextStreak,
       bestStreak: Math.max(state.bestStreak, nextStreak),
+    };
+  }
+
+  function isLevelComplete(state) {
+    return state.levelMakes >= state.levelTarget;
+  }
+
+  function advanceLevel(state) {
+    if (!isLevelComplete(state) || state.level >= state.maxLevel) return state;
+    return {
+      ...state,
+      level: state.level + 1,
+      levelMakes: 0,
+      timeLeft: state.duration,
+      streak: 0,
+      status: 'playing',
     };
   }
 
@@ -59,5 +80,5 @@
     return { x, y };
   }
 
-  return { createGameState, registerShot, tickClock, crossedHoop, calculateLaunchVelocity };
+  return { createGameState, registerShot, tickClock, crossedHoop, calculateLaunchVelocity, isLevelComplete, advanceLevel };
 }));

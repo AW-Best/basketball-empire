@@ -67,14 +67,27 @@ test('Buzzer Beater stays a simple swipe-to-shoot game with a focused arena pres
   assert.match(script, /function drawShotTarget\(/);
 });
 
-test('Buzzer Beater renders a front-facing hoop and preserves a round basketball', () => {
+test('Buzzer Beater renders a floating rim without a backboard and preserves a round basketball', () => {
   const script = fs.readFileSync(path.join(projectRoot, 'public/buzzer-beater.js'), 'utf8');
   const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
 
-  assert.match(script, /function drawFrontFacingHoop\(/);
-  assert.match(script, /context\.ellipse\(HOOP_CENTER_X, HOOP\.y, HOOP_HALF_WIDTH, HOOP_RIM_DEPTH/);
+  assert.match(script, /function drawFloatingRim\(/);
+  assert.match(script, /context\.ellipse\(hoopCenterX\(\), HOOP\.y, HOOP_HALF_WIDTH, HOOP_RIM_DEPTH/);
+  assert.doesNotMatch(script, /boardLeft|strokeRect/);
   assert.match(script, /context\.arc\(0, 0, BALL_RADIUS, 0, Math\.PI \* 2\)/);
   assert.match(css, /\.buzzer-court\s*\{[^}]*aspect-ratio:\s*16\s*\/\s*10[^}]*height:\s*auto/s);
+});
+
+test('Buzzer Beater has a four-make first level and a moving-rim second level', () => {
+  const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
+  const script = fs.readFileSync(path.join(projectRoot, 'public/buzzer-beater.js'), 'utf8');
+
+  assert.match(html, /id="buzzer-level"/);
+  assert.match(html, /id="buzzer-goal"/);
+  assert.match(html, /MAKE 4 SHOTS IN 60 SECONDS/);
+  assert.match(script, /function updateMovingHoop\(/);
+  assert.match(script, /state\.level === 2/);
+  assert.match(script, /engine\.advanceLevel\(state\)/);
 });
 
 test('Buzzer Beater shoots upward from the bottom toward a centered top hoop', () => {
@@ -105,7 +118,7 @@ test('Buzzer Beater mode navigation opens the challenge and can return to the ar
   assert.match(script, /\[data-game-mode="buzzer-beater"\]/);
   assert.match(script, /#buzzer-back-to-modes/);
   assert.match(script, /window\.BuzzerBeater\?\.reset/);
-  assert.match(buzzerScript, /function reset\(\)[\s\S]{0,400}requestAnimationFrame\(resizeCanvas\)/);
+  assert.match(buzzerScript, /function reset\(\)[\s\S]{0,600}requestAnimationFrame\(resizeCanvas\)/);
 });
 
 test('game screen contains the board, four-player scoreboard, court action area, and activity feed', () => {
