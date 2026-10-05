@@ -6,7 +6,7 @@
 - [x] RED: protect the active product from the retired mode name, real-player names, and conflicting team branding.
 - [x] GREEN: ship Dynasty Circuit with fictional prospects and the Capital Crowns.
 - [x] Run the complete automated test suite (154 passing).
-- [ ] Deploy and verify the public site.
+- [x] Deploy and verify the public site at `hoopire.com`.
 
 ## Sprint 042 — Initials-Only Avatars
 

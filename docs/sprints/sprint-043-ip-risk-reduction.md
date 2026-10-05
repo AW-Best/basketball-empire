@@ -25,4 +25,4 @@ Keep the existing Basketball Empire visual system and mode-card layout. Replace 
 - [x] RED: add product-content regression tests and update feature expectations.
 - [x] GREEN: replace the active names, copy, and matching logo identifier.
 - [x] Run the complete test suite (154 passing).
-- [ ] Deploy and verify the public site.
+- [x] Deploy and verify the public site at `hoopire.com`.
