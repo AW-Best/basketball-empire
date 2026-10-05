@@ -1,5 +1,13 @@
 # Sprint Status — Auction, History, and Team Card Polish
 
+## Sprint 048 — Straight-On End-Court Camera
+
+- [x] Record acceptance criteria, architecture, and original UI direction.
+- [x] RED: specify the straight-on court horizon, crowd bowl, and larger centered hoop.
+- [x] GREEN: replace the elevated court with an original end-court composition.
+- [x] Verify the actual responsive Canvas output against the supplied reference composition.
+- [ ] Run the full suite, commit, deploy, and verify production.
+
 ## Sprint 047 — Top Hoop and Upward Shooting
 
 - [x] Record acceptance criteria, architecture, and UI direction.

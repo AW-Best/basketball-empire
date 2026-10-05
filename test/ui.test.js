@@ -62,7 +62,7 @@ test('Buzzer Beater stays a simple swipe-to-shoot game with a focused arena pres
   assert.match(buzzerSection, /SIMPLE SHOOTING CHALLENGE/);
   assert.match(buzzerSection, /SWIPE TO SHOOT/);
   assert.doesNotMatch(buzzerSection, /choose (?:a )?player|customi[sz]e|pass to|dunk button/i);
-  assert.match(script, /function drawPerspectiveCourt\(/);
+  assert.match(script, /function drawStraightOnCourt\(/);
   assert.match(script, /function drawArenaLights\(/);
   assert.match(script, /function drawShotTarget\(/);
 });
@@ -81,10 +81,20 @@ test('Buzzer Beater shoots upward from the bottom toward a centered top hoop', (
   const script = fs.readFileSync(path.join(projectRoot, 'public/buzzer-beater.js'), 'utf8');
 
   assert.match(script, /const HOOP_CENTER_X = WORLD\.width \/ 2/);
-  assert.match(script, /const HOOP = \{ left: 454, right: 546, y: 176/);
+  assert.match(script, /const HOOP = \{ left: 445, right: 555, y: 210/);
   assert.match(script, /const positions = \[\{ x: 350, y: 525[\s\S]*\{ x: 500, y: 525[\s\S]*\{ x: 650, y: 525/);
   assert.doesNotMatch(script, /velocity\.x <= 0/);
   assert.match(script, /velocity\.y >= -40/);
+});
+
+test('Buzzer Beater uses a straight-on end-court camera like the supplied reference', () => {
+  const script = fs.readFileSync(path.join(projectRoot, 'public/buzzer-beater.js'), 'utf8');
+
+  assert.match(script, /const COURT_HORIZON = 315/);
+  assert.match(script, /const HOOP = \{ left: 445, right: 555, y: 210/);
+  assert.match(script, /function drawCrowdBowl\(/);
+  assert.match(script, /function drawStraightOnCourt\(/);
+  assert.doesNotMatch(script, /function drawPerspectiveCourt\(/);
 });
 
 test('Buzzer Beater mode navigation opens the challenge and can return to the arcade', () => {

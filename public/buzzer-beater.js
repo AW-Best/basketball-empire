@@ -7,7 +7,8 @@
 
   const context = canvas.getContext('2d');
   const WORLD = { width: 1000, height: 625, floor: 565 };
-  const HOOP = { left: 454, right: 546, y: 176, rimRadius: 8 };
+  const COURT_HORIZON = 315;
+  const HOOP = { left: 445, right: 555, y: 210, rimRadius: 8 };
   const HOOP_CENTER_X = WORLD.width / 2;
   const HOOP_HALF_WIDTH = (HOOP.right - HOOP.left) / 2;
   const HOOP_RIM_DEPTH = 13;
@@ -156,25 +157,38 @@
     context.fillStyle = light;
     context.fillRect(150, 0, 700, 470);
 
-    context.fillStyle = 'rgba(242,248,255,.09)';
-    for (let row = 0; row < 5; row += 1) {
-      for (let seat = 0; seat < 44; seat += 1) {
-        context.beginPath();
-        context.arc(12 + seat * 23, 30 + row * 22, 2.4 + (row % 2), 0, Math.PI * 2);
-        context.fill();
-      }
-    }
   }
 
-  function drawPerspectiveCourt() {
-    const floor = context.createLinearGradient(0, 220, 0, WORLD.height);
-    floor.addColorStop(0, '#8f421f');
-    floor.addColorStop(0.48, '#c76e31');
-    floor.addColorStop(1, '#efad5c');
+  function drawCrowdBowl() {
+    const stand = context.createLinearGradient(0, 38, 0, COURT_HORIZON);
+    stand.addColorStop(0, '#02070c');
+    stand.addColorStop(1, '#142838');
+    context.fillStyle = stand;
+    context.fillRect(0, 36, WORLD.width, COURT_HORIZON - 36);
+    for (let row = 0; row < 8; row += 1) {
+      const y = 72 + row * 29;
+      context.fillStyle = row % 2 ? 'rgba(137,160,173,.22)' : 'rgba(223,230,232,.16)';
+      for (let seat = 0; seat < 38; seat += 1) {
+        const x = 8 + seat * 27 + (row % 2) * 11;
+        context.beginPath();
+        context.arc(x, y, 5, 0, Math.PI * 2);
+        context.fill();
+        context.fillRect(x - 5, y + 5, 10, 13);
+      }
+    }
+    context.fillStyle = '#07131d';
+    context.fillRect(0, COURT_HORIZON - 18, WORLD.width, 18);
+  }
+
+  function drawStraightOnCourt() {
+    const floor = context.createLinearGradient(0, COURT_HORIZON, 0, WORLD.height);
+    floor.addColorStop(0, '#b9602c');
+    floor.addColorStop(0.45, '#d98542');
+    floor.addColorStop(1, '#f2bc72');
     context.fillStyle = floor;
     context.beginPath();
-    context.moveTo(190, 205);
-    context.lineTo(810, 205);
+    context.moveTo(0, COURT_HORIZON);
+    context.lineTo(WORLD.width, COURT_HORIZON);
     context.lineTo(WORLD.width, WORLD.height);
     context.lineTo(0, WORLD.height);
     context.closePath();
@@ -182,8 +196,8 @@
 
     context.save();
     context.beginPath();
-    context.moveTo(190, 205);
-    context.lineTo(810, 205);
+    context.moveTo(0, COURT_HORIZON);
+    context.lineTo(WORLD.width, COURT_HORIZON);
     context.lineTo(WORLD.width, WORLD.height);
     context.lineTo(0, WORLD.height);
     context.closePath();
@@ -192,24 +206,36 @@
     context.lineWidth = 2;
     for (let x = -120; x < WORLD.width + 120; x += 46) {
       context.beginPath();
-      context.moveTo(HOOP_CENTER_X + (x - HOOP_CENTER_X) * 0.24, 205);
+      context.moveTo(HOOP_CENTER_X + (x - HOOP_CENTER_X) * 0.38, COURT_HORIZON);
       context.lineTo(x, WORLD.height);
       context.stroke();
     }
+    context.fillStyle = 'rgba(22,91,112,.55)';
+    context.beginPath();
+    context.moveTo(397, COURT_HORIZON);
+    context.lineTo(603, COURT_HORIZON);
+    context.lineTo(700, WORLD.floor);
+    context.lineTo(300, WORLD.floor);
+    context.closePath();
+    context.fill();
     context.strokeStyle = 'rgba(255,246,226,.72)';
     context.lineWidth = 4;
     context.beginPath();
-    context.moveTo(26, WORLD.floor);
-    context.lineTo(980, WORLD.floor);
+    context.moveTo(0, COURT_HORIZON);
+    context.lineTo(WORLD.width, COURT_HORIZON);
     context.stroke();
     context.beginPath();
-    context.ellipse(HOOP_CENTER_X, WORLD.floor + 5, 205, 104, 0, Math.PI, Math.PI * 2);
+    context.ellipse(HOOP_CENTER_X, 474, 170, 50, 0, 0, Math.PI * 2);
     context.stroke();
-    context.setLineDash([10, 12]);
     context.beginPath();
-    context.ellipse(HOOP_CENTER_X, WORLD.floor + 8, 405, 210, 0, Math.PI, Math.PI * 2);
+    context.ellipse(HOOP_CENTER_X, 644, 240, 88, 0, Math.PI, Math.PI * 2);
     context.stroke();
-    context.setLineDash([]);
+    context.beginPath();
+    context.moveTo(300, WORLD.floor);
+    context.lineTo(397, COURT_HORIZON);
+    context.moveTo(700, WORLD.floor);
+    context.lineTo(603, COURT_HORIZON);
+    context.stroke();
     context.restore();
   }
 
@@ -222,11 +248,11 @@
     context.ellipse(HOOP_CENTER_X, HOOP.y + 2, 54, 17, 0, 0, Math.PI * 2);
     context.stroke();
     context.fillStyle = 'rgba(4,14,24,.74)';
-    context.fillRect(HOOP_CENTER_X - 77, 103, 154, 34);
+    context.fillRect(HOOP_CENTER_X - 77, 44, 154, 34);
     context.fillStyle = '#ffe19a';
     context.font = '700 15px "Arial Narrow", sans-serif';
     context.textAlign = 'center';
-    context.fillText('AIM FOR THE RIM', HOOP_CENTER_X, 126);
+    context.fillText('AIM FOR THE RIM', HOOP_CENTER_X, 67);
     context.restore();
   }
 
@@ -239,16 +265,25 @@
     context.fillStyle = gradient;
     context.fillRect(0, 0, WORLD.width, WORLD.height);
     drawArenaLights();
-    drawPerspectiveCourt();
+    drawCrowdBowl();
+    drawStraightOnCourt();
   }
 
   function drawFrontFacingHoop() {
-    const boardLeft = HOOP_CENTER_X - 94;
-    const boardTop = 24;
-    const boardWidth = 188;
-    const boardHeight = 126;
+    const boardLeft = HOOP_CENTER_X - 112;
+    const boardTop = 80;
+    const boardWidth = 224;
+    const boardHeight = 124;
 
     context.save();
+    context.fillStyle = '#26394a';
+    context.beginPath();
+    context.moveTo(HOOP_CENTER_X - 20, 190);
+    context.lineTo(HOOP_CENTER_X + 20, 190);
+    context.lineTo(HOOP_CENTER_X + 58, COURT_HORIZON);
+    context.lineTo(HOOP_CENTER_X - 58, COURT_HORIZON);
+    context.closePath();
+    context.fill();
     context.fillStyle = 'rgba(229,241,248,.13)';
     context.fillRect(boardLeft, boardTop, boardWidth, boardHeight);
     context.strokeStyle = '#eef7fb';
@@ -256,18 +291,7 @@
     context.strokeRect(boardLeft, boardTop, boardWidth, boardHeight);
     context.strokeStyle = '#f1f7fa';
     context.lineWidth = 5;
-    context.strokeRect(HOOP_CENTER_X - 38, 89, 76, 50);
-
-    context.fillStyle = '#24394b';
-    context.fillRect(HOOP_CENTER_X + 82, boardTop + boardHeight, 15, WORLD.floor - boardTop - boardHeight);
-    context.fillStyle = '#182a39';
-    context.beginPath();
-    context.moveTo(HOOP_CENTER_X + 89, 146);
-    context.lineTo(HOOP_CENTER_X + 17, HOOP.y - 2);
-    context.lineTo(HOOP_CENTER_X + 24, HOOP.y + 7);
-    context.lineTo(HOOP_CENTER_X + 97, 163);
-    context.closePath();
-    context.fill();
+    context.strokeRect(HOOP_CENTER_X - 42, 133, 84, 54);
 
     context.strokeStyle = 'rgba(241,248,250,.85)';
     context.lineWidth = 2;
