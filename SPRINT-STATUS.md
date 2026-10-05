@@ -1,5 +1,13 @@
 # Sprint Status — Auction, History, and Team Card Polish
 
+## Sprint 047 — Top Hoop and Upward Shooting
+
+- [x] Record acceptance criteria, architecture, and UI direction.
+- [x] RED: specify centered top hoop, bottom shooting positions, and unrestricted horizontal launch.
+- [x] GREEN: align hoop, court, shot target, and ball positions to bottom-to-top play.
+- [x] Verify an actual upward drag-and-release shot in the responsive browser view.
+- [ ] Run the full suite, commit, deploy, and verify production.
+
 ## Sprint 046 — Front-Facing Hoop and Round Ball
 
 - [x] Record acceptance criteria, architecture, and original UI direction.

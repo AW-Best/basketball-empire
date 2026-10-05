@@ -7,13 +7,13 @@
 
   const context = canvas.getContext('2d');
   const WORLD = { width: 1000, height: 625, floor: 565 };
-  const HOOP = { left: 786, right: 858, y: 246, rimRadius: 8, boardX: 888, boardTop: 120, boardBottom: 290 };
-  const HOOP_CENTER_X = (HOOP.left + HOOP.right) / 2;
+  const HOOP = { left: 454, right: 546, y: 176, rimRadius: 8 };
+  const HOOP_CENTER_X = WORLD.width / 2;
   const HOOP_HALF_WIDTH = (HOOP.right - HOOP.left) / 2;
   const HOOP_RIM_DEPTH = 13;
   const BALL_RADIUS = 23;
   const HIGH_SCORE_KEY = 'hoopireBuzzerBeaterHighScore';
-  const positions = [{ x: 185, y: 516, three: true }, { x: 300, y: 516, three: true }, { x: 405, y: 516, three: false }];
+  const positions = [{ x: 350, y: 525, three: true }, { x: 500, y: 525, three: false }, { x: 650, y: 525, three: true }];
   let positionIndex = 0;
   let state = engine.createGameState();
   let ball = makeBall();
@@ -125,10 +125,6 @@
     ball.rotation += ball.vx * delta / BALL_RADIUS;
     shotAge += delta;
 
-    if (ball.x + BALL_RADIUS >= HOOP.boardX && ball.previousX + BALL_RADIUS < HOOP.boardX && ball.y > HOOP.boardTop && ball.y < HOOP.boardBottom) {
-      ball.x = HOOP.boardX - BALL_RADIUS;
-      ball.vx = -Math.abs(ball.vx) * 0.72;
-    }
     collideCircle(HOOP.left, HOOP.y, HOOP.rimRadius);
     collideCircle(HOOP.right, HOOP.y, HOOP.rimRadius);
 
@@ -153,12 +149,12 @@
   }
 
   function drawArenaLights() {
-    const light = context.createRadialGradient(800, 55, 0, 800, 55, 360);
+    const light = context.createRadialGradient(HOOP_CENTER_X, 55, 0, HOOP_CENTER_X, 55, 360);
     light.addColorStop(0, 'rgba(255,248,220,.38)');
     light.addColorStop(0.36, 'rgba(123,201,255,.1)');
     light.addColorStop(1, 'rgba(255,255,255,0)');
     context.fillStyle = light;
-    context.fillRect(390, 0, 610, 470);
+    context.fillRect(150, 0, 700, 470);
 
     context.fillStyle = 'rgba(242,248,255,.09)';
     for (let row = 0; row < 5; row += 1) {
@@ -177,8 +173,8 @@
     floor.addColorStop(1, '#efad5c');
     context.fillStyle = floor;
     context.beginPath();
-    context.moveTo(185, 220);
-    context.lineTo(965, 220);
+    context.moveTo(190, 205);
+    context.lineTo(810, 205);
     context.lineTo(WORLD.width, WORLD.height);
     context.lineTo(0, WORLD.height);
     context.closePath();
@@ -186,8 +182,8 @@
 
     context.save();
     context.beginPath();
-    context.moveTo(185, 220);
-    context.lineTo(965, 220);
+    context.moveTo(190, 205);
+    context.lineTo(810, 205);
     context.lineTo(WORLD.width, WORLD.height);
     context.lineTo(0, WORLD.height);
     context.closePath();
@@ -196,7 +192,7 @@
     context.lineWidth = 2;
     for (let x = -120; x < WORLD.width + 120; x += 46) {
       context.beginPath();
-      context.moveTo(575 + (x - 575) * 0.24, 220);
+      context.moveTo(HOOP_CENTER_X + (x - HOOP_CENTER_X) * 0.24, 205);
       context.lineTo(x, WORLD.height);
       context.stroke();
     }
@@ -207,11 +203,11 @@
     context.lineTo(980, WORLD.floor);
     context.stroke();
     context.beginPath();
-    context.ellipse(820, WORLD.floor + 5, 205, 104, 0, Math.PI, Math.PI * 2);
+    context.ellipse(HOOP_CENTER_X, WORLD.floor + 5, 205, 104, 0, Math.PI, Math.PI * 2);
     context.stroke();
     context.setLineDash([10, 12]);
     context.beginPath();
-    context.ellipse(820, WORLD.floor + 8, 405, 210, 0, Math.PI, Math.PI * 1.48);
+    context.ellipse(HOOP_CENTER_X, WORLD.floor + 8, 405, 210, 0, Math.PI, Math.PI * 2);
     context.stroke();
     context.setLineDash([]);
     context.restore();
@@ -226,11 +222,11 @@
     context.ellipse(HOOP_CENTER_X, HOOP.y + 2, 54, 17, 0, 0, Math.PI * 2);
     context.stroke();
     context.fillStyle = 'rgba(4,14,24,.74)';
-    context.fillRect(745, 173, 154, 34);
+    context.fillRect(HOOP_CENTER_X - 77, 103, 154, 34);
     context.fillStyle = '#ffe19a';
     context.font = '700 15px "Arial Narrow", sans-serif';
     context.textAlign = 'center';
-    context.fillText('AIM FOR THE RIM', 822, 196);
+    context.fillText('AIM FOR THE RIM', HOOP_CENTER_X, 126);
     context.restore();
   }
 
@@ -248,7 +244,7 @@
 
   function drawFrontFacingHoop() {
     const boardLeft = HOOP_CENTER_X - 94;
-    const boardTop = 92;
+    const boardTop = 24;
     const boardWidth = 188;
     const boardHeight = 126;
 
@@ -260,16 +256,16 @@
     context.strokeRect(boardLeft, boardTop, boardWidth, boardHeight);
     context.strokeStyle = '#f1f7fa';
     context.lineWidth = 5;
-    context.strokeRect(HOOP_CENTER_X - 38, 153, 76, 50);
+    context.strokeRect(HOOP_CENTER_X - 38, 89, 76, 50);
 
     context.fillStyle = '#24394b';
     context.fillRect(HOOP_CENTER_X + 82, boardTop + boardHeight, 15, WORLD.floor - boardTop - boardHeight);
     context.fillStyle = '#182a39';
     context.beginPath();
-    context.moveTo(HOOP_CENTER_X + 89, 215);
+    context.moveTo(HOOP_CENTER_X + 89, 146);
     context.lineTo(HOOP_CENTER_X + 17, HOOP.y - 2);
     context.lineTo(HOOP_CENTER_X + 24, HOOP.y + 7);
-    context.lineTo(HOOP_CENTER_X + 97, 232);
+    context.lineTo(HOOP_CENTER_X + 97, 163);
     context.closePath();
     context.fill();
 
@@ -401,7 +397,7 @@
     dragging = false;
     pointer = canvasPoint(event);
     const velocity = engine.calculateLaunchVelocity(ball, pointer);
-    if (Math.hypot(velocity.x, velocity.y) < 130 || velocity.x <= 0 || velocity.y >= -40) {
+    if (Math.hypot(velocity.x, velocity.y) < 130 || velocity.y >= -40) {
       document.querySelector('#buzzer-power-fill').style.width = '0%';
       showCallout('PULL BACK & UP', 'is-miss');
       return;

@@ -77,6 +77,16 @@ test('Buzzer Beater renders a front-facing hoop and preserves a round basketball
   assert.match(css, /\.buzzer-court\s*\{[^}]*aspect-ratio:\s*16\s*\/\s*10[^}]*height:\s*auto/s);
 });
 
+test('Buzzer Beater shoots upward from the bottom toward a centered top hoop', () => {
+  const script = fs.readFileSync(path.join(projectRoot, 'public/buzzer-beater.js'), 'utf8');
+
+  assert.match(script, /const HOOP_CENTER_X = WORLD\.width \/ 2/);
+  assert.match(script, /const HOOP = \{ left: 454, right: 546, y: 176/);
+  assert.match(script, /const positions = \[\{ x: 350, y: 525[\s\S]*\{ x: 500, y: 525[\s\S]*\{ x: 650, y: 525/);
+  assert.doesNotMatch(script, /velocity\.x <= 0/);
+  assert.match(script, /velocity\.y >= -40/);
+});
+
 test('Buzzer Beater mode navigation opens the challenge and can return to the arcade', () => {
   const script = fs.readFileSync(path.join(projectRoot, 'public/app.js'), 'utf8');
   const buzzerScript = fs.readFileSync(path.join(projectRoot, 'public/buzzer-beater.js'), 'utf8');
