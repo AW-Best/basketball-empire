@@ -6,7 +6,7 @@
 - [x] RED: specify game rules, physics helpers, mode navigation, and responsive interface.
 - [x] GREEN: ship the playable 60-second single-player challenge.
 - [x] Run the complete automated test suite (162 passing).
-- [ ] Verify desktop and mobile gameplay (mobile drag-and-release verified).
+- [x] Verify desktop and mobile gameplay, including drag-and-release, shot counting, timer expiry, and final results.
 - [x] Commit the MVP implementation in a reviewable first batch.
 
 ## Sprint 043 — IP Risk Reduction

@@ -30,5 +30,5 @@ Use a focused “final possession under arena lights” composition: broadcast H
 - [x] GREEN: implement the playable challenge.
 - [x] Refactor the hidden-canvas and mobile-overlay regressions found during browser testing.
 - [x] Run the complete suite after final documentation updates (162 passing).
-- [ ] Manually verify desktop and mobile layouts (mobile gameplay verified; desktop remains).
+- [x] Manually verify desktop and mobile layouts, drag-and-release input, shot counting, timer expiry, and the final result card.
 - [x] Commit the MVP implementation as a reviewable first batch.
