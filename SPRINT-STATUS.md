@@ -6,7 +6,7 @@
 - [x] RED: specify centered top hoop, bottom shooting positions, and unrestricted horizontal launch.
 - [x] GREEN: align hoop, court, shot target, and ball positions to bottom-to-top play.
 - [x] Verify an actual upward drag-and-release shot in the responsive browser view.
-- [ ] Run the full suite, commit, deploy, and verify production.
+- [x] Run the full suite (165 passing), commit, deploy, and verify production.
 
 ## Sprint 046 — Front-Facing Hoop and Round Ball
 

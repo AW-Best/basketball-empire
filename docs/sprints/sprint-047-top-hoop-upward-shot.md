@@ -21,4 +21,4 @@ Retain the existing 2D projectile engine and authoritative scoring plane. Change
 - [x] RED: specify centered top hoop, bottom shooting positions, and unrestricted horizontal launch.
 - [x] GREEN: update geometry, perspective anchors, and launch validation.
 - [x] Verify a real bottom-to-top drag shot in the responsive browser view.
-- [ ] Run the full suite, commit, deploy, and verify production.
+- [x] Run the full suite (165 passing), commit, deploy, and verify production.
