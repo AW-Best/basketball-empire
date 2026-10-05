@@ -22,4 +22,4 @@ Keep the existing physics coordinates, input model, and Canvas scaling. Replace 
 - [x] RED: specify the straight-on court horizon, larger centered hoop, crowd bowl, and replacement renderer.
 - [x] GREEN: implement the original crowd bowl and end-court perspective.
 - [x] Verify the real responsive Canvas output against the requested composition.
-- [ ] Run the full suite, commit, deploy, and verify production.
+- [x] Run the full suite (166 passing), commit, deploy, and verify production.

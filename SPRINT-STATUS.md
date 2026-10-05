@@ -6,7 +6,7 @@
 - [x] RED: specify the straight-on court horizon, crowd bowl, and larger centered hoop.
 - [x] GREEN: replace the elevated court with an original end-court composition.
 - [x] Verify the actual responsive Canvas output against the supplied reference composition.
-- [ ] Run the full suite, commit, deploy, and verify production.
+- [x] Run the full suite (166 passing), commit, deploy, and verify production.
 
 ## Sprint 047 — Top Hoop and Upward Shooting
 
