@@ -8,6 +8,7 @@
 - [x] Run the complete automated test suite (162 passing).
 - [x] Verify desktop and mobile gameplay, including drag-and-release, shot counting, timer expiry, and final results.
 - [x] Commit the MVP implementation in a reviewable first batch.
+- [x] Deploy the MVP to Cloudflare and verify the public page, script, and health endpoint on `hoopire.com`.
 
 ## Sprint 043 — IP Risk Reduction
 
