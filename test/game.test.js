@@ -455,10 +455,10 @@ test('named prospects are recruitable once across the league', () => {
   const teams = game.board.filter((space) => space.group === 'rookie');
   teams.forEach((team) => { game.assets[team.id].ownerId = 'p1'; });
 
-  game = recruitStar(game, 'p1', teams[0].id, 'Stephen Curry');
-  assert.deepEqual(game.assets[teams[0].id].recruits, ['Stephen Curry']);
-  assert.ok(game.log.some((entry) => entry.type === 'recruited' && entry.playerName === 'Stephen Curry' && entry.cost === 200));
-  assert.throws(() => recruitStar(game, 'p1', teams[1].id, 'Stephen Curry'), /already recruited/i);
+  game = recruitStar(game, 'p1', teams[0].id, 'Jalen Mercer');
+  assert.deepEqual(game.assets[teams[0].id].recruits, ['Jalen Mercer']);
+  assert.ok(game.log.some((entry) => entry.type === 'recruited' && entry.playerName === 'Jalen Mercer' && entry.cost === 200));
+  assert.throws(() => recruitStar(game, 'p1', teams[1].id, 'Jalen Mercer'), /already recruited/i);
 });
 
 test('a match lasts ten minutes and the highest points player wins at expiry', () => {

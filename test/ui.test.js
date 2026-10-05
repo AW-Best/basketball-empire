@@ -5,13 +5,14 @@ const path = require('node:path');
 
 const projectRoot = path.resolve(__dirname, '..');
 
-test('Basketball Empire opens on a game-mode hub with Basketnopoly as a playable mode', () => {
+test('Basketball Empire opens on a game-mode hub with Dynasty Circuit as a playable mode', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
   const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
 
   assert.match(html, /id="mode-screen"/);
-  assert.match(html, /data-game-mode="basketnopoly"/);
-  assert.match(html, /BASKETNOPOLY/);
+  assert.match(html, /data-game-mode="dynasty-circuit"/);
+  assert.match(html, /DYNASTY CIRCUIT/);
+  assert.doesNotMatch(html, /Basketnopoly/i);
   assert.match(html, /PLAY NOW/);
   assert.match(html, /id="back-to-modes"/);
   assert.match(css, /\.mode-screen/);
@@ -19,13 +20,14 @@ test('Basketball Empire opens on a game-mode hub with Basketnopoly as a playable
   assert.match(css, /@media \(max-width: 900px\)[\s\S]*\.mode-grid/s);
 });
 
-test('mode navigation opens Basketnopoly while room invites and saved sessions bypass the hub', () => {
+test('mode navigation opens Dynasty Circuit while room invites and saved sessions bypass the hub', () => {
   const script = fs.readFileSync(path.join(projectRoot, 'public/app.js'), 'utf8');
 
   assert.match(script, /function showModeSelection/);
-  assert.match(script, /function openBasketnopoly/);
-  assert.match(script, /\[data-game-mode="basketnopoly"\]/);
-  assert.match(script, /invitedRoom && !session[\s\S]{0,180}openBasketnopoly/);
+  assert.match(script, /function openDynastyCircuit/);
+  assert.match(script, /\[data-game-mode="dynasty-circuit"\]/);
+  assert.match(script, /invitedRoom && !session[\s\S]{0,180}openDynastyCircuit/);
+  assert.doesNotMatch(script, /Basketnopoly/i);
   assert.match(script, /function renderLobby\(\)[\s\S]{0,140}modeScreen\.classList\.add\('is-hidden'\)/);
   assert.match(script, /function leaveCurrentRoom\(\)[\s\S]{0,1300}showModeSelection\(\)/);
 });
@@ -615,8 +617,8 @@ test('front office contains useful Recruit, Trade, and Teams sections', () => {
   assert.match(html, /data-office-tab="trade"/);
   assert.match(html, /data-office-tab="teams"/);
   assert.match(html, /id="front-office-content"/);
-  assert.match(script, /Stephen Curry/);
-  assert.match(script, /LeBron James/);
+  assert.match(script, /Jalen Mercer/);
+  assert.match(script, /Marcus Vale/);
   assert.match(script, /function renderFrontOffice/);
 });
 
@@ -682,8 +684,8 @@ test('Tip-Off guide explains the exact-landing 300 point bonus', () => {
 test('deployed browsers receive the current interface assets instead of stale cached files', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
 
-  assert.match(html, /styles\.css\?v=20261003a/);
-  assert.match(html, /app\.js\?v=20261003a/);
+  assert.match(html, /styles\.css\?v=20261005a/);
+  assert.match(html, /app\.js\?v=20261005a/);
 });
 
 test('API requests report an understandable connection error when a tunnel returns HTML', () => {
@@ -750,8 +752,8 @@ test('routes and labs expose price and revenue details', () => {
 
 test('front office offers eight named prospects with recruit actions', () => {
   const script = fs.readFileSync(path.join(projectRoot, 'public/app.js'), 'utf8');
-  assert.match(script, /Kevin Durant/);
-  assert.match(script, /Jayson Tatum/);
+  assert.match(script, /Devon Cross/);
+  assert.match(script, /Zane Holloway/);
   assert.match(script, /data-recruit-player/);
   assert.match(script, /playerName/);
 });
@@ -923,15 +925,15 @@ test('event card reveals include a local close button', () => {
   assert.match(css, /\.drawn-card-close/);
 });
 
-test('site footer shows Basketball Empire copyright and independent fan-project notice', () => {
+test('site footer states that the basketball universe is independent and fictional', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
   const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
 
   assert.match(html, /class="site-legal"/);
   assert.match(html, /© 2026 Basketball Empire/);
-  assert.match(html, /independent fan-made game/i);
+  assert.match(html, /independent fictional basketball game/i);
   assert.match(html, /not affiliated with, endorsed by, or licensed by the NBA, NBPA, or any NBA team/i);
-  assert.match(html, /in-game teams, events, and results are fictional/i);
+  assert.match(html, /in-game teams, players, events, and results are fictional/i);
   assert.match(css, /\.site-legal\s*\{/);
   assert.match(css, /@media \(max-width: 560px\)[\s\S]*\.site-legal/);
 });

@@ -12,14 +12,14 @@ const AUCTION_INCREMENTS = [2, 50, 100];
 const ROUTE_REVENUE = [25, 50, 100, 200];
 
 const RECRUITABLE_PLAYERS = [
-  { name: 'Stephen Curry', role: 'Shooter', rating: 96, cost: 200, skill: 'Deep-range boost' },
-  { name: 'LeBron James', role: 'Playmaker', rating: 97, cost: 200, skill: 'All-court leadership' },
-  { name: 'Nikola Jokić', role: 'Center', rating: 98, cost: 200, skill: 'Elite passing' },
-  { name: 'Giannis Antetokounmpo', role: 'Finisher', rating: 97, cost: 200, skill: 'Paint dominance' },
-  { name: 'Luka Dončić', role: 'Creator', rating: 96, cost: 150, skill: 'Clutch shotmaking' },
-  { name: 'Victor Wembanyama', role: 'Defender', rating: 94, cost: 150, skill: 'Rim protection' },
-  { name: 'Kevin Durant', role: 'Scorer', rating: 96, cost: 175, skill: 'Unstoppable pull-up' },
-  { name: 'Jayson Tatum', role: 'Wing', rating: 95, cost: 175, skill: 'Two-way versatility' },
+  { name: 'Jalen Mercer', role: 'Shooter', rating: 96, cost: 200, skill: 'Deep-range boost' },
+  { name: 'Marcus Vale', role: 'Playmaker', rating: 97, cost: 200, skill: 'All-court leadership' },
+  { name: 'Theo Navarro', role: 'Center', rating: 98, cost: 200, skill: 'Elite passing' },
+  { name: 'Kofi Daramy', role: 'Finisher', rating: 97, cost: 200, skill: 'Paint dominance' },
+  { name: 'Elias Rook', role: 'Creator', rating: 96, cost: 150, skill: 'Clutch shotmaking' },
+  { name: 'Nico Sterling', role: 'Defender', rating: 94, cost: 150, skill: 'Rim protection' },
+  { name: 'Devon Cross', role: 'Scorer', rating: 96, cost: 175, skill: 'Unstoppable pull-up' },
+  { name: 'Zane Holloway', role: 'Wing', rating: 95, cost: 175, skill: 'Two-way versatility' },
 ];
 
 const TEAM_OPERATIONS_CARDS = [
@@ -38,7 +38,7 @@ const GAME_TIME_CARDS = [
 
 const TEAM_GROUPS = [
   { group: 'rookie', names: ['Harbor Sharks', 'Metro Comets'], prices: [60, 60], recruitCost: 50 },
-  { group: 'rising', names: ['Desert Scorpions', 'Bay City Waves', 'Capital Kings'], prices: [100, 100, 120], recruitCost: 50 },
+  { group: 'rising', names: ['Desert Scorpions', 'Bay City Waves', 'Capital Crowns'], prices: [100, 100, 120], recruitCost: 50 },
   { group: 'urban', names: ['Summit Hawks', 'River City Foxes', 'Orlando Orbit'], prices: [140, 140, 160], recruitCost: 100 },
   { group: 'elite', names: ['Brooklyn Beats', 'Austin Arrows', 'Seattle Stormers'], prices: [180, 180, 200], recruitCost: 100 },
   { group: 'prime', names: ['Chicago Charge', 'Philly Phantoms', 'Miami Blaze'], prices: [220, 220, 240], recruitCost: 150 },
@@ -57,7 +57,7 @@ const TEAM_BY_NAME = new Map(
 
 const BOARD_LAYOUT = [
   ['Tip-Off', 'tipoff'], ['Harbor Sharks', 'team'], ['Team Operations', 'operations'], ['Metro Comets', 'team'], ['League Fees', 'fee'],
-  ['East Route', 'route'], ['Desert Scorpions', 'team'], ['Game Time', 'moment'], ['Bay City Waves', 'team'], ['Capital Kings', 'team'],
+  ['East Route', 'route'], ['Desert Scorpions', 'team'], ['Game Time', 'moment'], ['Bay City Waves', 'team'], ['Capital Crowns', 'team'],
   ['The Bench', 'bench'], ['Summit Hawks', 'team'], ['Offense Lab', 'training'], ['River City Foxes', 'team'], ['Orlando Orbit', 'team'],
   ['All-Star Route', 'route'], ['Brooklyn Beats', 'team'], ['Team Operations', 'operations'], ['Austin Arrows', 'team'], ['Seattle Stormers', 'team'],
   ['Locker Room', 'locker_room'], ['Chicago Charge', 'team'], ['Game Time', 'moment'], ['Philly Phantoms', 'team'], ['Miami Blaze', 'team'],

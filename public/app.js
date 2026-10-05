@@ -15,14 +15,14 @@ const TOKEN_MOTION_PROFILE = Object.freeze({
 });
 const CORNER_SPACE_INDEXES = new Set([0, 10, 20, 30]);
 const SCOUTING_BOARD = [
-  { name: 'Stephen Curry', role: 'Shooter', rating: 96, cost: 200, skill: 'Deep-range boost' },
-  { name: 'LeBron James', role: 'Playmaker', rating: 97, cost: 200, skill: 'All-court leadership' },
-  { name: 'Nikola Jokić', role: 'Center', rating: 98, cost: 200, skill: 'Elite passing' },
-  { name: 'Giannis Antetokounmpo', role: 'Finisher', rating: 97, cost: 200, skill: 'Paint dominance' },
-  { name: 'Luka Dončić', role: 'Creator', rating: 96, cost: 150, skill: 'Clutch shotmaking' },
-  { name: 'Victor Wembanyama', role: 'Defender', rating: 94, cost: 150, skill: 'Rim protection' },
-  { name: 'Kevin Durant', role: 'Scorer', rating: 96, cost: 175, skill: 'Unstoppable pull-up' },
-  { name: 'Jayson Tatum', role: 'Wing', rating: 95, cost: 175, skill: 'Two-way versatility' },
+  { name: 'Jalen Mercer', role: 'Shooter', rating: 96, cost: 200, skill: 'Deep-range boost' },
+  { name: 'Marcus Vale', role: 'Playmaker', rating: 97, cost: 200, skill: 'All-court leadership' },
+  { name: 'Theo Navarro', role: 'Center', rating: 98, cost: 200, skill: 'Elite passing' },
+  { name: 'Kofi Daramy', role: 'Finisher', rating: 97, cost: 200, skill: 'Paint dominance' },
+  { name: 'Elias Rook', role: 'Creator', rating: 96, cost: 150, skill: 'Clutch shotmaking' },
+  { name: 'Nico Sterling', role: 'Defender', rating: 94, cost: 150, skill: 'Rim protection' },
+  { name: 'Devon Cross', role: 'Scorer', rating: 96, cost: 175, skill: 'Unstoppable pull-up' },
+  { name: 'Zane Holloway', role: 'Wing', rating: 95, cost: 175, skill: 'Two-way versatility' },
 ];
 const SPACE_GUIDES = {
   tipoff: { label: 'TIP-OFF', rule: '+300 PTS when you land exactly here; +200 PTS when you pass.' },
@@ -46,7 +46,7 @@ const BOARD_SPACES = [
   { name: 'Desert Scorpions', type: 'team', group: 'sky', price: 100, logo: 'desert-scorpions' },
   { name: 'Game Time', type: 'moment', icon: '!' },
   { name: 'Bay City Waves', type: 'team', group: 'sky', price: 100, logo: 'bay-city-waves' },
-  { name: 'Capital Kings', type: 'team', group: 'sky', price: 120, logo: 'capital-kings' },
+  { name: 'Capital Crowns', type: 'team', group: 'sky', price: 120, logo: 'capital-crowns' },
   { name: 'THE BENCH', type: 'corner', icon: '⌛', note: 'Just watching' },
   { name: 'Summit Hawks', type: 'team', group: 'pink', price: 140, logo: 'summit-hawks' },
   { name: 'Offense Lab', type: 'training', icon: '↗', price: 150 },
@@ -159,11 +159,11 @@ function closeQuickGuide() {
   quickGuideDialog.close();
 }
 
-function openBasketnopoly({ join = false, guide = false } = {}) {
+function openDynastyCircuit({ join = false, guide = false } = {}) {
   modeScreen.classList.add('is-hidden');
   lobbyScreen.classList.remove('is-hidden');
   gameStage.classList.add('is-hidden');
-  document.querySelector('#header-game-status').textContent = 'BASKETNOPOLY';
+  document.querySelector('#header-game-status').textContent = 'DYNASTY CIRCUIT';
   if (join) document.querySelector('#join-tab').click();
   if (guide && localStorage.getItem(QUICK_GUIDE_DISMISSED_KEY) !== '1') setTimeout(() => openQuickGuide(), 120);
 }
@@ -1045,7 +1045,7 @@ document.querySelector('#bankrupt-button').addEventListener('click', () => {
 document.querySelector('#leave-game-button').addEventListener('click', () => {
   if (window.confirm('Leave this game and return to Create / Join?')) leaveCurrentRoom();
 });
-document.querySelector('[data-game-mode="basketnopoly"]').addEventListener('click', () => openBasketnopoly({ guide: true }));
+document.querySelector('[data-game-mode="dynasty-circuit"]').addEventListener('click', () => openDynastyCircuit({ guide: true }));
 document.querySelector('#back-to-modes').addEventListener('click', showModeSelection);
 document.querySelector('#brand-home').addEventListener('click', (event) => {
   event.preventDefault();
@@ -1139,7 +1139,7 @@ if (invitedRoom && session && invitedRoom.toUpperCase() !== session.roomCode) {
   localStorage.removeItem(SESSION_KEY);
   session = null;
 }
-if (invitedRoom && !session) { openBasketnopoly({ join: true }); document.querySelector('#room-code').value = invitedRoom.toUpperCase(); }
+if (invitedRoom && !session) { openDynastyCircuit({ join: true }); document.querySelector('#room-code').value = invitedRoom.toUpperCase(); }
 if (session) {
   modeScreen.classList.add('is-hidden');
   api(`/api/rooms/${encodeURIComponent(session.roomCode)}`).then((result) => { applyRoom(result.room); connectEvents(); }).catch(() => {

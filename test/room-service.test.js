@@ -125,8 +125,8 @@ test('named recruit actions assign the selected player to an eligible team', () 
   const record = rooms.requireRecord('DUNK42');
   record.game.assets['space-1'].ownerId = host.playerId;
   record.game.assets['space-3'].ownerId = host.playerId;
-  const result = rooms.performAction('DUNK42', host.token, { type: 'recruit', assetId: 'space-1', playerName: 'Stephen Curry' });
-  assert.deepEqual(result.assets['space-1'].recruits, ['Stephen Curry']);
+  const result = rooms.performAction('DUNK42', host.token, { type: 'recruit', assetId: 'space-1', playerName: 'Jalen Mercer' });
+  assert.deepEqual(result.assets['space-1'].recruits, ['Jalen Mercer']);
 });
 
 test('room auctions reschedule on bids and finish automatically after five quiet seconds', () => {
