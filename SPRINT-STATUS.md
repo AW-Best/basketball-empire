@@ -1,5 +1,13 @@
 # Sprint Status — Auction, History, and Team Card Polish
 
+## Sprint 046 — Front-Facing Hoop and Round Ball
+
+- [x] Record acceptance criteria, architecture, and original UI direction.
+- [x] RED: specify front-facing hoop geometry and uniform Canvas scaling.
+- [x] GREEN: render the front-facing hoop and preserve the round ball.
+- [x] Verify the actual responsive Canvas output in the browser.
+- [ ] Run the full suite, commit, deploy, and verify production.
+
 ## Sprint 045 — Simple Shooting Reference Pass
 
 - [x] Record scope, acceptance criteria, architecture, and original visual direction.

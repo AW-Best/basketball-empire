@@ -51,7 +51,7 @@ test('Buzzer Beater is a playable mode with a complete solo challenge screen', (
   assert.match(css, /@media \(max-width: 700px\)[\s\S]*\.buzzer-arena/s);
   assert.match(css, /@media \(max-width: 700px\)[\s\S]*\.buzzer-ball-mark\s*\{[^}]*display:\s*none/s);
   assert.match(css, /@media \(max-width: 700px\)[\s\S]*\.buzzer-start-overlay button[^}]*padding:\s*10px/s);
-  assert.match(css, /@media \(max-width: 700px\)[\s\S]*\.buzzer-court\s*\{[^}]*min-height:\s*300px/s);
+  assert.match(css, /@media \(max-width: 700px\)[\s\S]*\.buzzer-court\s*\{[^}]*min-height:\s*0/s);
 });
 
 test('Buzzer Beater stays a simple swipe-to-shoot game with a focused arena presentation', () => {
@@ -65,6 +65,16 @@ test('Buzzer Beater stays a simple swipe-to-shoot game with a focused arena pres
   assert.match(script, /function drawPerspectiveCourt\(/);
   assert.match(script, /function drawArenaLights\(/);
   assert.match(script, /function drawShotTarget\(/);
+});
+
+test('Buzzer Beater renders a front-facing hoop and preserves a round basketball', () => {
+  const script = fs.readFileSync(path.join(projectRoot, 'public/buzzer-beater.js'), 'utf8');
+  const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
+
+  assert.match(script, /function drawFrontFacingHoop\(/);
+  assert.match(script, /context\.ellipse\(HOOP_CENTER_X, HOOP\.y, HOOP_HALF_WIDTH, HOOP_RIM_DEPTH/);
+  assert.match(script, /context\.arc\(0, 0, BALL_RADIUS, 0, Math\.PI \* 2\)/);
+  assert.match(css, /\.buzzer-court\s*\{[^}]*aspect-ratio:\s*16\s*\/\s*10[^}]*height:\s*auto/s);
 });
 
 test('Buzzer Beater mode navigation opens the challenge and can return to the arcade', () => {

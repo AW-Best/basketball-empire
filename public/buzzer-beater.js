@@ -8,6 +8,9 @@
   const context = canvas.getContext('2d');
   const WORLD = { width: 1000, height: 625, floor: 565 };
   const HOOP = { left: 786, right: 858, y: 246, rimRadius: 8, boardX: 888, boardTop: 120, boardBottom: 290 };
+  const HOOP_CENTER_X = (HOOP.left + HOOP.right) / 2;
+  const HOOP_HALF_WIDTH = (HOOP.right - HOOP.left) / 2;
+  const HOOP_RIM_DEPTH = 13;
   const BALL_RADIUS = 23;
   const HIGH_SCORE_KEY = 'hoopireBuzzerBeaterHighScore';
   const positions = [{ x: 185, y: 516, three: true }, { x: 300, y: 516, three: true }, { x: 405, y: 516, three: false }];
@@ -220,7 +223,7 @@
     context.strokeStyle = `rgba(255,220,117,${pulse})`;
     context.lineWidth = 3;
     context.beginPath();
-    context.ellipse((HOOP.left + HOOP.right) / 2, HOOP.y + 2, 54, 17, 0, 0, Math.PI * 2);
+    context.ellipse(HOOP_CENTER_X, HOOP.y + 2, 54, 17, 0, 0, Math.PI * 2);
     context.stroke();
     context.fillStyle = 'rgba(4,14,24,.74)';
     context.fillRect(745, 173, 154, 34);
@@ -243,16 +246,61 @@
     drawPerspectiveCourt();
   }
 
-  function drawHoop() {
-    context.fillStyle = 'rgba(235,245,255,.22)';
-    context.fillRect(HOOP.boardX, HOOP.boardTop, 12, HOOP.boardBottom - HOOP.boardTop);
-    context.strokeStyle = '#f7fbff'; context.lineWidth = 6; context.strokeRect(HOOP.boardX - 3, HOOP.boardTop, 92, 125);
-    context.strokeStyle = '#ff6d24'; context.lineWidth = 9;
-    context.beginPath(); context.moveTo(HOOP.left, HOOP.y); context.lineTo(HOOP.right, HOOP.y); context.stroke();
-    context.strokeStyle = 'rgba(236,246,255,.72)'; context.lineWidth = 2;
-    for (let x = HOOP.left + 5; x <= HOOP.right - 5; x += 12) { context.beginPath(); context.moveTo(x, HOOP.y + 4); context.lineTo(822, HOOP.y + 74); context.stroke(); }
-    context.beginPath(); context.moveTo(HOOP.left + 5, HOOP.y + 27); context.lineTo(HOOP.right - 5, HOOP.y + 27); context.moveTo(HOOP.left + 15, HOOP.y + 52); context.lineTo(HOOP.right - 15, HOOP.y + 52); context.stroke();
-    context.fillStyle = '#23394e'; context.fillRect(919, HOOP.boardBottom, 15, WORLD.floor - HOOP.boardBottom);
+  function drawFrontFacingHoop() {
+    const boardLeft = HOOP_CENTER_X - 94;
+    const boardTop = 92;
+    const boardWidth = 188;
+    const boardHeight = 126;
+
+    context.save();
+    context.fillStyle = 'rgba(229,241,248,.13)';
+    context.fillRect(boardLeft, boardTop, boardWidth, boardHeight);
+    context.strokeStyle = '#eef7fb';
+    context.lineWidth = 7;
+    context.strokeRect(boardLeft, boardTop, boardWidth, boardHeight);
+    context.strokeStyle = '#f1f7fa';
+    context.lineWidth = 5;
+    context.strokeRect(HOOP_CENTER_X - 38, 153, 76, 50);
+
+    context.fillStyle = '#24394b';
+    context.fillRect(HOOP_CENTER_X + 82, boardTop + boardHeight, 15, WORLD.floor - boardTop - boardHeight);
+    context.fillStyle = '#182a39';
+    context.beginPath();
+    context.moveTo(HOOP_CENTER_X + 89, 215);
+    context.lineTo(HOOP_CENTER_X + 17, HOOP.y - 2);
+    context.lineTo(HOOP_CENTER_X + 24, HOOP.y + 7);
+    context.lineTo(HOOP_CENTER_X + 97, 232);
+    context.closePath();
+    context.fill();
+
+    context.strokeStyle = 'rgba(241,248,250,.85)';
+    context.lineWidth = 2;
+    for (let index = 0; index <= 8; index += 1) {
+      const x = HOOP.left + index * ((HOOP.right - HOOP.left) / 8);
+      context.beginPath();
+      context.moveTo(x, HOOP.y + 5);
+      context.lineTo(HOOP_CENTER_X + (x - HOOP_CENTER_X) * 0.55, HOOP.y + 74);
+      context.stroke();
+    }
+    for (let row = 1; row <= 3; row += 1) {
+      const y = HOOP.y + row * 18;
+      const inset = row * 6;
+      context.beginPath();
+      context.ellipse(HOOP_CENTER_X, y, HOOP_HALF_WIDTH - inset, HOOP_RIM_DEPTH * 0.72, 0, 0, Math.PI * 2);
+      context.stroke();
+    }
+
+    context.strokeStyle = '#f56b25';
+    context.lineWidth = 9;
+    context.beginPath();
+    context.ellipse(HOOP_CENTER_X, HOOP.y, HOOP_HALF_WIDTH, HOOP_RIM_DEPTH, 0, 0, Math.PI * 2);
+    context.stroke();
+    context.strokeStyle = 'rgba(255,188,122,.9)';
+    context.lineWidth = 2;
+    context.beginPath();
+    context.ellipse(HOOP_CENTER_X, HOOP.y - 2, HOOP_HALF_WIDTH - 3, HOOP_RIM_DEPTH - 3, 0, Math.PI, Math.PI * 2);
+    context.stroke();
+    context.restore();
   }
 
   function drawAimGuide() {
@@ -289,7 +337,7 @@
   function draw() {
     context.setTransform(canvas.width / WORLD.width, 0, 0, canvas.height / WORLD.height, 0, 0);
     drawArena();
-    drawHoop();
+    drawFrontFacingHoop();
     drawShotTarget();
     drawAimGuide();
     drawBall();
