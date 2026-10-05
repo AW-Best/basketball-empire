@@ -1,5 +1,13 @@
 # Sprint Status — Auction, History, and Team Card Polish
 
+## Sprint 045 — Simple Shooting Reference Pass
+
+- [x] Record scope, acceptance criteria, architecture, and original visual direction.
+- [x] RED: specify a simple swipe-to-shoot game with focused arena presentation.
+- [x] GREEN: add the perspective court, arena lights, rim target, and clearer instructions.
+- [x] Run the complete suite (163 passing) and verify the Canvas composition with the existing responsive layout.
+- [ ] Commit and deploy the refinement.
+
 ## Sprint 044 — Buzzer Beater MVP
 
 - [x] Record acceptance criteria, architecture, and UI direction.

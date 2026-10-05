@@ -149,39 +149,98 @@
     if (ball.x < -80 || ball.x > WORLD.width + 80 || ball.y > WORLD.height + 100 || shotAge > 5) settleShot(ball.scored);
   }
 
+  function drawArenaLights() {
+    const light = context.createRadialGradient(800, 55, 0, 800, 55, 360);
+    light.addColorStop(0, 'rgba(255,248,220,.38)');
+    light.addColorStop(0.36, 'rgba(123,201,255,.1)');
+    light.addColorStop(1, 'rgba(255,255,255,0)');
+    context.fillStyle = light;
+    context.fillRect(390, 0, 610, 470);
+
+    context.fillStyle = 'rgba(242,248,255,.09)';
+    for (let row = 0; row < 5; row += 1) {
+      for (let seat = 0; seat < 44; seat += 1) {
+        context.beginPath();
+        context.arc(12 + seat * 23, 30 + row * 22, 2.4 + (row % 2), 0, Math.PI * 2);
+        context.fill();
+      }
+    }
+  }
+
+  function drawPerspectiveCourt() {
+    const floor = context.createLinearGradient(0, 220, 0, WORLD.height);
+    floor.addColorStop(0, '#8f421f');
+    floor.addColorStop(0.48, '#c76e31');
+    floor.addColorStop(1, '#efad5c');
+    context.fillStyle = floor;
+    context.beginPath();
+    context.moveTo(185, 220);
+    context.lineTo(965, 220);
+    context.lineTo(WORLD.width, WORLD.height);
+    context.lineTo(0, WORLD.height);
+    context.closePath();
+    context.fill();
+
+    context.save();
+    context.beginPath();
+    context.moveTo(185, 220);
+    context.lineTo(965, 220);
+    context.lineTo(WORLD.width, WORLD.height);
+    context.lineTo(0, WORLD.height);
+    context.closePath();
+    context.clip();
+    context.strokeStyle = 'rgba(74,31,10,.28)';
+    context.lineWidth = 2;
+    for (let x = -120; x < WORLD.width + 120; x += 46) {
+      context.beginPath();
+      context.moveTo(575 + (x - 575) * 0.24, 220);
+      context.lineTo(x, WORLD.height);
+      context.stroke();
+    }
+    context.strokeStyle = 'rgba(255,246,226,.72)';
+    context.lineWidth = 4;
+    context.beginPath();
+    context.moveTo(26, WORLD.floor);
+    context.lineTo(980, WORLD.floor);
+    context.stroke();
+    context.beginPath();
+    context.ellipse(820, WORLD.floor + 5, 205, 104, 0, Math.PI, Math.PI * 2);
+    context.stroke();
+    context.setLineDash([10, 12]);
+    context.beginPath();
+    context.ellipse(820, WORLD.floor + 8, 405, 210, 0, Math.PI, Math.PI * 1.48);
+    context.stroke();
+    context.setLineDash([]);
+    context.restore();
+  }
+
+  function drawShotTarget() {
+    const pulse = 0.5 + Math.sin(performance.now() / 320) * 0.15;
+    context.save();
+    context.strokeStyle = `rgba(255,220,117,${pulse})`;
+    context.lineWidth = 3;
+    context.beginPath();
+    context.ellipse((HOOP.left + HOOP.right) / 2, HOOP.y + 2, 54, 17, 0, 0, Math.PI * 2);
+    context.stroke();
+    context.fillStyle = 'rgba(4,14,24,.74)';
+    context.fillRect(745, 173, 154, 34);
+    context.fillStyle = '#ffe19a';
+    context.font = '700 15px "Arial Narrow", sans-serif';
+    context.textAlign = 'center';
+    context.fillText('AIM FOR THE RIM', 822, 196);
+    context.restore();
+  }
+
   function drawArena() {
     const gradient = context.createLinearGradient(0, 0, 0, WORLD.height);
     gradient.addColorStop(0, '#020811');
     gradient.addColorStop(0.42, '#071d2d');
-    gradient.addColorStop(0.43, '#b85522');
-    gradient.addColorStop(1, '#d88a3f');
+    gradient.addColorStop(0.43, '#102c3d');
+    gradient.addColorStop(1, '#07131e');
     context.fillStyle = gradient;
     context.fillRect(0, 0, WORLD.width, WORLD.height);
-
-    context.fillStyle = 'rgba(255,255,255,.07)';
-    for (let row = 0; row < 5; row += 1) {
-      for (let seat = 0; seat < 44; seat += 1) {
-        context.beginPath();
-        context.arc(12 + seat * 23, 35 + row * 24, 3 + (row % 2), 0, Math.PI * 2);
-        context.fill();
-      }
-    }
-    const light = context.createRadialGradient(790, 70, 0, 790, 70, 320);
-    light.addColorStop(0, 'rgba(255,244,210,.32)');
-    light.addColorStop(1, 'rgba(255,255,255,0)');
-    context.fillStyle = light;
-    context.fillRect(450, 0, 550, 450);
-
-    context.strokeStyle = 'rgba(72,35,12,.35)';
-    context.lineWidth = 2;
-    for (let x = 0; x < WORLD.width; x += 56) { context.beginPath(); context.moveTo(x, 270); context.lineTo(x + 70, WORLD.height); context.stroke(); }
-    context.strokeStyle = 'rgba(255,244,221,.65)';
-    context.lineWidth = 4;
-    context.beginPath(); context.moveTo(0, WORLD.floor); context.lineTo(WORLD.width, WORLD.floor); context.stroke();
-    context.beginPath(); context.arc(820, WORLD.floor, 180, Math.PI, Math.PI * 2); context.stroke();
-    context.setLineDash([10, 12]);
-    context.beginPath(); context.arc(820, WORLD.floor, 360, Math.PI, Math.PI * 1.5); context.stroke();
-    context.setLineDash([]);
+    drawArenaLights();
+    drawPerspectiveCourt();
   }
 
   function drawHoop() {
@@ -231,6 +290,7 @@
     context.setTransform(canvas.width / WORLD.width, 0, 0, canvas.height / WORLD.height, 0, 0);
     drawArena();
     drawHoop();
+    drawShotTarget();
     drawAimGuide();
     drawBall();
   }

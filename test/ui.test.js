@@ -54,6 +54,19 @@ test('Buzzer Beater is a playable mode with a complete solo challenge screen', (
   assert.match(css, /@media \(max-width: 700px\)[\s\S]*\.buzzer-court\s*\{[^}]*min-height:\s*300px/s);
 });
 
+test('Buzzer Beater stays a simple swipe-to-shoot game with a focused arena presentation', () => {
+  const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
+  const script = fs.readFileSync(path.join(projectRoot, 'public/buzzer-beater.js'), 'utf8');
+  const buzzerSection = html.match(/<section class="buzzer-screen[\s\S]*?<\/section>\s*<main class="game-stage/)[0];
+
+  assert.match(buzzerSection, /SIMPLE SHOOTING CHALLENGE/);
+  assert.match(buzzerSection, /SWIPE TO SHOOT/);
+  assert.doesNotMatch(buzzerSection, /choose (?:a )?player|customi[sz]e|pass to|dunk button/i);
+  assert.match(script, /function drawPerspectiveCourt\(/);
+  assert.match(script, /function drawArenaLights\(/);
+  assert.match(script, /function drawShotTarget\(/);
+});
+
 test('Buzzer Beater mode navigation opens the challenge and can return to the arcade', () => {
   const script = fs.readFileSync(path.join(projectRoot, 'public/app.js'), 'utf8');
   const buzzerScript = fs.readFileSync(path.join(projectRoot, 'public/buzzer-beater.js'), 'utf8');
