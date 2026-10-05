@@ -6,7 +6,7 @@
 - [x] RED: specify front-facing hoop geometry and uniform Canvas scaling.
 - [x] GREEN: render the front-facing hoop and preserve the round ball.
 - [x] Verify the actual responsive Canvas output in the browser.
-- [ ] Run the full suite, commit, deploy, and verify production.
+- [x] Run the full suite (164 passing), commit, deploy, and verify production.
 
 ## Sprint 045 — Simple Shooting Reference Pass
 

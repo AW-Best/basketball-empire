@@ -22,4 +22,4 @@ Keep the authoritative hoop coordinates and collision model. Replace only the Ca
 - [x] RED: specify a front-facing hoop renderer and aspect-ratio-safe circular ball.
 - [x] GREEN: render the front-facing backboard, elliptical rim, mesh net, and rear support.
 - [x] Verify the actual responsive Canvas output in the browser.
-- [ ] Run the full suite, commit, deploy, and verify production.
+- [x] Run the full suite (164 passing), commit, deploy, and verify production.
