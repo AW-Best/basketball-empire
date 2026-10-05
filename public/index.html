@@ -18,7 +18,7 @@
       href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Nunito+Sans:wght@600;700;800;900&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20261005a" />
+    <link rel="stylesheet" href="styles.css?v=20261005c" />
   </head>
   <body>
     <div class="arena-shell">
@@ -43,7 +43,7 @@
           <span class="eyebrow">BASKETBALL EMPIRE ARCADE</span>
           <h1 id="mode-title">PICK YOUR<br /><em>GAME MODE.</em></h1>
           <p>One basketball universe. Different ways to build your legend. Choose a mode and bring your friends to the court.</p>
-          <div class="mode-stat-line"><span><b>4</b> MAX PLAYERS</span><span><b>1</b> LIVE MODE</span></div>
+          <div class="mode-stat-line"><span><b>4</b> MAX PLAYERS</span><span><b>2</b> LIVE MODES</span></div>
         </div>
         <div class="mode-grid" aria-label="Game modes">
           <button class="mode-card is-playable" type="button" data-game-mode="dynasty-circuit">
@@ -52,11 +52,12 @@
             <span class="mode-copy"><small>FRANCHISE BOARD GAME</small><strong>DYNASTY CIRCUIT</strong><span>Buy teams, recruit stars, trade assets, and outscore your rivals.</span></span>
             <span class="mode-enter">ENTER MODE <b>→</b></span>
           </button>
-          <article class="mode-card is-coming-soon" aria-disabled="true">
-            <span class="mode-status">COMING SOON</span>
+          <button class="mode-card is-playable is-buzzer" type="button" data-game-mode="buzzer-beater">
+            <span class="mode-status">PLAY NOW</span>
             <span class="mode-shot-art" aria-hidden="true"><i></i></span>
-            <span class="mode-copy"><small>SKILL CHALLENGE</small><strong>BUZZER BEATER</strong><span>A fast head-to-head shooting challenge is warming up.</span></span>
-          </article>
+            <span class="mode-copy"><small>60-SECOND SKILL CHALLENGE</small><strong>BUZZER BEATER</strong><span>Pull back, let it fly, and own the final ten seconds.</span></span>
+            <span class="mode-enter">TAKE THE SHOT <b>→</b></span>
+          </button>
         </div>
       </section>
 
@@ -102,6 +103,51 @@
           <div class="lobby-controls">
             <button id="ready-button" type="button">I'M READY</button>
             <button class="lobby-primary" id="start-button" type="button" disabled>START MATCH</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="buzzer-screen is-hidden" id="buzzer-beater-screen" aria-labelledby="buzzer-title">
+        <header class="buzzer-header">
+          <button class="back-to-modes" id="buzzer-back-to-modes" type="button">← ALL GAME MODES</button>
+          <div>
+            <span class="eyebrow">SOLO SKILL CHALLENGE</span>
+            <h1 id="buzzer-title">BUZZER <em>BEATER</em></h1>
+          </div>
+          <p>Pull the ball away from the hoop, aim, and release. Five straight makes ignite a 2× streak. The final 10 seconds are worth double.</p>
+        </header>
+
+        <div class="buzzer-arena">
+          <aside class="buzzer-hud" aria-label="Buzzer Beater scoreboard">
+            <div class="buzzer-clock-panel"><small>GAME CLOCK</small><strong id="buzzer-clock">60.0</strong><span>SECONDS</span></div>
+            <div class="buzzer-score-panel"><small>SCORE</small><strong id="buzzer-score">0</strong><span>POINTS</span></div>
+            <div class="buzzer-stat-grid">
+              <div><small>MAKES</small><strong id="buzzer-makes">0</strong></div>
+              <div><small>SHOTS</small><strong id="buzzer-shots">0</strong></div>
+              <div><small>STREAK</small><strong id="buzzer-streak">0</strong></div>
+              <div><small>BEST</small><strong id="buzzer-best">0</strong></div>
+            </div>
+            <div class="buzzer-power"><span>SHOT POWER</span><div><i id="buzzer-power-fill"></i></div></div>
+            <p><b>HOW TO SHOOT</b> Press the ball, drag backward, then release. Longer pull = more power.</p>
+          </aside>
+
+          <div class="buzzer-court-shell">
+            <canvas class="buzzer-court" id="buzzer-court" width="1000" height="625" aria-label="Interactive basketball shooting court"></canvas>
+            <div class="buzzer-callout" id="buzzer-callout" aria-live="assertive">READY?</div>
+            <div class="buzzer-start-overlay" id="buzzer-start-overlay">
+              <span class="buzzer-ball-mark" aria-hidden="true"></span>
+              <small>ONE BALL · ONE MINUTE</small>
+              <h2>OWN THE<br /><em>FINAL SHOT.</em></h2>
+              <p>Drag back from the ball and release toward the rim.</p>
+              <button id="buzzer-start" type="button">START 60-SECOND RUN</button>
+            </div>
+            <section class="buzzer-result is-hidden" id="buzzer-result" aria-live="polite">
+              <span>FINAL HORN</span>
+              <h2 id="buzzer-result-score">0 PTS</h2>
+              <p id="buzzer-result-summary">0 makes from 0 shots</p>
+              <div><span>ACCURACY <b id="buzzer-accuracy">0%</b></span><span>BEST STREAK <b id="buzzer-result-streak">0</b></span><span>HIGH SCORE <b id="buzzer-high-score">0</b></span></div>
+              <button id="buzzer-play-again" type="button">PLAY AGAIN</button>
+            </section>
           </div>
         </div>
       </section>
@@ -369,10 +415,12 @@
       <button class="card-primary" id="space-guide-done" type="button">GOT IT</button>
     </dialog>
 
+    <script src="buzzer-beater-engine.js?v=20261005c"></script>
+    <script src="buzzer-beater.js?v=20261005c"></script>
     <script>
       if (window.location.protocol !== 'file:') {
         const gameScript = document.createElement('script');
-        gameScript.src = 'app.js?v=20261005a';
+        gameScript.src = 'app.js?v=20261005c';
         document.body.append(gameScript);
       }
     </script>

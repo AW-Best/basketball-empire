@@ -115,6 +115,7 @@ const quickGuideDialog = document.querySelector('#quick-guide-dialog');
 const modeScreen = document.querySelector('#mode-screen');
 const lobbyScreen = document.querySelector('#lobby-screen');
 const gameStage = document.querySelector('#game-stage');
+const buzzerScreen = document.querySelector('#buzzer-beater-screen');
 
 async function loadVisitorCount() {
   const counter = document.querySelector('#visitor-count');
@@ -163,15 +164,27 @@ function openDynastyCircuit({ join = false, guide = false } = {}) {
   modeScreen.classList.add('is-hidden');
   lobbyScreen.classList.remove('is-hidden');
   gameStage.classList.add('is-hidden');
+  buzzerScreen.classList.add('is-hidden');
   document.querySelector('#header-game-status').textContent = 'DYNASTY CIRCUIT';
   if (join) document.querySelector('#join-tab').click();
   if (guide && localStorage.getItem(QUICK_GUIDE_DISMISSED_KEY) !== '1') setTimeout(() => openQuickGuide(), 120);
+}
+
+function openBuzzerBeater() {
+  modeScreen.classList.add('is-hidden');
+  lobbyScreen.classList.add('is-hidden');
+  gameStage.classList.add('is-hidden');
+  buzzerScreen.classList.remove('is-hidden');
+  document.querySelector('#header-room-code').textContent = 'SOLO';
+  document.querySelector('#header-game-status').textContent = 'BUZZER BEATER';
+  window.BuzzerBeater?.reset();
 }
 
 function showModeSelection() {
   modeScreen.classList.remove('is-hidden');
   lobbyScreen.classList.add('is-hidden');
   gameStage.classList.add('is-hidden');
+  buzzerScreen.classList.add('is-hidden');
   document.querySelector('#header-room-code').textContent = '—';
   document.querySelector('#header-game-status').textContent = 'CHOOSE A MODE';
 }
@@ -1046,7 +1059,12 @@ document.querySelector('#leave-game-button').addEventListener('click', () => {
   if (window.confirm('Leave this game and return to Create / Join?')) leaveCurrentRoom();
 });
 document.querySelector('[data-game-mode="dynasty-circuit"]').addEventListener('click', () => openDynastyCircuit({ guide: true }));
+document.querySelector('[data-game-mode="buzzer-beater"]').addEventListener('click', openBuzzerBeater);
 document.querySelector('#back-to-modes').addEventListener('click', showModeSelection);
+document.querySelector('#buzzer-back-to-modes').addEventListener('click', () => {
+  window.BuzzerBeater?.reset();
+  showModeSelection();
+});
 document.querySelector('#brand-home').addEventListener('click', (event) => {
   event.preventDefault();
   if (!session) showModeSelection();

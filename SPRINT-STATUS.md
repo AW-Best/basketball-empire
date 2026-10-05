@@ -1,5 +1,14 @@
 # Sprint Status — Auction, History, and Team Card Polish
 
+## Sprint 044 — Buzzer Beater MVP
+
+- [x] Record acceptance criteria, architecture, and UI direction.
+- [x] RED: specify game rules, physics helpers, mode navigation, and responsive interface.
+- [x] GREEN: ship the playable 60-second single-player challenge.
+- [x] Run the complete automated test suite (162 passing).
+- [ ] Verify desktop and mobile gameplay (mobile drag-and-release verified).
+- [x] Commit the MVP implementation in a reviewable first batch.
+
 ## Sprint 043 — IP Risk Reduction
 
 - [x] Record acceptance criteria, architecture, and UI approach.

@@ -32,6 +32,39 @@ test('mode navigation opens Dynasty Circuit while room invites and saved session
   assert.match(script, /function leaveCurrentRoom\(\)[\s\S]{0,1300}showModeSelection\(\)/);
 });
 
+test('Buzzer Beater is a playable mode with a complete solo challenge screen', () => {
+  const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
+  const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
+
+  assert.match(html, /data-game-mode="buzzer-beater"/);
+  assert.match(html, /id="buzzer-beater-screen"/);
+  assert.match(html, /id="buzzer-court"/);
+  assert.match(html, /id="buzzer-start"/);
+  assert.match(html, /id="buzzer-score"/);
+  assert.match(html, /id="buzzer-clock"/);
+  assert.match(html, /id="buzzer-result"/);
+  assert.match(html, /buzzer-beater-engine\.js\?v=/);
+  assert.match(html, /buzzer-beater\.js\?v=/);
+  assert.match(css, /\.buzzer-screen/);
+  assert.match(css, /\.buzzer-court/);
+  assert.match(css, /touch-action:\s*none/);
+  assert.match(css, /@media \(max-width: 700px\)[\s\S]*\.buzzer-arena/s);
+  assert.match(css, /@media \(max-width: 700px\)[\s\S]*\.buzzer-ball-mark\s*\{[^}]*display:\s*none/s);
+  assert.match(css, /@media \(max-width: 700px\)[\s\S]*\.buzzer-start-overlay button[^}]*padding:\s*10px/s);
+  assert.match(css, /@media \(max-width: 700px\)[\s\S]*\.buzzer-court\s*\{[^}]*min-height:\s*300px/s);
+});
+
+test('Buzzer Beater mode navigation opens the challenge and can return to the arcade', () => {
+  const script = fs.readFileSync(path.join(projectRoot, 'public/app.js'), 'utf8');
+  const buzzerScript = fs.readFileSync(path.join(projectRoot, 'public/buzzer-beater.js'), 'utf8');
+
+  assert.match(script, /function openBuzzerBeater/);
+  assert.match(script, /\[data-game-mode="buzzer-beater"\]/);
+  assert.match(script, /#buzzer-back-to-modes/);
+  assert.match(script, /window\.BuzzerBeater\?\.reset/);
+  assert.match(buzzerScript, /function reset\(\)[\s\S]{0,400}requestAnimationFrame\(resizeCanvas\)/);
+});
+
 test('game screen contains the board, four-player scoreboard, court action area, and activity feed', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
 
@@ -684,8 +717,8 @@ test('Tip-Off guide explains the exact-landing 300 point bonus', () => {
 test('deployed browsers receive the current interface assets instead of stale cached files', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
 
-  assert.match(html, /styles\.css\?v=20261005a/);
-  assert.match(html, /app\.js\?v=20261005a/);
+  assert.match(html, /styles\.css\?v=20261005c/);
+  assert.match(html, /app\.js\?v=20261005c/);
 });
 
 test('API requests report an understandable connection error when a tunnel returns HTML', () => {
@@ -949,6 +982,7 @@ test('site loads the owner AdSense account and links a complete privacy notice',
   assert.match(privacy, /Google AdSense/);
   assert.match(privacy, /cookies/i);
   assert.match(privacy, /localStorage/);
+  assert.match(privacy, /Buzzer Beater high score/i);
   assert.match(privacy, /uploaded avatar/i);
 });
 
