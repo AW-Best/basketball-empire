@@ -6,7 +6,7 @@
 - [x] RED: specify a simple swipe-to-shoot game with focused arena presentation.
 - [x] GREEN: add the perspective court, arena lights, rim target, and clearer instructions.
 - [x] Run the complete suite (163 passing) and verify the Canvas composition with the existing responsive layout.
-- [ ] Commit and deploy the refinement.
+- [x] Commit, deploy, and verify the refinement on `hoopire.com`.
 
 ## Sprint 044 — Buzzer Beater MVP
 

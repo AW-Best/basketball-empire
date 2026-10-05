@@ -25,4 +25,4 @@ Use the reference only for high-level visual cues: a broadcast-like diagonal har
 - [x] RED: specify the simple shooting-only UI contract and required arena rendering helpers.
 - [x] GREEN: add the presentation copy, perspective court, arena lights, and rim target.
 - [x] Run the complete suite (163 passing) and verify the live Canvas composition with the existing responsive layout.
-- [ ] Commit and deploy the refinement.
+- [x] Commit, deploy, and verify the refinement on `hoopire.com`.
