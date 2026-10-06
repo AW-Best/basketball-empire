@@ -11,6 +11,11 @@ test('school story page is a visual Year 8 presentation about building the game'
 
   assert.match(html, /How I Made Basketball Empire/);
   assert.match(html, /MADE BY A YEAR 8 STUDENT/);
+  assert.match(html, /HI, I'M<br><mark>AARON/);
+  assert.match(html, /I LOVE PLAYING<br>BASKETBALL/);
+  assert.match(html, /I LOVE PLAYING<br>MONOPOLY/);
+  assert.match(html, /I'M LEARNING<br>AI/);
+  assert.match(html, /COULD I USE AI TO BUILD MY OWN GAME\?/);
   assert.match(html, /Codex/);
   assert.match(html, /domain/);
   assert.match(html, /DAILY VIEWS/);
