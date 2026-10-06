@@ -241,7 +241,11 @@ button { font: inherit; }
 .buzzer-demo-ball { position: absolute; left: calc(50% - 18px); bottom: 17px; width: 36px; height: 36px; border-radius: 50%; background: radial-gradient(circle at 34% 28%, #ffbd69, #f26a21 52%, #8b2709); box-shadow: 0 8px 13px rgba(0,0,0,.45); animation: buzzer-demo-ball 3.2s cubic-bezier(.45,.02,.2,1) infinite; }
 .buzzer-demo-ball::before, .buzzer-demo-ball::after { content: ''; position: absolute; inset: 4px 16px; border-radius: 50%; border-left: 2px solid #5b2112; border-right: 2px solid #5b2112; }
 .buzzer-demo-ball::after { inset: 16px 3px; border: 0; border-top: 2px solid #5b2112; }
-.buzzer-demo-hand { position: absolute; left: calc(50% + 12px); bottom: 2px; color: #fff; font-size: 28px; filter: drop-shadow(0 3px 4px rgba(0,0,0,.5)); animation: buzzer-demo-hand 3.2s ease-in-out infinite; }
+.buzzer-demo-hand { position: absolute; z-index: 7; left: 53px; bottom: 17px; color: #fff; font-size: 25px; filter: drop-shadow(0 3px 4px rgba(0,0,0,.5)); animation: buzzer-demo-hand 3.2s ease-in-out infinite; }
+.buzzer-demo-tap-button { position: absolute; z-index: 6; bottom: 18px; left: 18px; display: grid; width: 86px; height: 48px; place-content: center; border: 2px solid #ffd39d; border-radius: 24px; color: #081621; background: linear-gradient(180deg, #ffac55, var(--court-orange)); box-shadow: 0 6px 0 #8a2b09, 0 11px 22px rgba(0,0,0,.42); text-align: center; transform-origin: 50% 100%; animation: buzzer-tutorial-tap-button 7.2s ease-in-out infinite; }
+.buzzer-demo-tap-button b { font: 900 14px/1 'Barlow Condensed', sans-serif; letter-spacing: .12em; }
+.buzzer-demo-tap-button span { display: block; margin-top: 3px; font-size: 6px; font-weight: 1000; letter-spacing: .08em; }
+.buzzer-demo-tap-ripple { position: absolute; z-index: 5; bottom: 13px; left: 13px; width: 96px; height: 58px; border: 2px solid rgba(255,185,104,.8); border-radius: 30px; opacity: 0; animation: buzzer-tutorial-tap-ripple 7.2s ease-out infinite; }
 .buzzer-demo-arc { position: absolute; inset: 0; }
 .buzzer-demo-arc i { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: rgba(255,225,154,.65); }
 .buzzer-demo-arc i:nth-child(1) { left: 36%; top: 67%; }.buzzer-demo-arc i:nth-child(2) { left: 40%; top: 47%; }.buzzer-demo-arc i:nth-child(3) { left: 44%; top: 31%; }.buzzer-demo-arc i:nth-child(4) { left: 48%; top: 21%; }
@@ -249,7 +253,7 @@ button { font: inherit; }
 .buzzer-demo-steps span { padding: 6px 8px; border-radius: 6px; color: #9db1bf; background: rgba(255,255,255,.06); font-size: 8px; font-weight: 900; letter-spacing: .07em; }
 .buzzer-demo-steps b { display: inline-grid; width: 17px; height: 17px; margin-right: 3px; place-items: center; border-radius: 50%; color: #07141f; background: var(--cyan); font-size: 9px; }
 .buzzer-tutorial-caption { position: absolute; z-index: 4; right: 14px; bottom: 14px; opacity: 0; padding: 7px 10px; border-left: 3px solid var(--cyan); color: var(--cream); background: rgba(2,10,17,.78); font: 900 10px 'Nunito Sans', sans-serif; letter-spacing: .08em; animation: buzzer-tutorial-caption 7.2s infinite; }
-.buzzer-tutorial-caption:nth-of-type(4) { animation-delay: 0s; }.buzzer-tutorial-caption:nth-of-type(5) { animation-delay: 2.4s; }.buzzer-tutorial-caption:nth-of-type(6) { animation-delay: 4.8s; }
+.buzzer-tutorial-caption.phase-one { animation-delay: 0s; }.buzzer-tutorial-caption.phase-two { animation-delay: 2.4s; }.buzzer-tutorial-caption.phase-three { animation-delay: 4.8s; }
 .buzzer-tutorial-caption b { color: var(--court-orange); }
 .buzzer-tutorial-progress { position: absolute; z-index: 5; right: 0; bottom: 0; left: 0; height: 3px; transform-origin: left; background: linear-gradient(90deg, var(--cyan), var(--court-orange)); animation: buzzer-tutorial-progress 7.2s linear infinite; }
 .buzzer-tutorial .buzzer-demo-ball { animation: buzzer-tutorial-shot 7.2s cubic-bezier(.45,.02,.2,1) infinite; }
@@ -271,8 +275,10 @@ button { font: inherit; }
 @keyframes clutch-clock { 50% { color: #fff; background: #4c0710; } }
 @keyframes buzzer-demo-ball { 0%, 18% { transform: translate(0,0) rotate(0); } 30% { transform: translate(-55px, 23px) rotate(-35deg); } 43% { transform: translate(-36px, -34px) rotate(70deg); } 66% { transform: translate(0, -76px) rotate(190deg); } 73% { transform: translate(0, -63px) scale(.82) rotate(230deg); } 82%, 100% { transform: translate(0, 0) scale(1) rotate(360deg); } }
 @keyframes buzzer-demo-hand { 0%, 18% { transform: translate(0,0); opacity: .95; } 30% { transform: translate(-55px, 23px); opacity: 1; } 38% { transform: translate(-44px, 8px); opacity: 0; } 82% { opacity: 0; } 100% { transform: translate(0,0); opacity: .95; } }
-@keyframes buzzer-tutorial-shot { 0%,12% { transform: translate(-132px,0) rotate(0); } 21% { transform: translate(-92px,-66px) rotate(55deg); } 29% { transform: translate(-57px,-38px) rotate(100deg); } 38% { transform: translate(-18px,-104px) rotate(155deg); } 46% { transform: translate(16px,-70px) rotate(205deg); } 55% { transform: translate(54px,-130px) rotate(260deg); } 66% { transform: translate(86px,-76px) scale(.72) rotate(315deg); opacity: 1; } 76% { transform: translate(86px,-42px) scale(.68) rotate(350deg); opacity: .12; } 84%,100% { transform: translate(-132px,0) scale(1) rotate(360deg); opacity: 1; } }
-@keyframes buzzer-tutorial-hand { 0%,12% { transform: translate(-132px,0) scale(1); opacity: .95; } 16%,32%,48% { transform: translate(-132px,-4px) scale(.72); opacity: 1; } 22%,38%,54% { transform: translate(-132px,0) scale(1); opacity: .95; } 62%,92% { opacity: 0; } 100% { transform: translate(-132px,0) scale(1); opacity: .95; } }
+@keyframes buzzer-tutorial-shot { 0%,12% { transform: translate(-66px,0) rotate(0); } 16% { transform: translate(-66px,-12px) rotate(18deg); } 21% { transform: translate(-48px,-68px) rotate(55deg); } 29% { transform: translate(-27px,-34px) rotate(100deg); } 33% { transform: translate(-22px,-44px) rotate(115deg); } 38% { transform: translate(0,-108px) rotate(155deg); } 46% { transform: translate(20px,-68px) rotate(205deg); } 50% { transform: translate(28px,-77px) rotate(220deg); } 55% { transform: translate(56px,-132px) rotate(260deg); } 66% { transform: translate(88px,-76px) scale(.72) rotate(315deg); opacity: 1; } 76% { transform: translate(88px,-42px) scale(.68) rotate(350deg); opacity: .12; } 84%,100% { transform: translate(-66px,0) scale(1) rotate(360deg); opacity: 1; } }
+@keyframes buzzer-tutorial-hand { 0%,12% { transform: translateY(0) scale(1); opacity: .95; } 14%,31%,48% { transform: translateY(8px) scale(.78); opacity: 1; } 18%,35%,52% { transform: translateY(0) scale(1); opacity: .95; } 62%,92% { opacity: 0; } 100% { transform: translateY(0) scale(1); opacity: .95; } }
+@keyframes buzzer-tutorial-tap-button { 0%,12%,18%,29%,35%,46%,52%,100% { transform: translateY(0) scale(1); box-shadow: 0 6px 0 #8a2b09, 0 11px 22px rgba(0,0,0,.42); } 14%,31%,48% { transform: translateY(6px) scale(.96); box-shadow: 0 1px 0 #8a2b09, 0 3px 12px rgba(242,106,33,.62); filter: brightness(1.22); } 62%,84% { opacity: .45; } }
+@keyframes buzzer-tutorial-tap-ripple { 0%,12%,18%,29%,35%,46%,52%,100% { opacity: 0; transform: scale(.86); } 14%,31%,48% { opacity: .9; transform: scale(1); } 18%,35%,52% { opacity: 0; transform: scale(1.34); } }
 @keyframes buzzer-tutorial-caption { 0%,4% { opacity: 0; transform: translateY(6px); } 8%,25% { opacity: 1; transform: translateY(0); } 31%,100% { opacity: 0; transform: translateY(-4px); } }
 @keyframes buzzer-tutorial-progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
@@ -1260,5 +1266,5 @@ button { font: inherit; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   .quick-guide-slide { animation: none; }
-  .buzzer-demo-ball, .buzzer-demo-hand, .buzzer-tutorial-caption, .buzzer-tutorial-progress { animation: none; }
+  .buzzer-demo-ball, .buzzer-demo-hand, .buzzer-demo-tap-button, .buzzer-demo-tap-ripple, .buzzer-tutorial-caption, .buzzer-tutorial-progress { animation: none; }
 }

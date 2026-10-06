@@ -112,9 +112,9 @@ test('Buzzer Beater teaches repeated tap-to-fly shooting with an animated visual
   const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
 
   assert.match(html, /class="buzzer-shot-demo"/);
-  assert.match(html, /TAP TO LIFT/);
-  assert.match(html, /KEEP TAPPING/);
-  assert.match(html, /SCORE &amp; SWITCH/);
+  assert.match(html, /PRESS → RISE/);
+  assert.match(html, /RELEASE → FALL/);
+  assert.match(html, /PRESS AGAIN/);
   assert.match(css, /@keyframes buzzer-demo-ball/);
   assert.match(css, /@keyframes buzzer-demo-hand/);
   assert.match(css, /prefers-reduced-motion:[\s\S]*\.buzzer-demo-ball/s);
@@ -136,6 +136,20 @@ test('Buzzer Beater presents a replayable how-to-play video with a visible baske
   assert.match(script, /function replayTutorial\(/);
   assert.match(script, /#buzzer-how-to-play/);
   assert.match(script, /#buzzer-tutorial-replay/);
+});
+
+test('Buzzer tutorial visibly demonstrates press, rise, fall, and press again', () => {
+  const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
+  const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
+
+  assert.match(html, /class="buzzer-demo-tap-button"[^>]*><b>TAP<\/b><span>PRESS AGAIN<\/span>/);
+  assert.match(html, /class="buzzer-demo-tap-ripple"/);
+  assert.match(html, /PRESS → RISE/);
+  assert.match(html, /RELEASE → FALL/);
+  assert.match(html, /PRESS AGAIN/);
+  assert.match(css, /@keyframes buzzer-tutorial-tap-button/);
+  assert.match(css, /@keyframes buzzer-tutorial-tap-ripple/);
+  assert.match(css, /@keyframes buzzer-tutorial-shot[\s\S]*21%[\s\S]*29%[\s\S]*38%/);
 });
 
 test('Buzzer Beater removes the power meter and applies another flap on every pointer press', () => {
@@ -847,7 +861,7 @@ test('Tip-Off guide explains the exact-landing 300 point bonus', () => {
 test('deployed browsers receive the current interface assets instead of stale cached files', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
 
-  assert.match(html, /styles\.css\?v=20261006e/);
+  assert.match(html, /styles\.css\?v=20261006f/);
   assert.match(html, /app\.js\?v=20261005c/);
 });
 
