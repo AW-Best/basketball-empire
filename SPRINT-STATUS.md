@@ -388,4 +388,4 @@
 - [x] RED: specify same-ball side switching and tactile feedback.
 - [x] GREEN: implement continuous ball play, smoke, tap pulse, net kick, flash, and score burst.
 - [x] Browser-play consecutive makes across both basket sides.
-- [ ] Run the full suite, commit, deploy, and verify production.
+- [x] Run the full suite, commit, deploy, and verify production.
