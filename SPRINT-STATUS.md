@@ -372,4 +372,4 @@
 - [x] RED: specify fixed tap shots, 1/2/3 scoring, and basket-side switching.
 - [x] GREEN: implement the portrait side court, one-tap controls, and Level 1 loop.
 - [x] Verify a complete four-basket browser play-through.
-- [ ] Run the full suite, commit, deploy, and verify production.
+- [x] Run the full suite, commit, deploy, and verify production.
