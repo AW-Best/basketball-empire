@@ -23,6 +23,10 @@
   let leaderboardEntries = [];
   let leaderboardPrompted = false;
   let firstShot = true;
+  let tapPulse = 0;
+  let scoreFlash = 0;
+  let netPulse = 0;
+  let scoreBurst = null;
 
   function hoopGeometry() {
     const right = hoopSide === 'right';
@@ -168,6 +172,10 @@
     const kind = engine.classifyBasket(ball);
     const points = kind === 'swish' ? 3 : kind === 'bank' ? 2 : 1;
     state = engine.registerShot(state, { made: true, kind });
+    ball.vx = 0;
+    scoreFlash = 1;
+    netPulse = 1;
+    scoreBurst = { text: `+${points}`, x: hoopGeometry().centerX, y: hoopGeometry().y - 46, life: 1 };
     const label = kind === 'swish' ? 'SWISH' : kind === 'bank' ? 'BANK SHOT' : 'BUCKET';
     showCallout(`${label} +${points}`, kind === 'swish' ? 'is-clutch' : 'is-make');
     updateHud();
@@ -176,7 +184,12 @@
       resetTimer = setTimeout(() => finishGame(true), 750);
       return;
     }
-    resetTimer = setTimeout(() => resetBall(true), 520);
+    resetTimer = setTimeout(() => {
+      const continuation = engine.continueAfterMake(ball, hoopSide);
+      hoopSide = continuation.side;
+      ball = continuation.ball;
+      shotAge = 0;
+    }, 360);
   }
 
   function flapBall() {
@@ -184,6 +197,7 @@
     const firstTapOfAttempt = !ball.inFlight;
     const impulse = engine.applyTapImpulse(ball, hoopSide);
     Object.assign(ball, impulse, { inFlight: true });
+    tapPulse = 1;
     if (firstTapOfAttempt) {
       Object.assign(ball, { scored: false, hitRim: false, hitBackboard: false, trail: [] });
       shotAge = 0;
@@ -239,13 +253,15 @@
       ball.trail.push({ x: ball.x, y: ball.y, age: shotAge });
       if (ball.trail.length > 10) ball.trail.shift();
     }
-    collideBackboard(hoop);
-    collideRim(hoop.left, hoop.y);
-    collideRim(hoop.right, hoop.y);
-    if (!ball.scored && engine.crossedHoop(
-      { x: ball.previousX, y: ball.previousY }, { x: ball.x, y: ball.y },
-      { left: hoop.left + BALL_RADIUS * 0.35, right: hoop.right - BALL_RADIUS * 0.35, y: hoop.y + 5 },
-    )) scoreBasket();
+    if (!ball.scored) {
+      collideBackboard(hoop);
+      collideRim(hoop.left, hoop.y);
+      collideRim(hoop.right, hoop.y);
+      if (engine.crossedHoop(
+        { x: ball.previousX, y: ball.previousY }, { x: ball.x, y: ball.y },
+        { left: hoop.left + BALL_RADIUS * 0.35, right: hoop.right - BALL_RADIUS * 0.35, y: hoop.y + 5 },
+      )) scoreBasket();
+    }
     if (ball.y + BALL_RADIUS >= WORLD.floor) {
       ball.y = WORLD.floor - BALL_RADIUS;
       ball.vy = -Math.abs(ball.vy) * 0.42;
@@ -292,7 +308,7 @@
     context.strokeStyle = 'rgba(244,249,250,.88)'; context.lineWidth = 2;
     for (let index = 0; index <= 6; index += 1) {
       const x = hoop.left + index * (RIM_WIDTH / 6);
-      const bottomX = hoop.centerX + (x - hoop.centerX) * 0.45;
+      const bottomX = hoop.centerX + (x - hoop.centerX) * 0.45 + (hoopSide === 'right' ? -1 : 1) * netPulse * 13;
       context.beginPath(); context.moveTo(x, hoop.y + 5); context.lineTo(bottomX, hoop.y + 100); context.stroke();
     }
     for (let row = 1; row <= 4; row += 1) {
@@ -313,12 +329,38 @@
     context.restore();
   }
 
+  function drawBallShadow() {
+    const height = Math.max(0, WORLD.floor - ball.y);
+    const scale = Math.max(0.3, 1 - height / 900);
+    context.save();
+    context.globalAlpha = 0.1 + scale * 0.2;
+    context.fillStyle = '#000';
+    context.beginPath();
+    context.ellipse(ball.x, WORLD.floor - 7, 34 * scale, 8 * scale, 0, 0, Math.PI * 2);
+    context.fill();
+    context.restore();
+  }
+
   function drawBall() {
     ball.trail.forEach((mark, index) => {
-      context.globalAlpha = ((index + 1) / ball.trail.length) * 0.16;
-      context.fillStyle = '#ff9a45'; context.beginPath(); context.arc(mark.x, mark.y, BALL_RADIUS * 0.45, 0, Math.PI * 2); context.fill();
+      const strength = (index + 1) / ball.trail.length;
+      context.globalAlpha = strength * 0.2;
+      context.fillStyle = '#d7e0e4';
+      context.beginPath();
+      context.arc(mark.x, mark.y, 4 + strength * 8, 0, Math.PI * 2);
+      context.fill();
     });
     context.globalAlpha = 1;
+    if (tapPulse > 0) {
+      context.save();
+      context.globalAlpha = tapPulse * 0.6;
+      context.strokeStyle = '#fff3c4';
+      context.lineWidth = 4;
+      context.beginPath();
+      context.arc(ball.x, ball.y, BALL_RADIUS + (1 - tapPulse) * 30, 0, Math.PI * 2);
+      context.stroke();
+      context.restore();
+    }
     context.save(); context.translate(ball.x, ball.y); context.rotate(ball.rotation);
     const glow = context.createRadialGradient(-8, -10, 2, 0, 0, BALL_RADIUS);
     glow.addColorStop(0, '#ffc066'); glow.addColorStop(0.52, '#ef7627'); glow.addColorStop(1, '#8f2609');
@@ -330,9 +372,41 @@
     context.restore();
   }
 
+  function drawScoreBurst() {
+    if (!scoreBurst) return;
+    context.save();
+    context.globalAlpha = Math.min(1, scoreBurst.life * 1.8);
+    context.fillStyle = '#fff4a3';
+    context.textAlign = 'center';
+    context.font = '900 44px "Barlow Condensed", sans-serif';
+    context.shadowColor = 'rgba(255,183,54,.7)';
+    context.shadowBlur = 18;
+    context.fillText(scoreBurst.text, scoreBurst.x, scoreBurst.y - (1 - scoreBurst.life) * 55);
+    context.restore();
+  }
+
+  function drawScoreFlash() {
+    if (scoreFlash <= 0) return;
+    context.save();
+    context.globalAlpha = scoreFlash * 0.2;
+    context.fillStyle = '#fff6ca';
+    context.fillRect(0, 0, WORLD.width, WORLD.height);
+    context.restore();
+  }
+
+  function updateVisualEffects(delta) {
+    tapPulse = Math.max(0, tapPulse - delta * 4.8);
+    scoreFlash = Math.max(0, scoreFlash - delta * 5.5);
+    netPulse = Math.max(0, netPulse - delta * 2.8);
+    if (scoreBurst) {
+      scoreBurst.life -= delta * 1.4;
+      if (scoreBurst.life <= 0) scoreBurst = null;
+    }
+  }
+
   function draw() {
     context.setTransform(canvas.width / WORLD.width, 0, 0, canvas.height / WORLD.height, 0, 0);
-    drawBackdrop(); drawSideHoop(); drawTapHint(); drawBall();
+    drawBackdrop(); drawBallShadow(); drawSideHoop(); drawTapHint(); drawBall(); drawScoreBurst(); drawScoreFlash();
   }
 
   function frame(now) {
@@ -345,13 +419,14 @@
       if (state.status === 'finished') finishGame(false);
       updatePhysics(delta); updateHud();
     }
+    updateVisualEffects(delta);
     draw(); requestAnimationFrame(frame);
   }
 
   function startGame() {
     clearTimeout(resetTimer);
     state = { ...engine.createGameState(), status: 'playing' };
-    hoopSide = 'right'; ball = makeBall(); firstShot = true; leaderboardPrompted = false;
+    hoopSide = 'right'; ball = makeBall(); firstShot = true; leaderboardPrompted = false; tapPulse = 0; scoreFlash = 0; netPulse = 0; scoreBurst = null;
     gameStartedAt = performance.now(); previousElapsed = 0;
     document.querySelector('#buzzer-start-overlay').classList.add('is-hidden');
     document.querySelector('#buzzer-result').classList.add('is-hidden');
@@ -362,7 +437,7 @@
 
   function reset() {
     clearTimeout(resetTimer);
-    state = engine.createGameState(); hoopSide = 'right'; ball = makeBall(); firstShot = true; leaderboardPrompted = false;
+    state = engine.createGameState(); hoopSide = 'right'; ball = makeBall(); firstShot = true; leaderboardPrompted = false; tapPulse = 0; scoreFlash = 0; netPulse = 0; scoreBurst = null;
     document.querySelector('#buzzer-result').classList.add('is-hidden');
     document.querySelector('#buzzer-record-dialog').classList.add('is-hidden');
     document.querySelector('#buzzer-start-overlay').classList.remove('is-hidden');

@@ -381,3 +381,11 @@
 - [x] GREEN: implement gravity-driven tap-to-fly controls and update the tutorial.
 - [x] Browser-play a scoring rhythm into both basket sides.
 - [x] Run the full suite, commit, deploy, and verify production.
+
+## Sprint 056 — Video-Style Mid-Play Interaction
+
+- [x] Inspect the supplied video's middle sequence frame by frame.
+- [x] RED: specify same-ball side switching and tactile feedback.
+- [x] GREEN: implement continuous ball play, smoke, tap pulse, net kick, flash, and score burst.
+- [x] Browser-play consecutive makes across both basket sides.
+- [ ] Run the full suite, commit, deploy, and verify production.

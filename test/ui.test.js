@@ -159,6 +159,19 @@ test('Buzzer Beater alternates side-view hoop positions after made shots', () =>
   assert.match(script, /hoopSide = engine\.oppositeSide\(hoopSide\)/);
   assert.match(script, /const WORLD = \{ width: 720, height: 960, floor: 900 \}/);
   assert.match(script, /x, y: 500, previousX: x, previousY: 500/);
+  assert.match(script, /engine\.continueAfterMake\(ball, hoopSide\)/);
+  assert.doesNotMatch(script, /resetBall\(true\)/);
+});
+
+test('Buzzer Beater gives taps and makes tactile video-style feedback', () => {
+  const script = fs.readFileSync(path.join(projectRoot, 'public/buzzer-beater.js'), 'utf8');
+
+  assert.match(script, /let tapPulse = 0/);
+  assert.match(script, /let scoreFlash = 0/);
+  assert.match(script, /function drawBallShadow\(/);
+  assert.match(script, /function drawScoreBurst\(/);
+  assert.match(script, /tapPulse = 1/);
+  assert.match(script, /scoreFlash = 1/);
 });
 
 test('Buzzer Beater uses the supplied portrait side-court reference', () => {

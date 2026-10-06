@@ -81,5 +81,20 @@
     return side === 'left' ? 'right' : 'left';
   }
 
-  return { createGameState, registerShot, tickClock, crossedHoop, applyTapImpulse, classifyBasket, oppositeSide, isLevelComplete, advanceLevel };
+  function continueAfterMake(ball, side) {
+    return {
+      side: oppositeSide(side),
+      ball: {
+        ...ball,
+        vx: 0,
+        vy: Math.max(ball.vy, 180),
+        scored: false,
+        hitRim: false,
+        hitBackboard: false,
+        trail: ball.trail.slice(-4),
+      },
+    };
+  }
+
+  return { createGameState, registerShot, tickClock, crossedHoop, applyTapImpulse, classifyBasket, oppositeSide, continueAfterMake, isLevelComplete, advanceLevel };
 }));

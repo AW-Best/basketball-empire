@@ -11,6 +11,7 @@ const {
   applyTapImpulse,
   classifyBasket,
   oppositeSide,
+  continueAfterMake,
   isLevelComplete,
 } = require('../public/buzzer-beater-engine.js');
 
@@ -95,4 +96,12 @@ test('basket contact classifies normal, bank, and swish scores', () => {
 test('a made basket sends the next hoop to the opposite side', () => {
   assert.equal(oppositeSide('left'), 'right');
   assert.equal(oppositeSide('right'), 'left');
+});
+
+test('after a make the same ball drops below the hoop and play continues toward the other side', () => {
+  const ball = { x: 604, y: 372, vx: 150, vy: 90, scored: true, hitRim: false, hitBackboard: false, trail: [1, 2, 3, 4, 5] };
+  assert.deepEqual(continueAfterMake(ball, 'right'), {
+    side: 'left',
+    ball: { ...ball, vx: 0, vy: 180, scored: false, hitRim: false, hitBackboard: false, trail: [2, 3, 4, 5] },
+  });
 });
