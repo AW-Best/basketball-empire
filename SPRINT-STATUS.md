@@ -349,4 +349,4 @@
 - [x] RED: specify the animated three-step tutorial and semantic live power meter.
 - [x] GREEN: implement tutorial motion, percentage feedback, charging emphasis, and mobile visibility.
 - [x] Verify the full suite and browser presentation.
-- [ ] Commit and deploy.
+- [x] Commit and deploy.
