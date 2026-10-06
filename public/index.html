@@ -18,7 +18,7 @@
       href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Nunito+Sans:wght@600;700;800;900&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20261006d" />
+    <link rel="stylesheet" href="styles.css?v=20261006e" />
   </head>
   <body>
     <div class="arena-shell">
@@ -55,7 +55,7 @@
           <button class="mode-card is-playable is-buzzer" type="button" data-game-mode="buzzer-beater">
             <span class="mode-status">PLAY NOW</span>
             <span class="mode-shot-art" aria-hidden="true"><i></i></span>
-            <span class="mode-copy"><small>60-SECOND SKILL CHALLENGE</small><strong>BUZZER BEATER</strong><span>Tap once, send it high, and chase the perfect swish.</span></span>
+            <span class="mode-copy"><small>60-SECOND SKILL CHALLENGE</small><strong>BUZZER BEATER</strong><span>Keep tapping to guide the ball through the hoop.</span></span>
             <span class="mode-enter">TAKE THE SHOT <b>→</b></span>
           </button>
         </div>
@@ -114,7 +114,7 @@
             <span class="eyebrow">SIMPLE SHOOTING CHALLENGE</span>
             <h1 id="buzzer-title">BUZZER <em>BEATER</em></h1>
           </div>
-          <p>Tap anywhere to shoot. Make 4 baskets in 60 seconds and send the hoop to the other side.</p>
+          <p>Each tap bumps the ball upward. Keep tapping to guide it through 4 baskets in 60 seconds.</p>
         </header>
 
         <div class="buzzer-arena">
@@ -129,7 +129,7 @@
               <div><small>BEST</small><strong id="buzzer-best">0</strong></div>
             </div>
             <div class="buzzer-scoring-key" aria-label="Scoring rules"><span><b>+1</b> NORMAL</span><span><b>+2</b> BANK</span><span><b>+3</b> SWISH</span></div>
-            <p><b>HOW TO SHOOT</b> Tap anywhere. Every shot uses the same power—timing is everything.</p>
+            <p><b>HOW TO PLAY</b> Each tap gives the ball one upward boost. Keep tapping before gravity pulls it down.</p>
             <button class="buzzer-how-to-play" id="buzzer-how-to-play" type="button"><span aria-hidden="true">▶</span> WATCH HOW TO PLAY</button>
             <section class="buzzer-leaderboard" id="buzzer-leaderboard" aria-labelledby="buzzer-leaderboard-title">
               <div><small>ALL-TIME</small><strong id="buzzer-leaderboard-title">TOP 5</strong></div>
@@ -138,23 +138,23 @@
           </aside>
 
           <div class="buzzer-court-shell">
-            <canvas class="buzzer-court" id="buzzer-court" width="720" height="960" aria-label="Tap-to-shoot side-view basketball court"></canvas>
+            <canvas class="buzzer-court" id="buzzer-court" width="720" height="960" aria-label="Repeated-tap side-view basketball court"></canvas>
             <div class="buzzer-callout" id="buzzer-callout" aria-live="assertive">READY?</div>
             <div class="buzzer-start-overlay" id="buzzer-start-overlay">
               <section class="buzzer-tutorial" id="buzzer-tutorial" role="dialog" aria-modal="true" aria-labelledby="buzzer-tutorial-title">
-                <small>LEVEL 1 · MAKE 4 SHOTS IN 60 SECONDS · TAP TO SHOOT</small>
+                <small>LEVEL 1 · MAKE 4 SHOTS IN 60 SECONDS · TAP TO FLY</small>
                 <h2 id="buzzer-tutorial-title">HOW TO <em>PLAY</em></h2>
-                <div class="buzzer-shot-demo" aria-label="Animated video: tap once to send the ball into the side basket">
+                <div class="buzzer-shot-demo" aria-label="Animated video: tap repeatedly to lift the ball into the side basket">
                   <div class="buzzer-tutorial-hoop is-side" aria-hidden="true"><span class="buzzer-demo-board"></span><span class="buzzer-demo-rim"></span><span class="buzzer-tutorial-net"></span></div>
                   <span class="buzzer-demo-arc" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
                   <span class="buzzer-demo-ball" aria-hidden="true"></span>
                   <span class="buzzer-demo-hand" aria-hidden="true">☝</span>
-                  <span class="buzzer-tutorial-caption" aria-hidden="true"><b>1</b> TAP ANYWHERE</span>
-                  <span class="buzzer-tutorial-caption" aria-hidden="true"><b>2</b> FIXED SHOT</span>
+                  <span class="buzzer-tutorial-caption" aria-hidden="true"><b>1</b> TAP TO LIFT</span>
+                  <span class="buzzer-tutorial-caption" aria-hidden="true"><b>2</b> KEEP TAPPING</span>
                   <span class="buzzer-tutorial-caption" aria-hidden="true"><b>3</b> SCORE &amp; SWITCH</span>
                   <span class="buzzer-tutorial-progress" aria-hidden="true"></span>
                 </div>
-                <div class="buzzer-demo-steps"><span><b>1</b> TAP ANYWHERE</span><span><b>2</b> FIXED SHOT</span><span><b>3</b> SCORE &amp; SWITCH</span></div>
+                <div class="buzzer-demo-steps"><span><b>1</b> TAP TO LIFT</span><span><b>2</b> KEEP TAPPING</span><span><b>3</b> SCORE &amp; SWITCH</span></div>
                 <div class="buzzer-tutorial-actions"><button class="is-secondary" id="buzzer-tutorial-replay" type="button">↻ REPLAY VIDEO</button><button id="buzzer-start" type="button">START LEVEL 1</button></div>
               </section>
             </div>
@@ -444,8 +444,8 @@
       <button class="card-primary" id="space-guide-done" type="button">GOT IT</button>
     </dialog>
 
-    <script src="buzzer-beater-engine.js?v=20261006e"></script>
-    <script src="buzzer-beater.js?v=20261006d"></script>
+    <script src="buzzer-beater-engine.js?v=20261006g"></script>
+    <script src="buzzer-beater.js?v=20261006f"></script>
     <script>
       if (window.location.protocol !== 'file:') {
         const gameScript = document.createElement('script');

@@ -34,7 +34,7 @@
 
   function makeBall() {
     const x = hoopSide === 'right' ? 150 : 570;
-    return { x, y: 790, previousX: x, previousY: 790, vx: 0, vy: 0, rotation: 0, inFlight: false, scored: false, hitRim: false, hitBackboard: false, trail: [] };
+    return { x, y: 500, previousX: x, previousY: 500, vx: 0, vy: 0, rotation: 0, inFlight: false, scored: false, hitRim: false, hitBackboard: false, trail: [] };
   }
 
   function resizeCanvas() {
@@ -179,14 +179,18 @@
     resetTimer = setTimeout(() => resetBall(true), 520);
   }
 
-  function launchTapShot() {
-    if (state.status !== 'playing' || ball.inFlight) return;
-    const velocity = engine.calculateTapVelocity(hoopSide);
-    Object.assign(ball, { vx: velocity.x, vy: velocity.y, inFlight: true, scored: false, hitRim: false, hitBackboard: false, trail: [] });
-    shotAge = 0;
+  function flapBall() {
+    if (state.status !== 'playing' || ball.scored) return;
+    const firstTapOfAttempt = !ball.inFlight;
+    const impulse = engine.applyTapImpulse(ball, hoopSide);
+    Object.assign(ball, impulse, { inFlight: true });
+    if (firstTapOfAttempt) {
+      Object.assign(ball, { scored: false, hitRim: false, hitBackboard: false, trail: [] });
+      shotAge = 0;
+    }
     if (firstShot) {
       firstShot = false;
-      showCallout('TAP. FLY. SCORE.', 'is-make');
+      showCallout('KEEP TAPPING!', 'is-make');
     }
   }
 
@@ -305,7 +309,7 @@
     context.fillStyle = 'rgba(2,8,14,.76)'; context.fillRect(205, 520, 310, 64);
     context.strokeStyle = '#50d3e3'; context.strokeRect(205, 520, 310, 64);
     context.fillStyle = '#fff4dd'; context.font = '900 25px "Arial Narrow", sans-serif'; context.textAlign = 'center';
-    context.fillText('TAP ANYWHERE TO SHOOT', 360, 561);
+    context.fillText('KEEP TAPPING TO FLY', 360, 561);
     context.restore();
   }
 
@@ -353,7 +357,7 @@
     document.querySelector('#buzzer-result').classList.add('is-hidden');
     document.querySelector('#buzzer-record-dialog').classList.add('is-hidden');
     document.querySelector('#buzzer-record-status').textContent = '';
-    showCallout('60 SECONDS. TAP!', 'is-make'); updateHud();
+    showCallout('60 SECONDS. KEEP TAPPING!', 'is-make'); updateHud();
   }
 
   function reset() {
@@ -373,7 +377,7 @@
     animatedParts.forEach((part) => { part.style.animation = ''; });
   }
 
-  canvas.addEventListener('pointerdown', () => { launchTapShot(); });
+  canvas.addEventListener('pointerdown', (event) => { event.preventDefault(); flapBall(); });
   document.querySelector('#buzzer-start').addEventListener('click', startGame);
   document.querySelector('#buzzer-tutorial-replay').addEventListener('click', replayTutorial);
   document.querySelector('#buzzer-how-to-play').addEventListener('click', () => { reset(); replayTutorial(); });

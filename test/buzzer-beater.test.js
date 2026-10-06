@@ -8,7 +8,7 @@ const {
   registerShot,
   tickClock,
   crossedHoop,
-  calculateTapVelocity,
+  applyTapImpulse,
   classifyBasket,
   oppositeSide,
   isLevelComplete,
@@ -75,9 +75,15 @@ test('a basket only counts when the ball crosses the hoop plane downward from ab
   assert.equal(crossedHoop({ x: 480, y: 210 }, { x: 480, y: 230 }, hoop), false);
 });
 
-test('one tap launches with fixed mirrored velocity toward the active side', () => {
-  assert.deepEqual(calculateTapVelocity('right'), { x: 269, y: -1080 });
-  assert.deepEqual(calculateTapVelocity('left'), { x: -269, y: -1080 });
+test('every tap gives the live ball one upward flap toward the active hoop', () => {
+  assert.deepEqual(applyTapImpulse({ vx: 90, vy: 180 }, 'right'), { vx: 150, vy: -420 });
+  assert.deepEqual(applyTapImpulse({ vx: -90, vy: -120 }, 'left'), { vx: -150, vy: -420 });
+});
+
+test('repeated taps reset upward speed instead of creating one automatic shot', () => {
+  const firstTap = applyTapImpulse({ vx: 0, vy: 300 }, 'right');
+  const fallingAgain = { ...firstTap, vy: 120 };
+  assert.deepEqual(applyTapImpulse(fallingAgain, 'right'), { vx: 150, vy: -420 });
 });
 
 test('basket contact classifies normal, bank, and swish scores', () => {

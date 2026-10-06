@@ -60,7 +60,7 @@ test('Buzzer Beater stays a simple tap-to-shoot game with a focused arena presen
   const buzzerSection = html.match(/<section class="buzzer-screen[\s\S]*?<\/section>\s*<main class="game-stage/)[0];
 
   assert.match(buzzerSection, /SIMPLE SHOOTING CHALLENGE/);
-  assert.match(buzzerSection, /TAP TO SHOOT/);
+  assert.match(buzzerSection, /TAP TO FLY/);
   assert.doesNotMatch(buzzerSection, /choose (?:a )?player|customi[sz]e|pass to|dunk button/i);
   assert.doesNotMatch(html, /Pull back, let it fly/);
   assert.match(script, /function drawBackdrop\(/);
@@ -107,13 +107,13 @@ test('Buzzer Beater shows a global top-five leaderboard and asks qualifying play
   assert.match(css, /\.buzzer-record-dialog/);
 });
 
-test('Buzzer Beater teaches one-tap side shooting with an animated visual guide', () => {
+test('Buzzer Beater teaches repeated tap-to-fly shooting with an animated visual guide', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
   const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
 
   assert.match(html, /class="buzzer-shot-demo"/);
-  assert.match(html, /TAP ANYWHERE/);
-  assert.match(html, /FIXED SHOT/);
+  assert.match(html, /TAP TO LIFT/);
+  assert.match(html, /KEEP TAPPING/);
   assert.match(html, /SCORE &amp; SWITCH/);
   assert.match(css, /@keyframes buzzer-demo-ball/);
   assert.match(css, /@keyframes buzzer-demo-hand/);
@@ -138,7 +138,7 @@ test('Buzzer Beater presents a replayable how-to-play video with a visible baske
   assert.match(script, /#buzzer-tutorial-replay/);
 });
 
-test('Buzzer Beater removes the power meter and launches on a single pointer press', () => {
+test('Buzzer Beater removes the power meter and applies another flap on every pointer press', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
   const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
   const script = fs.readFileSync(path.join(projectRoot, 'public/buzzer-beater.js'), 'utf8');
@@ -146,17 +146,19 @@ test('Buzzer Beater removes the power meter and launches on a single pointer pre
   assert.doesNotMatch(html, /id="buzzer-power"/);
   assert.doesNotMatch(css, /\.buzzer-power\.is-charging/);
   assert.doesNotMatch(script, /updatePowerMeter/);
-  assert.match(script, /function launchTapShot\(/);
-  assert.match(script, /pointerdown[\s\S]{0,240}launchTapShot\(\)/);
+  assert.match(script, /function flapBall\(/);
+  assert.match(script, /pointerdown[\s\S]{0,240}flapBall\(\)/);
+  assert.match(script, /const firstTapOfAttempt = !ball\.inFlight/);
 });
 
-test('Buzzer Beater alternates fixed side-view hoop positions after made shots', () => {
+test('Buzzer Beater alternates side-view hoop positions after made shots', () => {
   const script = fs.readFileSync(path.join(projectRoot, 'public/buzzer-beater.js'), 'utf8');
 
   assert.match(script, /let hoopSide = 'right'/);
-  assert.match(script, /engine\.calculateTapVelocity\(hoopSide\)/);
+  assert.match(script, /engine\.applyTapImpulse\(ball, hoopSide\)/);
   assert.match(script, /hoopSide = engine\.oppositeSide\(hoopSide\)/);
   assert.match(script, /const WORLD = \{ width: 720, height: 960, floor: 900 \}/);
+  assert.match(script, /x, y: 500, previousX: x, previousY: 500/);
 });
 
 test('Buzzer Beater uses the supplied portrait side-court reference', () => {
@@ -832,7 +834,7 @@ test('Tip-Off guide explains the exact-landing 300 point bonus', () => {
 test('deployed browsers receive the current interface assets instead of stale cached files', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
 
-  assert.match(html, /styles\.css\?v=20261006d/);
+  assert.match(html, /styles\.css\?v=20261006e/);
   assert.match(html, /app\.js\?v=20261005c/);
 });
 

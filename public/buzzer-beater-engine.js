@@ -67,8 +67,8 @@
     return movingDown && crossedPlane && xAtCrossing >= hoop.left && xAtCrossing <= hoop.right;
   }
 
-  function calculateTapVelocity(side) {
-    return { x: side === 'left' ? -269 : 269, y: -1080 };
+  function applyTapImpulse(ball, side) {
+    return { vx: side === 'left' ? -150 : 150, vy: -420 };
   }
 
   function classifyBasket(contact) {
@@ -81,5 +81,5 @@
     return side === 'left' ? 'right' : 'left';
   }
 
-  return { createGameState, registerShot, tickClock, crossedHoop, calculateTapVelocity, classifyBasket, oppositeSide, isLevelComplete, advanceLevel };
+  return { createGameState, registerShot, tickClock, crossedHoop, applyTapImpulse, classifyBasket, oppositeSide, isLevelComplete, advanceLevel };
 }));

@@ -373,3 +373,11 @@
 - [x] GREEN: implement the portrait side court, one-tap controls, and Level 1 loop.
 - [x] Verify a complete four-basket browser play-through.
 - [x] Run the full suite, commit, deploy, and verify production.
+
+## Sprint 055 — Repeated-Tap Ball Flight
+
+- [x] Re-check the supplied video and correct the interaction model.
+- [x] RED: specify repeated upward impulses and in-flight input.
+- [x] GREEN: implement gravity-driven tap-to-fly controls and update the tutorial.
+- [x] Browser-play a scoring rhythm into both basket sides.
+- [ ] Run the full suite, commit, deploy, and verify production.
