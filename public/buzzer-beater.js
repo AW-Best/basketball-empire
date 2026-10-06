@@ -446,7 +446,7 @@
 
   function replayTutorial() {
     const tutorial = document.querySelector('#buzzer-tutorial');
-    const animatedParts = tutorial.querySelectorAll('.buzzer-demo-ball, .buzzer-demo-hand, .buzzer-demo-tap-button, .buzzer-demo-tap-ripple, .buzzer-tutorial-caption, .buzzer-tutorial-progress');
+    const animatedParts = tutorial.querySelectorAll('.buzzer-demo-ball, .buzzer-demo-ball-shadow, .buzzer-demo-ball-pulse, .buzzer-demo-smoke i, .buzzer-demo-hand, .buzzer-demo-tap-button, .buzzer-demo-tap-ripple, .buzzer-tutorial-caption, .buzzer-tutorial-progress');
     animatedParts.forEach((part) => { part.style.animation = 'none'; });
     void tutorial.offsetWidth;
     animatedParts.forEach((part) => { part.style.animation = ''; });

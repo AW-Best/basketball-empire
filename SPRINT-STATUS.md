@@ -396,3 +396,10 @@
 - [x] RED: specify a visible TAP control, press ripple, and phase captions.
 - [x] GREEN: synchronize three button presses with the basketball's stepped flight.
 - [x] Run the full suite, commit, deploy, and verify production.
+
+## Sprint 058 — Tutorial Ball Effects
+
+- [x] Define the live-game effects that belong in the tutorial.
+- [x] RED: specify pulse, smoke trail, and height-reactive shadow layers.
+- [x] GREEN: synchronize the ball effects with the tutorial flight timeline.
+- [ ] Run the full suite, commit, deploy, and verify production.
