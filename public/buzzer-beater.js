@@ -30,10 +30,12 @@
 
   function hoopGeometry() {
     const right = hoopSide === 'right';
+    const levelElapsed = gameStartedAt ? (performance.now() - gameStartedAt) / 1000 : 0;
+    const verticalOffset = engine.movingHoopOffset(state.level, levelElapsed);
     const boardX = right ? 665 : 55;
     const innerEdge = right ? 650 : 70;
     const outerEdge = right ? innerEdge - RIM_WIDTH : innerEdge + RIM_WIDTH;
-    return { boardX, boardTop: 250, boardBottom: 470, left: Math.min(innerEdge, outerEdge), right: Math.max(innerEdge, outerEdge), y: 360, centerX: (innerEdge + outerEdge) / 2 };
+    return { boardX, boardTop: 250 + verticalOffset, boardBottom: 470 + verticalOffset, left: Math.min(innerEdge, outerEdge), right: Math.max(innerEdge, outerEdge), y: 360 + verticalOffset, centerX: (innerEdge + outerEdge) / 2 };
   }
 
   function makeBall() {
@@ -128,7 +130,7 @@
     document.querySelector('#buzzer-shots').textContent = state.shots;
     document.querySelector('#buzzer-streak').textContent = state.streak;
     document.querySelector('#buzzer-best').textContent = state.bestStreak;
-    document.querySelector('#buzzer-level').textContent = '1';
+    document.querySelector('#buzzer-level').textContent = state.level;
     document.querySelector('#buzzer-goal').textContent = `${state.levelMakes} / ${state.levelTarget} MADE`;
   }
 
@@ -140,7 +142,7 @@
     localStorage.setItem(HIGH_SCORE_KEY, String(highScore));
     const accuracy = state.shots ? Math.round((state.makes / state.shots) * 100) : 0;
     document.querySelector('#buzzer-result-score').textContent = `${state.score} PTS`;
-    document.querySelector('#buzzer-result-kicker').textContent = cleared ? 'LEVEL 1 CLEARED' : 'FINAL HORN';
+    document.querySelector('#buzzer-result-kicker').textContent = cleared ? 'ALL LEVELS CLEARED' : 'FINAL HORN';
     document.querySelector('#buzzer-result-summary').textContent = `${state.makes} makes from ${state.shots} shots${state.score > oldBest ? ' · NEW RECORD' : ''}`;
     document.querySelector('#buzzer-accuracy').textContent = `${accuracy}%`;
     document.querySelector('#buzzer-result-streak').textContent = state.bestStreak;
@@ -154,6 +156,22 @@
     if (switchSides) hoopSide = engine.oppositeSide(hoopSide);
     ball = makeBall();
     shotAge = 0;
+  }
+
+  function startNextLevel() {
+    state = engine.advanceLevel(state);
+    hoopSide = 'right';
+    ball = makeBall();
+    firstShot = false;
+    tapPulse = 0;
+    scoreFlash = 0;
+    netPulse = 0;
+    scoreBurst = null;
+    shotAge = 0;
+    gameStartedAt = performance.now();
+    previousElapsed = 0;
+    showCallout(`LEVEL ${state.level} · MOVING RIM`, 'is-clutch');
+    updateHud();
   }
 
   function settleMiss() {
@@ -181,7 +199,10 @@
     updateHud();
     clearTimeout(resetTimer);
     if (engine.isLevelComplete(state)) {
-      resetTimer = setTimeout(() => finishGame(true), 750);
+      resetTimer = setTimeout(() => {
+        if (state.level < state.maxLevel) startNextLevel();
+        else finishGame(true);
+      }, 900);
       return;
     }
     resetTimer = setTimeout(() => {

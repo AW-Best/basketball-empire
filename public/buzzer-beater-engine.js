@@ -18,7 +18,7 @@
       level: 1,
       levelMakes: 0,
       levelTarget: 4,
-      maxLevel: 1,
+      maxLevel: 2,
     };
   }
 
@@ -52,6 +52,11 @@
       streak: 0,
       status: 'playing',
     };
+  }
+
+  function movingHoopOffset(level, elapsedSeconds) {
+    if (level < 2) return 0;
+    return Math.sin(Math.max(0, elapsedSeconds) * 1.65) * 95;
   }
 
   function tickClock(state, elapsedSeconds) {
@@ -96,5 +101,5 @@
     };
   }
 
-  return { createGameState, registerShot, tickClock, crossedHoop, applyTapImpulse, classifyBasket, oppositeSide, continueAfterMake, isLevelComplete, advanceLevel };
+  return { createGameState, registerShot, tickClock, crossedHoop, applyTapImpulse, classifyBasket, oppositeSide, continueAfterMake, isLevelComplete, advanceLevel, movingHoopOffset };
 }));

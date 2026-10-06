@@ -403,3 +403,10 @@
 - [x] RED: specify pulse, smoke trail, and height-reactive shadow layers.
 - [x] GREEN: synchronize the ball effects with the tutorial flight timeline.
 - [x] Run the full suite, commit, deploy, and verify production.
+
+## Sprint 059 — Moving-Rim Level 2
+
+- [x] Define the second-level rules, transition, and moving-hoop behavior.
+- [x] RED: specify level advancement and bounded hoop movement.
+- [x] GREEN: continue after Level 1 with a fresh clock and moving rim.
+- [ ] Run the full suite, commit, deploy, and verify production.

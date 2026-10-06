@@ -18,7 +18,7 @@
       href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Nunito+Sans:wght@600;700;800;900&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20261006g" />
+    <link rel="stylesheet" href="styles.css?v=20261006h" />
   </head>
   <body>
     <div class="arena-shell">
@@ -143,6 +143,7 @@
             <div class="buzzer-start-overlay" id="buzzer-start-overlay">
               <section class="buzzer-tutorial" id="buzzer-tutorial" role="dialog" aria-modal="true" aria-labelledby="buzzer-tutorial-title">
                 <small>LEVEL 1 · MAKE 4 SHOTS IN 60 SECONDS · TAP TO FLY</small>
+                <span class="buzzer-next-level-note">NEXT: LEVEL 2 · MOVING RIM</span>
                 <h2 id="buzzer-tutorial-title">HOW TO <em>PLAY</em></h2>
                 <div class="buzzer-shot-demo" aria-label="Animated video: tap repeatedly to lift the ball into the side basket">
                   <div class="buzzer-tutorial-hoop is-side" aria-hidden="true"><span class="buzzer-demo-board"></span><span class="buzzer-demo-rim"></span><span class="buzzer-tutorial-net"></span></div>
@@ -449,8 +450,8 @@
       <button class="card-primary" id="space-guide-done" type="button">GOT IT</button>
     </dialog>
 
-    <script src="buzzer-beater-engine.js?v=20261006h"></script>
-    <script src="buzzer-beater.js?v=20261006g"></script>
+    <script src="buzzer-beater-engine.js?v=20261006i"></script>
+    <script src="buzzer-beater.js?v=20261006h"></script>
     <script>
       if (window.location.protocol !== 'file:') {
         const gameScript = document.createElement('script');

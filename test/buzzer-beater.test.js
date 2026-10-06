@@ -13,6 +13,8 @@ const {
   oppositeSide,
   continueAfterMake,
   isLevelComplete,
+  advanceLevel,
+  movingHoopOffset,
 } = require('../public/buzzer-beater-engine.js');
 
 test('creates a ready 60-second solo challenge', () => {
@@ -28,7 +30,7 @@ test('creates a ready 60-second solo challenge', () => {
     level: 1,
     levelMakes: 0,
     levelTarget: 4,
-    maxLevel: 1,
+    maxLevel: 2,
   });
 });
 
@@ -37,6 +39,24 @@ test('level one is cleared after four made shots', () => {
   for (let shot = 0; shot < 4; shot += 1) state = registerShot(state, { made: true, isThreePointer: false });
   assert.equal(state.levelMakes, 4);
   assert.equal(isLevelComplete(state), true);
+});
+
+test('clearing level one starts a fresh sixty-second moving-rim level', () => {
+  let state = { ...createGameState(), status: 'playing' };
+  for (let shot = 0; shot < 4; shot += 1) state = registerShot(state, { made: true, kind: 'normal' });
+  const next = advanceLevel(state);
+
+  assert.equal(next.level, 2);
+  assert.equal(next.levelMakes, 0);
+  assert.equal(next.timeLeft, 60);
+  assert.equal(next.status, 'playing');
+});
+
+test('the second-level hoop moves vertically while level one stays fixed', () => {
+  assert.equal(movingHoopOffset(1, 0.8), 0);
+  assert.equal(movingHoopOffset(2, 0), 0);
+  assert.notEqual(movingHoopOffset(2, 0.8), 0);
+  assert.ok(Math.abs(movingHoopOffset(2, 10)) <= 95);
 });
 
 test('scores one for normal, two for bank, and three for swish', () => {

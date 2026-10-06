@@ -57,6 +57,7 @@ test('Buzzer Beater is a playable mode with a complete solo challenge screen', (
 test('Buzzer Beater stays a simple tap-to-shoot game with a focused arena presentation', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
   const script = fs.readFileSync(path.join(projectRoot, 'public/buzzer-beater.js'), 'utf8');
+  const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
   const buzzerSection = html.match(/<section class="buzzer-screen[\s\S]*?<\/section>\s*<main class="game-stage/)[0];
 
   assert.match(buzzerSection, /SIMPLE SHOOTING CHALLENGE/);
@@ -88,6 +89,19 @@ test('Buzzer Beater first level asks for four makes in sixty seconds', () => {
   assert.match(html, /MAKE 4 SHOTS IN 60 SECONDS/);
   assert.match(script, /state\.levelTarget/);
   assert.doesNotMatch(script, /updateMovingHoop/);
+});
+
+test('Buzzer Beater continues into a moving-rim second level', () => {
+  const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
+  const script = fs.readFileSync(path.join(projectRoot, 'public/buzzer-beater.js'), 'utf8');
+  const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
+
+  assert.match(html, /LEVEL 2 · MOVING RIM/);
+  assert.match(script, /function startNextLevel\(/);
+  assert.match(script, /engine\.advanceLevel\(state\)/);
+  assert.match(script, /engine\.movingHoopOffset\(state\.level/);
+  assert.match(script, /LEVEL \$\{state\.level\}/);
+  assert.match(css, /\.buzzer-next-level-note/);
 });
 
 test('Buzzer Beater shows a global top-five leaderboard and asks qualifying players about their nickname', () => {
@@ -874,7 +888,7 @@ test('Tip-Off guide explains the exact-landing 300 point bonus', () => {
 test('deployed browsers receive the current interface assets instead of stale cached files', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
 
-  assert.match(html, /styles\.css\?v=20261006g/);
+  assert.match(html, /styles\.css\?v=20261006h/);
   assert.match(html, /app\.js\?v=20261005c/);
 });
 
