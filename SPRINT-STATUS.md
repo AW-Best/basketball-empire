@@ -350,3 +350,11 @@
 - [x] GREEN: implement tutorial motion, percentage feedback, charging emphasis, and mobile visibility.
 - [x] Verify the full suite and browser presentation.
 - [x] Commit and deploy.
+
+## Sprint 052 — Buzzer Tutorial Video
+
+- [x] Define architecture, UI direction, acceptance criteria, and accessibility behavior.
+- [x] RED: specify a replayable tutorial, visible basket, and in-game tutorial entry point.
+- [x] GREEN: implement the timed lesson, front-facing hoop and net, captions, and replay controls.
+- [x] Verify the full suite and browser presentation.
+- [ ] Commit and deploy.

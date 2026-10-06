@@ -527,6 +527,14 @@
     requestAnimationFrame(resizeCanvas);
   }
 
+  function replayTutorial() {
+    const tutorial = document.querySelector('#buzzer-tutorial');
+    const animatedParts = tutorial.querySelectorAll('.buzzer-demo-ball, .buzzer-demo-hand, .buzzer-tutorial-caption, .buzzer-tutorial-progress');
+    animatedParts.forEach((part) => { part.style.animation = 'none'; });
+    void tutorial.offsetWidth;
+    animatedParts.forEach((part) => { part.style.animation = ''; });
+  }
+
   canvas.addEventListener('pointerdown', (event) => {
     if (state.status !== 'playing' || ball.inFlight) return;
     const point = canvasPoint(event);
@@ -559,6 +567,8 @@
   });
   canvas.addEventListener('pointercancel', () => { dragging = false; updatePowerMeter(); });
   document.querySelector('#buzzer-start').addEventListener('click', startGame);
+  document.querySelector('#buzzer-tutorial-replay').addEventListener('click', replayTutorial);
+  document.querySelector('#buzzer-how-to-play').addEventListener('click', () => { reset(); replayTutorial(); });
   document.querySelector('#buzzer-play-again').addEventListener('click', startGame);
   document.querySelector('#buzzer-save-nickname').addEventListener('click', () => {
     const nickname = document.querySelector('#buzzer-nickname').value.trim();

@@ -18,7 +18,7 @@
       href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Nunito+Sans:wght@600;700;800;900&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20261006b" />
+    <link rel="stylesheet" href="styles.css?v=20261006c" />
   </head>
   <body>
     <div class="arena-shell">
@@ -134,6 +134,7 @@
               <small>DRAG FARTHER FOR MORE POWER</small>
             </div>
             <p><b>HOW TO SHOOT</b> Press the ball, drag backward, then release. Longer pull = more power.</p>
+            <button class="buzzer-how-to-play" id="buzzer-how-to-play" type="button"><span aria-hidden="true">▶</span> WATCH HOW TO PLAY</button>
             <section class="buzzer-leaderboard" id="buzzer-leaderboard" aria-labelledby="buzzer-leaderboard-title">
               <div><small>ALL-TIME</small><strong id="buzzer-leaderboard-title">TOP 5</strong></div>
               <ol id="buzzer-leaderboard-list"><li><span>Loading…</span><b>—</b></li></ol>
@@ -144,16 +145,22 @@
             <canvas class="buzzer-court" id="buzzer-court" width="1000" height="625" aria-label="Interactive basketball shooting court"></canvas>
             <div class="buzzer-callout" id="buzzer-callout" aria-live="assertive">READY?</div>
             <div class="buzzer-start-overlay" id="buzzer-start-overlay">
-              <small>LEVEL 1 · MAKE 4 SHOTS IN 60 SECONDS · SWIPE TO SHOOT</small>
-              <h2>BEAT THE<br /><em>RIM.</em></h2>
-              <div class="buzzer-shot-demo" aria-label="Animated example: drag the basketball backward, release it, and aim for the rim">
-                <span class="buzzer-demo-rim" aria-hidden="true"></span>
-                <span class="buzzer-demo-arc" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-                <span class="buzzer-demo-ball" aria-hidden="true"></span>
-                <span class="buzzer-demo-hand" aria-hidden="true">☝</span>
-              </div>
-              <div class="buzzer-demo-steps"><span><b>1</b> DRAG BACK</span><span><b>2</b> RELEASE</span><span><b>3</b> AIM FOR THE RIM</span></div>
-              <button id="buzzer-start" type="button">START LEVEL 1</button>
+              <section class="buzzer-tutorial" id="buzzer-tutorial" role="dialog" aria-modal="true" aria-labelledby="buzzer-tutorial-title">
+                <small>7-SECOND COURTSIDE LESSON · MAKE 4 SHOTS IN 60 SECONDS · SWIPE TO SHOOT</small>
+                <h2 id="buzzer-tutorial-title">HOW TO <em>PLAY</em></h2>
+                <div class="buzzer-shot-demo" aria-label="Animated video: drag the basketball backward, release it, and shoot through the basket">
+                  <div class="buzzer-tutorial-hoop" aria-hidden="true"><span class="buzzer-demo-rim"></span><span class="buzzer-tutorial-net"></span></div>
+                  <span class="buzzer-demo-arc" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+                  <span class="buzzer-demo-ball" aria-hidden="true"></span>
+                  <span class="buzzer-demo-hand" aria-hidden="true">☝</span>
+                  <span class="buzzer-tutorial-caption" aria-hidden="true"><b>1</b> PRESS THE BALL</span>
+                  <span class="buzzer-tutorial-caption" aria-hidden="true"><b>2</b> DRAG BACK TO POWER UP</span>
+                  <span class="buzzer-tutorial-caption" aria-hidden="true"><b>3</b> RELEASE &amp; SCORE</span>
+                  <span class="buzzer-tutorial-progress" aria-hidden="true"></span>
+                </div>
+                <div class="buzzer-demo-steps"><span><b>1</b> DRAG BACK</span><span><b>2</b> RELEASE</span><span><b>3</b> AIM FOR THE RIM</span></div>
+                <div class="buzzer-tutorial-actions"><button class="is-secondary" id="buzzer-tutorial-replay" type="button">↻ REPLAY VIDEO</button><button id="buzzer-start" type="button">START LEVEL 1</button></div>
+              </section>
             </div>
             <section class="buzzer-result is-hidden" id="buzzer-result" aria-live="polite">
               <span id="buzzer-result-kicker">FINAL HORN</span>
@@ -442,7 +449,7 @@
     </dialog>
 
     <script src="buzzer-beater-engine.js?v=20261005h"></script>
-    <script src="buzzer-beater.js?v=20261006a"></script>
+    <script src="buzzer-beater.js?v=20261006c"></script>
     <script>
       if (window.location.protocol !== 'file:') {
         const gameScript = document.createElement('script');

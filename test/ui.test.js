@@ -120,6 +120,24 @@ test('Buzzer Beater teaches the drag-and-release shot with an animated visual gu
   assert.match(css, /prefers-reduced-motion:[\s\S]*\.buzzer-demo-ball/s);
 });
 
+test('Buzzer Beater presents a replayable how-to-play video with a visible basket', () => {
+  const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
+  const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
+  const script = fs.readFileSync(path.join(projectRoot, 'public/buzzer-beater.js'), 'utf8');
+
+  assert.match(html, /id="buzzer-tutorial"[^>]*role="dialog"/);
+  assert.match(html, /class="buzzer-tutorial-hoop"/);
+  assert.match(html, /class="buzzer-tutorial-net"/);
+  assert.match(html, /id="buzzer-tutorial-replay"/);
+  assert.match(html, /id="buzzer-how-to-play"/);
+  assert.match(html, /WATCH HOW TO PLAY/);
+  assert.match(css, /@keyframes buzzer-tutorial-shot/);
+  assert.match(css, /@keyframes buzzer-tutorial-caption/);
+  assert.match(script, /function replayTutorial\(/);
+  assert.match(script, /#buzzer-how-to-play/);
+  assert.match(script, /#buzzer-tutorial-replay/);
+});
+
 test('Buzzer Beater power meter is high contrast and reports live shot strength', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
   const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
@@ -816,7 +834,7 @@ test('Tip-Off guide explains the exact-landing 300 point bonus', () => {
 test('deployed browsers receive the current interface assets instead of stale cached files', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
 
-  assert.match(html, /styles\.css\?v=20261006b/);
+  assert.match(html, /styles\.css\?v=20261006c/);
   assert.match(html, /app\.js\?v=20261005c/);
 });
 
