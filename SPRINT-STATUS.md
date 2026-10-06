@@ -395,4 +395,4 @@
 - [x] Define the press, rise, release, fall, and repeat teaching sequence.
 - [x] RED: specify a visible TAP control, press ripple, and phase captions.
 - [x] GREEN: synchronize three button presses with the basketball's stepped flight.
-- [ ] Run the full suite, commit, deploy, and verify production.
+- [x] Run the full suite, commit, deploy, and verify production.
