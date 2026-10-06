@@ -380,4 +380,4 @@
 - [x] RED: specify repeated upward impulses and in-flight input.
 - [x] GREEN: implement gravity-driven tap-to-fly controls and update the tutorial.
 - [x] Browser-play a scoring rhythm into both basket sides.
-- [ ] Run the full suite, commit, deploy, and verify production.
+- [x] Run the full suite, commit, deploy, and verify production.
