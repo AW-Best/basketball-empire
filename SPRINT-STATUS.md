@@ -341,4 +341,4 @@
 - [x] RED: specify Top 5 persistence, validation, deployment binding, local API, and score dialog.
 - [x] GREEN: implement the global leaderboard and nickname/Anonymous flow.
 - [x] Verify the full 175-test suite and responsive browser presentation.
-- [ ] Commit and deploy.
+- [x] Commit, deploy, and verify the production leaderboard endpoint.
