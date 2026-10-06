@@ -357,4 +357,4 @@
 - [x] RED: specify a replayable tutorial, visible basket, and in-game tutorial entry point.
 - [x] GREEN: implement the timed lesson, front-facing hoop and net, captions, and replay controls.
 - [x] Verify the full suite and browser presentation.
-- [ ] Commit and deploy.
+- [x] Commit and deploy.
