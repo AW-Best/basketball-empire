@@ -8,9 +8,10 @@ const {
   registerShot,
   tickClock,
   crossedHoop,
-  calculateLaunchVelocity,
+  calculateTapVelocity,
+  classifyBasket,
+  oppositeSide,
   isLevelComplete,
-  advanceLevel,
 } = require('../public/buzzer-beater-engine.js');
 
 test('creates a ready 60-second solo challenge', () => {
@@ -26,7 +27,7 @@ test('creates a ready 60-second solo challenge', () => {
     level: 1,
     levelMakes: 0,
     levelTarget: 4,
-    maxLevel: 2,
+    maxLevel: 1,
   });
 });
 
@@ -37,33 +38,25 @@ test('level one is cleared after four made shots', () => {
   assert.equal(isLevelComplete(state), true);
 });
 
-test('clearing level one starts a fresh 60-second moving-rim level', () => {
-  const cleared = { ...createGameState(), status: 'playing', levelMakes: 4 };
-  const next = advanceLevel(cleared);
-  assert.equal(next.level, 2);
-  assert.equal(next.timeLeft, 60);
-  assert.equal(next.levelMakes, 0);
-  assert.equal(next.status, 'playing');
-  assert.deepEqual(advanceLevel({ ...next, levelMakes: 4 }), { ...next, levelMakes: 4 });
+test('scores one for normal, two for bank, and three for swish', () => {
+  let state = { ...createGameState(), status: 'playing' };
+  state = registerShot(state, { made: true, kind: 'normal' });
+  assert.equal(state.score, 1);
+  state = registerShot(state, { made: true, kind: 'bank' });
+  assert.equal(state.score, 3);
+  state = registerShot(state, { made: true, kind: 'swish' });
+  assert.equal(state.score, 6);
+  assert.equal(state.shots, 3);
+  assert.equal(state.makes, 3);
 });
 
-test('scores two or three points and doubles makes in the final ten seconds', () => {
+test('streak is visual feedback only and a miss resets it', () => {
   let state = { ...createGameState(), status: 'playing' };
-  state = registerShot(state, { made: true, isThreePointer: false });
-  assert.equal(state.score, 2);
-  state = registerShot({ ...state, timeLeft: 10 }, { made: true, isThreePointer: true });
-  assert.equal(state.score, 8);
-  assert.equal(state.shots, 2);
-  assert.equal(state.makes, 2);
-});
-
-test('five straight makes earn a two-times streak multiplier and a miss resets it', () => {
-  let state = { ...createGameState(), status: 'playing' };
-  for (let shot = 0; shot < 5; shot += 1) state = registerShot(state, { made: true, isThreePointer: false });
-  assert.equal(state.score, 12);
+  for (let shot = 0; shot < 5; shot += 1) state = registerShot(state, { made: true, kind: 'normal' });
+  assert.equal(state.score, 5);
   assert.equal(state.streak, 5);
   assert.equal(state.bestStreak, 5);
-  state = registerShot(state, { made: false, isThreePointer: false });
+  state = registerShot(state, { made: false, kind: 'normal' });
   assert.equal(state.streak, 0);
   assert.equal(state.shots, 6);
 });
@@ -72,7 +65,7 @@ test('clock reaches finished exactly once and finished games reject new scores',
   const finished = tickClock({ ...createGameState(), status: 'playing', timeLeft: 0.2 }, 0.2);
   assert.equal(finished.status, 'finished');
   assert.equal(finished.timeLeft, 0);
-  assert.deepEqual(registerShot(finished, { made: true, isThreePointer: true }), finished);
+  assert.deepEqual(registerShot(finished, { made: true, kind: 'swish' }), finished);
 });
 
 test('a basket only counts when the ball crosses the hoop plane downward from above', () => {
@@ -82,9 +75,18 @@ test('a basket only counts when the ball crosses the hoop plane downward from ab
   assert.equal(crossedHoop({ x: 480, y: 210 }, { x: 480, y: 230 }, hoop), false);
 });
 
-test('dragging opposite the hoop creates a capped launch vector toward the hoop', () => {
-  const velocity = calculateLaunchVelocity({ x: 180, y: 500 }, { x: 100, y: 580 });
-  assert.ok(velocity.x > 0);
-  assert.ok(velocity.y < 0);
-  assert.ok(Math.hypot(velocity.x, velocity.y) <= 1100);
+test('one tap launches with fixed mirrored velocity toward the active side', () => {
+  assert.deepEqual(calculateTapVelocity('right'), { x: 269, y: -1080 });
+  assert.deepEqual(calculateTapVelocity('left'), { x: -269, y: -1080 });
+});
+
+test('basket contact classifies normal, bank, and swish scores', () => {
+  assert.equal(classifyBasket({ hitBackboard: false, hitRim: true }), 'normal');
+  assert.equal(classifyBasket({ hitBackboard: true, hitRim: false }), 'bank');
+  assert.equal(classifyBasket({ hitBackboard: false, hitRim: false }), 'swish');
+});
+
+test('a made basket sends the next hoop to the opposite side', () => {
+  assert.equal(oppositeSide('left'), 'right');
+  assert.equal(oppositeSide('right'), 'left');
 });

@@ -54,40 +54,40 @@ test('Buzzer Beater is a playable mode with a complete solo challenge screen', (
   assert.match(css, /@media \(max-width: 700px\)[\s\S]*\.buzzer-court\s*\{[^}]*min-height:\s*0/s);
 });
 
-test('Buzzer Beater stays a simple swipe-to-shoot game with a focused arena presentation', () => {
+test('Buzzer Beater stays a simple tap-to-shoot game with a focused arena presentation', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
   const script = fs.readFileSync(path.join(projectRoot, 'public/buzzer-beater.js'), 'utf8');
   const buzzerSection = html.match(/<section class="buzzer-screen[\s\S]*?<\/section>\s*<main class="game-stage/)[0];
 
   assert.match(buzzerSection, /SIMPLE SHOOTING CHALLENGE/);
-  assert.match(buzzerSection, /SWIPE TO SHOOT/);
+  assert.match(buzzerSection, /TAP TO SHOOT/);
   assert.doesNotMatch(buzzerSection, /choose (?:a )?player|customi[sz]e|pass to|dunk button/i);
-  assert.match(script, /function drawStraightOnCourt\(/);
-  assert.match(script, /function drawArenaLights\(/);
-  assert.match(script, /function drawShotTarget\(/);
+  assert.doesNotMatch(html, /Pull back, let it fly/);
+  assert.match(script, /function drawBackdrop\(/);
+  assert.match(script, /function drawSideHoop\(/);
+  assert.match(script, /function drawTapHint\(/);
 });
 
-test('Buzzer Beater renders a floating rim without a backboard and preserves a round basketball', () => {
+test('Buzzer Beater renders side hoops with backboards and preserves a round basketball', () => {
   const script = fs.readFileSync(path.join(projectRoot, 'public/buzzer-beater.js'), 'utf8');
   const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
 
-  assert.match(script, /function drawFloatingRim\(/);
-  assert.match(script, /context\.ellipse\(hoopCenterX\(\), HOOP\.y, HOOP_HALF_WIDTH, HOOP_RIM_DEPTH/);
-  assert.doesNotMatch(script, /boardLeft|strokeRect/);
+  assert.match(script, /function drawSideHoop\(/);
+  assert.match(script, /function drawBackboard\(/);
+  assert.match(script, /hoopSide === 'right'/);
   assert.match(script, /context\.arc\(0, 0, BALL_RADIUS, 0, Math\.PI \* 2\)/);
-  assert.match(css, /\.buzzer-court\s*\{[^}]*aspect-ratio:\s*16\s*\/\s*10[^}]*height:\s*auto/s);
+  assert.match(css, /\.buzzer-court\s*\{[^}]*aspect-ratio:\s*3\s*\/\s*4[^}]*height:\s*auto/s);
 });
 
-test('Buzzer Beater has a four-make first level and a moving-rim second level', () => {
+test('Buzzer Beater first level asks for four makes in sixty seconds', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
   const script = fs.readFileSync(path.join(projectRoot, 'public/buzzer-beater.js'), 'utf8');
 
   assert.match(html, /id="buzzer-level"/);
   assert.match(html, /id="buzzer-goal"/);
   assert.match(html, /MAKE 4 SHOTS IN 60 SECONDS/);
-  assert.match(script, /function updateMovingHoop\(/);
-  assert.match(script, /state\.level === 2/);
-  assert.match(script, /engine\.advanceLevel\(state\)/);
+  assert.match(script, /state\.levelTarget/);
+  assert.doesNotMatch(script, /updateMovingHoop/);
 });
 
 test('Buzzer Beater shows a global top-five leaderboard and asks qualifying players about their nickname', () => {
@@ -107,14 +107,14 @@ test('Buzzer Beater shows a global top-five leaderboard and asks qualifying play
   assert.match(css, /\.buzzer-record-dialog/);
 });
 
-test('Buzzer Beater teaches the drag-and-release shot with an animated visual guide', () => {
+test('Buzzer Beater teaches one-tap side shooting with an animated visual guide', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
   const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
 
   assert.match(html, /class="buzzer-shot-demo"/);
-  assert.match(html, /DRAG BACK/);
-  assert.match(html, /RELEASE/);
-  assert.match(html, /AIM FOR THE RIM/);
+  assert.match(html, /TAP ANYWHERE/);
+  assert.match(html, /FIXED SHOT/);
+  assert.match(html, /SCORE &amp; SWITCH/);
   assert.match(css, /@keyframes buzzer-demo-ball/);
   assert.match(css, /@keyframes buzzer-demo-hand/);
   assert.match(css, /prefers-reduced-motion:[\s\S]*\.buzzer-demo-ball/s);
@@ -126,7 +126,7 @@ test('Buzzer Beater presents a replayable how-to-play video with a visible baske
   const script = fs.readFileSync(path.join(projectRoot, 'public/buzzer-beater.js'), 'utf8');
 
   assert.match(html, /id="buzzer-tutorial"[^>]*role="dialog"/);
-  assert.match(html, /class="buzzer-tutorial-hoop"/);
+  assert.match(html, /class="buzzer-tutorial-hoop[^"].*"/);
   assert.match(html, /class="buzzer-tutorial-net"/);
   assert.match(html, /id="buzzer-tutorial-replay"/);
   assert.match(html, /id="buzzer-how-to-play"/);
@@ -138,37 +138,35 @@ test('Buzzer Beater presents a replayable how-to-play video with a visible baske
   assert.match(script, /#buzzer-tutorial-replay/);
 });
 
-test('Buzzer Beater power meter is high contrast and reports live shot strength', () => {
+test('Buzzer Beater removes the power meter and launches on a single pointer press', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
   const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
   const script = fs.readFileSync(path.join(projectRoot, 'public/buzzer-beater.js'), 'utf8');
 
-  assert.match(html, /id="buzzer-power"[^>]*role="meter"/);
-  assert.match(html, /id="buzzer-power-value">0%/);
-  assert.match(css, /\.buzzer-power\.is-charging/);
-  assert.match(css, /\.buzzer-power-value/);
-  assert.match(script, /function updatePowerMeter\(/);
-  assert.match(script, /classList\.toggle\('is-charging'/);
+  assert.doesNotMatch(html, /id="buzzer-power"/);
+  assert.doesNotMatch(css, /\.buzzer-power\.is-charging/);
+  assert.doesNotMatch(script, /updatePowerMeter/);
+  assert.match(script, /function launchTapShot\(/);
+  assert.match(script, /pointerdown[\s\S]{0,240}launchTapShot\(\)/);
 });
 
-test('Buzzer Beater shoots upward from the bottom toward a centered top hoop', () => {
+test('Buzzer Beater alternates fixed side-view hoop positions after made shots', () => {
   const script = fs.readFileSync(path.join(projectRoot, 'public/buzzer-beater.js'), 'utf8');
 
-  assert.match(script, /const HOOP_CENTER_X = WORLD\.width \/ 2/);
-  assert.match(script, /const HOOP = \{ left: 445, right: 555, y: 210/);
-  assert.match(script, /const positions = \[\{ x: 350, y: 525[\s\S]*\{ x: 500, y: 525[\s\S]*\{ x: 650, y: 525/);
-  assert.doesNotMatch(script, /velocity\.x <= 0/);
-  assert.match(script, /velocity\.y >= -40/);
+  assert.match(script, /let hoopSide = 'right'/);
+  assert.match(script, /engine\.calculateTapVelocity\(hoopSide\)/);
+  assert.match(script, /hoopSide = engine\.oppositeSide\(hoopSide\)/);
+  assert.match(script, /const WORLD = \{ width: 720, height: 960, floor: 900 \}/);
 });
 
-test('Buzzer Beater uses a straight-on end-court camera like the supplied reference', () => {
+test('Buzzer Beater uses the supplied portrait side-court reference', () => {
   const script = fs.readFileSync(path.join(projectRoot, 'public/buzzer-beater.js'), 'utf8');
 
-  assert.match(script, /const COURT_HORIZON = 315/);
-  assert.match(script, /const HOOP = \{ left: 445, right: 555, y: 210/);
-  assert.match(script, /function drawCrowdBowl\(/);
-  assert.match(script, /function drawStraightOnCourt\(/);
-  assert.doesNotMatch(script, /function drawPerspectiveCourt\(/);
+  assert.match(script, /const WORLD = \{ width: 720, height: 960, floor: 900 \}/);
+  assert.match(script, /function hoopGeometry\(/);
+  assert.match(script, /function drawBackboard\(/);
+  assert.match(script, /function drawSideHoop\(/);
+  assert.doesNotMatch(script, /drawStraightOnCourt/);
 });
 
 test('Buzzer Beater mode navigation opens the challenge and can return to the arcade', () => {
@@ -834,7 +832,7 @@ test('Tip-Off guide explains the exact-landing 300 point bonus', () => {
 test('deployed browsers receive the current interface assets instead of stale cached files', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
 
-  assert.match(html, /styles\.css\?v=20261006c/);
+  assert.match(html, /styles\.css\?v=20261006d/);
   assert.match(html, /app\.js\?v=20261005c/);
 });
 

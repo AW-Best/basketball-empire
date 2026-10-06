@@ -365,3 +365,11 @@
 - [x] RED: specify story content, keyboard navigation, and print support.
 - [x] GREEN: build the presentation page and natural speaking script.
 - [x] Run the full suite and verify the page locally.
+
+## Sprint 054 — One-Tap Side-Hoop Level 1
+
+- [x] Record the supplied-video gameplay requirements and approvals.
+- [x] RED: specify fixed tap shots, 1/2/3 scoring, and basket-side switching.
+- [x] GREEN: implement the portrait side court, one-tap controls, and Level 1 loop.
+- [x] Verify a complete four-basket browser play-through.
+- [ ] Run the full suite, commit, deploy, and verify production.

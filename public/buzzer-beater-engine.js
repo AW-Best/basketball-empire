@@ -18,19 +18,18 @@
       level: 1,
       levelMakes: 0,
       levelTarget: 4,
-      maxLevel: 2,
+      maxLevel: 1,
     };
   }
 
   function registerShot(state, shot) {
     if (state.status !== 'playing') return state;
     const nextStreak = shot.made ? state.streak + 1 : 0;
-    const streakMultiplier = nextStreak >= 5 ? 2 : 1;
-    const clutchMultiplier = state.timeLeft <= 10 ? 2 : 1;
-    const basePoints = shot.isThreePointer ? 3 : 2;
+    const pointsByKind = { normal: 1, bank: 2, swish: 3 };
+    const basePoints = pointsByKind[shot.kind] || 1;
     return {
       ...state,
-      score: state.score + (shot.made ? basePoints * streakMultiplier * clutchMultiplier : 0),
+      score: state.score + (shot.made ? basePoints : 0),
       shots: state.shots + 1,
       makes: state.makes + (shot.made ? 1 : 0),
       levelMakes: state.levelMakes + (shot.made ? 1 : 0),
@@ -68,17 +67,19 @@
     return movingDown && crossedPlane && xAtCrossing >= hoop.left && xAtCrossing <= hoop.right;
   }
 
-  function calculateLaunchVelocity(ball, pointer) {
-    const scale = 7.4;
-    let x = (ball.x - pointer.x) * scale;
-    let y = (ball.y - pointer.y) * scale;
-    const speed = Math.hypot(x, y);
-    if (speed > 1100) {
-      x *= 1100 / speed;
-      y *= 1100 / speed;
-    }
-    return { x, y };
+  function calculateTapVelocity(side) {
+    return { x: side === 'left' ? -269 : 269, y: -1080 };
   }
 
-  return { createGameState, registerShot, tickClock, crossedHoop, calculateLaunchVelocity, isLevelComplete, advanceLevel };
+  function classifyBasket(contact) {
+    if (contact.hitBackboard) return 'bank';
+    if (!contact.hitRim) return 'swish';
+    return 'normal';
+  }
+
+  function oppositeSide(side) {
+    return side === 'left' ? 'right' : 'left';
+  }
+
+  return { createGameState, registerShot, tickClock, crossedHoop, calculateTapVelocity, classifyBasket, oppositeSide, isLevelComplete, advanceLevel };
 }));
