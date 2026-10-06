@@ -402,4 +402,4 @@
 - [x] Define the live-game effects that belong in the tutorial.
 - [x] RED: specify pulse, smoke trail, and height-reactive shadow layers.
 - [x] GREEN: synchronize the ball effects with the tutorial flight timeline.
-- [ ] Run the full suite, commit, deploy, and verify production.
+- [x] Run the full suite, commit, deploy, and verify production.
