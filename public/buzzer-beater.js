@@ -27,6 +27,8 @@
   let gameStartedAt = 0;
   let previousElapsed = 0;
   let levelTransitioning = false;
+  let leaderboardEntries = [];
+  let leaderboardPrompted = false;
 
   function hoopCenterX() {
     return (HOOP.left + HOOP.right) / 2;
@@ -73,6 +75,76 @@
     calloutTimer = setTimeout(() => { callout.className = 'buzzer-callout'; }, 780);
   }
 
+  function renderLeaderboard() {
+    const list = document.querySelector('#buzzer-leaderboard-list');
+    list.replaceChildren();
+    if (!leaderboardEntries.length) {
+      const item = document.createElement('li');
+      const name = document.createElement('span');
+      const score = document.createElement('b');
+      name.textContent = 'Be the first';
+      score.textContent = '—';
+      item.append(name, score);
+      list.append(item);
+      return;
+    }
+    leaderboardEntries.forEach((entry) => {
+      const item = document.createElement('li');
+      const name = document.createElement('span');
+      const score = document.createElement('b');
+      name.textContent = entry.nickname;
+      score.textContent = entry.score;
+      item.append(name, score);
+      list.append(item);
+    });
+  }
+
+  async function loadLeaderboard() {
+    try {
+      const response = await fetch('/api/buzzer/leaderboard', { cache: 'no-store' });
+      if (!response.ok) throw new Error('Leaderboard unavailable.');
+      const payload = await response.json();
+      leaderboardEntries = Array.isArray(payload.entries) ? payload.entries.slice(0, 5) : [];
+      renderLeaderboard();
+      return true;
+    } catch {
+      document.querySelector('#buzzer-leaderboard-list').innerHTML = '<li><span>Offline</span><b>—</b></li>';
+      return false;
+    }
+  }
+
+  function qualifiesForLeaderboard(score) {
+    return score > 0 && (leaderboardEntries.length < 5 || score > leaderboardEntries[leaderboardEntries.length - 1].score);
+  }
+
+  async function considerLeaderboard() {
+    if (leaderboardPrompted) return;
+    const available = await loadLeaderboard();
+    if (!available || !qualifiesForLeaderboard(state.score)) return;
+    leaderboardPrompted = true;
+    document.querySelector('#buzzer-record-dialog').classList.remove('is-hidden');
+    document.querySelector('#buzzer-nickname').focus();
+  }
+
+  async function saveLeaderboardScore(nickname) {
+    const status = document.querySelector('#buzzer-record-status');
+    status.textContent = 'Saving…';
+    try {
+      const response = await fetch('/api/buzzer/leaderboard', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ nickname, score: state.score }),
+      });
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload.error || 'Could not save the score.');
+      leaderboardEntries = payload.entries;
+      renderLeaderboard();
+      document.querySelector('#buzzer-record-dialog').classList.add('is-hidden');
+    } catch (error) {
+      status.textContent = error.message;
+    }
+  }
+
   function updateHud() {
     document.querySelector('#buzzer-clock').textContent = state.timeLeft.toFixed(1);
     document.querySelector('#buzzer-clock').closest('.buzzer-clock-panel').classList.toggle('is-clutch', state.timeLeft <= 10 && state.status === 'playing');
@@ -100,11 +172,13 @@
     document.querySelector('#buzzer-high-score').textContent = highScore;
     document.querySelector('#buzzer-result').classList.remove('is-hidden');
     showCallout('FINAL HORN', 'is-clutch');
+    void considerLeaderboard();
   }
 
   function startNextLevel() {
     state = engine.advanceLevel(state);
     levelTransitioning = false;
+    leaderboardPrompted = false;
     centerHoop();
     gameStartedAt = performance.now();
     previousElapsed = 0;
@@ -414,12 +488,15 @@
     state = { ...engine.createGameState(), status: 'playing' };
     positionIndex = 0;
     levelTransitioning = false;
+    leaderboardPrompted = false;
     centerHoop();
     ball = makeBall();
     gameStartedAt = performance.now();
     previousElapsed = 0;
     document.querySelector('#buzzer-start-overlay').classList.add('is-hidden');
     document.querySelector('#buzzer-result').classList.add('is-hidden');
+    document.querySelector('#buzzer-record-dialog').classList.add('is-hidden');
+    document.querySelector('#buzzer-record-status').textContent = '';
     showCallout('60 SECONDS. GO!', 'is-make');
     updateHud();
   }
@@ -429,11 +506,13 @@
     state = engine.createGameState();
     positionIndex = 0;
     levelTransitioning = false;
+    leaderboardPrompted = false;
     centerHoop();
     ball = makeBall();
     dragging = false;
     document.querySelector('#buzzer-power-fill').style.width = '0%';
     document.querySelector('#buzzer-result').classList.add('is-hidden');
+    document.querySelector('#buzzer-record-dialog').classList.add('is-hidden');
     document.querySelector('#buzzer-start-overlay').classList.remove('is-hidden');
     updateHud();
     requestAnimationFrame(resizeCanvas);
@@ -471,10 +550,20 @@
   canvas.addEventListener('pointercancel', () => { dragging = false; });
   document.querySelector('#buzzer-start').addEventListener('click', startGame);
   document.querySelector('#buzzer-play-again').addEventListener('click', startGame);
+  document.querySelector('#buzzer-save-nickname').addEventListener('click', () => {
+    const nickname = document.querySelector('#buzzer-nickname').value.trim();
+    if (!nickname) {
+      document.querySelector('#buzzer-record-status').textContent = 'Enter a nickname, or choose Anonymous.';
+      return;
+    }
+    void saveLeaderboardScore(nickname);
+  });
+  document.querySelector('#buzzer-save-anonymous').addEventListener('click', () => { void saveLeaderboardScore('Anonymous'); });
   window.addEventListener('resize', resizeCanvas);
 
   window.BuzzerBeater = { reset, start: startGame };
   resizeCanvas();
   reset();
+  void loadLeaderboard();
   requestAnimationFrame(frame);
 }());

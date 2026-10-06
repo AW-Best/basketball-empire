@@ -201,6 +201,27 @@ button { font: inherit; }
 .buzzer-power i { display: block; width: 0; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--cyan), #ffe050, #ff4d5e); transition: width .05s linear; }
 .buzzer-hud > p { margin: 0; color: #7891a3; font-size: 10px; line-height: 1.55; }
 .buzzer-hud > p b { display: block; color: var(--cream); font-size: 9px; letter-spacing: .12em; }
+.buzzer-leaderboard { padding: 12px; border: 1px solid rgba(80,211,227,.18); border-radius: 13px; background: rgba(1,8,14,.72); }
+.buzzer-leaderboard > div { display: flex; align-items: baseline; justify-content: space-between; }
+.buzzer-leaderboard small { color: var(--cyan); font-size: 8px; font-weight: 900; letter-spacing: .16em; }
+.buzzer-leaderboard strong { color: var(--cream); font: 900 18px 'Barlow Condensed', sans-serif; letter-spacing: .08em; }
+.buzzer-leaderboard ol { display: grid; gap: 4px; margin: 8px 0 0; padding: 0; list-style: none; counter-reset: rank; }
+.buzzer-leaderboard li { display: grid; grid-template-columns: 18px 1fr auto; gap: 6px; color: #8ca1af; font-size: 10px; counter-increment: rank; }
+.buzzer-leaderboard li::before { content: counter(rank, decimal-leading-zero); color: #526c7e; font-weight: 900; }
+.buzzer-leaderboard li span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.buzzer-leaderboard li b { color: #ffd77a; font-variant-numeric: tabular-nums; }
+.buzzer-record-dialog { position: absolute; inset: 0; z-index: 6; display: grid; place-content: center; justify-items: stretch; padding: clamp(24px, 6vw, 70px); background: radial-gradient(circle at 50% 35%, rgba(17,66,91,.96), rgba(1,7,13,.98) 72%); text-align: left; }
+.buzzer-record-dialog > small { color: #ffd77a; font-weight: 900; letter-spacing: .18em; }
+.buzzer-record-dialog h2 { margin: 8px 0; color: var(--cream); font: 900 clamp(42px, 7vw, 76px)/.85 'Barlow Condensed', sans-serif; }
+.buzzer-record-dialog > p { margin: 0 0 18px; color: #a9bbc7; }
+.buzzer-record-dialog label { display: flex; justify-content: space-between; color: var(--cyan); font-size: 10px; font-weight: 900; letter-spacing: .12em; }
+.buzzer-record-dialog label span { color: #607a8c; letter-spacing: 0; }
+.buzzer-record-dialog input { margin: 7px 0 12px; padding: 13px 15px; border: 1px solid rgba(255,255,255,.18); border-radius: 8px; outline: none; color: var(--cream); background: rgba(0,0,0,.35); font: 800 18px 'Nunito Sans', sans-serif; }
+.buzzer-record-dialog input:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(80,211,227,.12); }
+.buzzer-record-dialog .buzzer-record-status { min-height: 18px; margin: 0; color: #ff8792; font-size: 11px; }
+.buzzer-record-dialog > div { display: flex; gap: 10px; margin-top: 8px; }
+.buzzer-record-dialog button { flex: 1; padding: 13px; border: 0; border-radius: 8px; background: var(--court-orange); color: #07141f; font: 900 13px 'Barlow Condensed', sans-serif; letter-spacing: .08em; cursor: pointer; }
+.buzzer-record-dialog button.is-secondary { color: var(--cream); background: rgba(255,255,255,.1); }
 .buzzer-court-shell { position: relative; min-width: 0; overflow: hidden; border-radius: 18px; background: #071623; }
 .buzzer-court { display: block; width: 100%; aspect-ratio: 16 / 10; height: auto; min-height: 0; touch-action: none; cursor: grab; }
 .buzzer-court:active { cursor: grabbing; }
@@ -233,6 +254,13 @@ button { font: inherit; }
   .buzzer-clock-panel, .buzzer-score-panel { padding: 8px 10px; }
   .buzzer-clock-panel strong, .buzzer-score-panel strong { font-size: 34px; }
   .buzzer-clock-panel span, .buzzer-score-panel span, .buzzer-hud > p, .buzzer-power { display: none; }
+  .buzzer-leaderboard { grid-column: 1 / -1; padding: 7px 10px; }
+  .buzzer-leaderboard ol { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .buzzer-leaderboard li { display: block; min-width: 0; }
+  .buzzer-leaderboard li::before { margin-right: 3px; }
+  .buzzer-leaderboard li span { display: block; }
+  .buzzer-record-dialog { padding: 22px; }
+  .buzzer-record-dialog > div { flex-direction: column; }
   .buzzer-stat-grid { grid-template-columns: 1fr 1fr; }
   .buzzer-stat-grid div { padding: 5px 7px; }
   .buzzer-stat-grid strong { font-size: 18px; }

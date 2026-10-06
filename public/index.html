@@ -18,7 +18,7 @@
       href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Nunito+Sans:wght@600;700;800;900&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20261005c" />
+    <link rel="stylesheet" href="styles.css?v=20261006a" />
   </head>
   <body>
     <div class="arena-shell">
@@ -130,6 +130,10 @@
             </div>
             <div class="buzzer-power"><span>SHOT POWER</span><div><i id="buzzer-power-fill"></i></div></div>
             <p><b>HOW TO SHOOT</b> Press the ball, drag backward, then release. Longer pull = more power.</p>
+            <section class="buzzer-leaderboard" id="buzzer-leaderboard" aria-labelledby="buzzer-leaderboard-title">
+              <div><small>ALL-TIME</small><strong id="buzzer-leaderboard-title">TOP 5</strong></div>
+              <ol id="buzzer-leaderboard-list"><li><span>Loading…</span><b>—</b></li></ol>
+            </section>
           </aside>
 
           <div class="buzzer-court-shell">
@@ -148,6 +152,18 @@
               <p id="buzzer-result-summary">0 makes from 0 shots</p>
               <div><span>ACCURACY <b id="buzzer-accuracy">0%</b></span><span>BEST STREAK <b id="buzzer-result-streak">0</b></span><span>HIGH SCORE <b id="buzzer-high-score">0</b></span></div>
               <button id="buzzer-play-again" type="button">PLAY AGAIN</button>
+            </section>
+            <section class="buzzer-record-dialog is-hidden" id="buzzer-record-dialog" role="dialog" aria-modal="true" aria-labelledby="buzzer-record-title">
+              <small>YOU MADE THE TOP 5</small>
+              <h2 id="buzzer-record-title">SAVE YOUR SCORE?</h2>
+              <p>Save a nickname, or join the leaderboard as Anonymous.</p>
+              <label for="buzzer-nickname">NICKNAME <span>16 characters max</span></label>
+              <input id="buzzer-nickname" maxlength="16" autocomplete="nickname" placeholder="Your nickname" />
+              <p class="buzzer-record-status" id="buzzer-record-status" role="status"></p>
+              <div>
+                <button id="buzzer-save-nickname" type="button">SAVE MY NICKNAME</button>
+                <button class="is-secondary" id="buzzer-save-anonymous" type="button">STAY ANONYMOUS</button>
+              </div>
             </section>
           </div>
         </div>
@@ -417,7 +433,7 @@
     </dialog>
 
     <script src="buzzer-beater-engine.js?v=20261005h"></script>
-    <script src="buzzer-beater.js?v=20261005h"></script>
+    <script src="buzzer-beater.js?v=20261006a"></script>
     <script>
       if (window.location.protocol !== 'file:') {
         const gameScript = document.createElement('script');

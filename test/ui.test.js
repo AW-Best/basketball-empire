@@ -90,6 +90,23 @@ test('Buzzer Beater has a four-make first level and a moving-rim second level', 
   assert.match(script, /engine\.advanceLevel\(state\)/);
 });
 
+test('Buzzer Beater shows a global top-five leaderboard and asks qualifying players about their nickname', () => {
+  const html = fs.readFileSync(path.join(projectRoot, 'public/index.html'), 'utf8');
+  const script = fs.readFileSync(path.join(projectRoot, 'public/buzzer-beater.js'), 'utf8');
+  const css = fs.readFileSync(path.join(projectRoot, 'public/styles.css'), 'utf8');
+
+  assert.match(html, /id="buzzer-leaderboard"/);
+  assert.match(html, /id="buzzer-leaderboard-list"/);
+  assert.match(html, /id="buzzer-record-dialog"/);
+  assert.match(html, /id="buzzer-nickname"/);
+  assert.match(html, /SAVE MY NICKNAME/);
+  assert.match(html, /STAY ANONYMOUS/);
+  assert.match(script, /\/api\/buzzer\/leaderboard/);
+  assert.match(script, /function qualifiesForLeaderboard\(/);
+  assert.match(css, /\.buzzer-leaderboard/);
+  assert.match(css, /\.buzzer-record-dialog/);
+});
+
 test('Buzzer Beater shoots upward from the bottom toward a centered top hoop', () => {
   const script = fs.readFileSync(path.join(projectRoot, 'public/buzzer-beater.js'), 'utf8');
 
@@ -1064,4 +1081,12 @@ test('privacy notice explains the daily visitor counter cookie and Cloudflare an
   assert.match(privacy, /be_visitor_day/);
   assert.match(privacy, /Cloudflare Web Analytics/);
   assert.match(privacy, /once per UTC day/i);
+});
+
+test('privacy notice explains optional Buzzer Beater leaderboard nicknames', () => {
+  const privacy = fs.readFileSync(path.join(projectRoot, 'public/privacy.html'), 'utf8');
+  assert.match(privacy, /Buzzer Beater leaderboard/i);
+  assert.match(privacy, /nickname/i);
+  assert.match(privacy, /Anonymous/i);
+  assert.match(privacy, /top five/i);
 });

@@ -52,6 +52,8 @@ async function createRuntime() {
   };
   const visitorContext = new FakeContext();
   const visitorCounter = new workerModule.VisitorCounter(visitorContext, {});
+  const leaderboardContext = new FakeContext();
+  const leaderboard = new workerModule.BuzzerLeaderboard(leaderboardContext, {});
   const env = {
     ROOMS: namespace,
     VISITOR_COUNTER: {
@@ -63,13 +65,22 @@ async function createRuntime() {
         return { fetch: (request) => visitorCounter.fetch(request) };
       },
     },
+    BUZZER_LEADERBOARD: {
+      idFromName(name) {
+        assert.equal(name, 'global');
+        return name;
+      },
+      get() {
+        return { fetch: (request) => leaderboard.fetch(request) };
+      },
+    },
     ASSETS: {
       fetch: async () => new Response('Basketball Empire page', {
         headers: { 'content-type': 'text/html; charset=utf-8' },
       }),
     },
   };
-  return { worker: workerModule.default, env, objects, visitorContext };
+  return { worker: workerModule.default, env, objects, visitorContext, leaderboardContext };
 }
 
 async function post(worker, env, path, body, token) {
@@ -164,4 +175,31 @@ test('public visitor counter increments once for a browser each UTC day', async 
 
   const secondVisitor = await worker.fetch(new Request('https://example.test/api/visits', { method: 'POST' }), env);
   assert.deepEqual(await secondVisitor.json(), { visits: 2 });
+});
+
+test('Buzzer Beater leaderboard keeps only the five highest historical scores', async () => {
+  const { worker, env } = await createRuntime();
+  const entries = [12, 40, 18, 7, 30, 25];
+  for (const [index, score] of entries.entries()) {
+    const response = await post(worker, env, '/api/buzzer/leaderboard', {
+      nickname: `Player ${index + 1}`,
+      score,
+    });
+    assert.equal(response.status, 201);
+  }
+
+  const response = await worker.fetch(new Request('https://example.test/api/buzzer/leaderboard'), env);
+  const payload = await response.json();
+  assert.deepEqual(payload.entries.map((entry) => entry.score), [40, 30, 25, 18, 12]);
+  assert.equal(payload.entries.length, 5);
+});
+
+test('Buzzer leaderboard sanitizes nicknames and rejects impossible submissions', async () => {
+  const { worker, env } = await createRuntime();
+  const saved = await post(worker, env, '/api/buzzer/leaderboard', { nickname: '  <Ace>  ', score: 22 });
+  assert.equal(saved.status, 201);
+  assert.equal((await saved.json()).entry.nickname, 'Ace');
+
+  const invalid = await post(worker, env, '/api/buzzer/leaderboard', { nickname: 'Cheater', score: 100001 });
+  assert.equal(invalid.status, 400);
 });

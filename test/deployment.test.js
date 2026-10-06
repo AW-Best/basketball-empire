@@ -57,6 +57,14 @@ test('Cloudflare deployment binds one global visitor counter', () => {
   assert.equal(config.exports.VisitorCounter.type, 'durable-object');
 });
 
+test('Cloudflare deployment binds one global Buzzer Beater leaderboard', () => {
+  const config = JSON.parse(fs.readFileSync(path.join(projectRoot, 'wrangler.jsonc'), 'utf8'));
+  assert.ok(config.durable_objects.bindings.some((binding) => (
+    binding.name === 'BUZZER_LEADERBOARD' && binding.class_name === 'BuzzerLeaderboard'
+  )));
+  assert.equal(config.exports.BuzzerLeaderboard.type, 'durable-object');
+});
+
 test('package scripts support local Cloudflare verification and deployment', () => {
   const packageJson = JSON.parse(fs.readFileSync(path.join(projectRoot, 'package.json'), 'utf8'));
 

@@ -23,6 +23,7 @@ const PLAYER_COLORS = ['#f26a21', '#3b9dff', '#32d583', '#ffc83d'];
 const CODE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 const RECORD_KEY = 'record';
 const VISITOR_COUNT_KEY = 'visits';
+const LEADERBOARD_KEY = 'top-five';
 
 function randomCode() {
   const bytes = crypto.getRandomValues(new Uint8Array(6));
@@ -95,6 +96,49 @@ export class VisitorCounter {
       headers['set-cookie'] = `be_visitor_day=${today}; Max-Age=86400; Path=/; Secure; SameSite=Lax`;
     }
     return Response.json({ visits }, { headers });
+  }
+}
+
+function cleanNickname(value) {
+  const cleaned = String(value || '')
+    .replace(/[<>]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 16);
+  return cleaned || 'Anonymous';
+}
+
+export class BuzzerLeaderboard {
+  constructor(ctx, env) {
+    this.ctx = ctx;
+    this.env = env;
+  }
+
+  async fetch(request) {
+    if (request.method === 'GET') {
+      return json({ entries: await this.ctx.storage.get(LEADERBOARD_KEY) || [] });
+    }
+    if (request.method !== 'POST') return json({ error: 'Not found.' }, 404);
+    try {
+      const body = await readJson(request);
+      const score = Number(body.score);
+      if (!Number.isInteger(score) || score < 0 || score > 100000) throw new Error('Submit a valid score.');
+      const entry = {
+        id: crypto.randomUUID(),
+        nickname: cleanNickname(body.nickname),
+        score,
+        createdAt: Date.now(),
+      };
+      const current = await this.ctx.storage.get(LEADERBOARD_KEY) || [];
+      const entries = [...current, entry]
+        .sort((left, right) => right.score - left.score || left.createdAt - right.createdAt)
+        .slice(0, 5);
+      const qualified = entries.some((candidate) => candidate.id === entry.id);
+      if (qualified) await this.ctx.storage.put(LEADERBOARD_KEY, entries);
+      return json({ entry, entries, qualified }, 201);
+    } catch (error) {
+      return json({ error: error.message }, 400);
+    }
   }
 }
 
@@ -285,6 +329,10 @@ const worker = {
     if (request.method === 'POST' && url.pathname === '/api/visits') {
       const id = env.VISITOR_COUNTER.idFromName('global');
       return env.VISITOR_COUNTER.get(id).fetch(request);
+    }
+    if (url.pathname === '/api/buzzer/leaderboard' && (request.method === 'GET' || request.method === 'POST')) {
+      const id = env.BUZZER_LEADERBOARD.idFromName('global');
+      return env.BUZZER_LEADERBOARD.get(id).fetch(request);
     }
     const roomMatch = url.pathname.match(/^\/api\/rooms\/([A-Za-z0-9]+)(?:\/.*)?$/);
     if (roomMatch) {

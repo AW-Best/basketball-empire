@@ -333,3 +333,12 @@
 - [x] GREEN: implement level state, HUD progress, and moving-rim gameplay.
 - [x] Verify the full 169-test automated suite.
 - [ ] Complete browser play-check, commit, and deploy the level challenge.
+
+## Sprint 050 — Buzzer Leaderboard and Level Roadmap
+
+- [x] Research comparable basketball progression patterns.
+- [x] Define architecture, UI, privacy, acceptance criteria, and six-level roadmap.
+- [x] RED: specify Top 5 persistence, validation, deployment binding, local API, and score dialog.
+- [x] GREEN: implement the global leaderboard and nickname/Anonymous flow.
+- [x] Verify the full 175-test suite and responsive browser presentation.
+- [ ] Commit and deploy.

@@ -53,6 +53,10 @@ function errorStatus(error) {
   return 400;
 }
 
+function cleanLeaderboardNickname(value) {
+  return String(value || '').replace(/[<>]/g, '').replace(/\s+/g, ' ').trim().slice(0, 16) || 'Anonymous';
+}
+
 function serveStatic(publicDir, pathname, response) {
   const requestedPath = pathname === '/' ? '/index.html' : pathname;
   let decodedPath;
@@ -81,6 +85,7 @@ function serveStatic(publicDir, pathname, response) {
 }
 
 function createServer({ roomService = new RoomService(), publicDir = DEFAULT_PUBLIC_DIR } = {}) {
+  let buzzerLeaderboard = [];
   return http.createServer(async (request, response) => {
     const url = new URL(request.url, 'http://localhost');
     const route = `${request.method} ${url.pathname}`;
@@ -92,6 +97,30 @@ function createServer({ roomService = new RoomService(), publicDir = DEFAULT_PUB
       if (route === 'POST /api/rooms') {
         const body = await readJson(request);
         sendJson(response, 201, roomService.createRoom({ name: body.name, avatarDataUrl: body.avatarDataUrl }));
+        return;
+      }
+      if (route === 'GET /api/buzzer/leaderboard') {
+        sendJson(response, 200, { entries: buzzerLeaderboard });
+        return;
+      }
+      if (route === 'POST /api/buzzer/leaderboard') {
+        const body = await readJson(request);
+        const score = Number(body.score);
+        if (!Number.isInteger(score) || score < 0 || score > 100000) throw new Error('Submit a valid score.');
+        const entry = {
+          id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+          nickname: cleanLeaderboardNickname(body.nickname),
+          score,
+          createdAt: Date.now(),
+        };
+        buzzerLeaderboard = [...buzzerLeaderboard, entry]
+          .sort((left, right) => right.score - left.score || left.createdAt - right.createdAt)
+          .slice(0, 5);
+        sendJson(response, 201, {
+          entry,
+          entries: buzzerLeaderboard,
+          qualified: buzzerLeaderboard.some((candidate) => candidate.id === entry.id),
+        });
         return;
       }
 

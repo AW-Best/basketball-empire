@@ -45,6 +45,21 @@ test('serves health status and the game interface', async () => {
   });
 });
 
+test('serves a local top-five Buzzer Beater leaderboard', async () => {
+  await withServer(async (baseUrl) => {
+    for (const [nickname, score] of [['Ace', 10], ['Sky', 22], ['Anonymous', 15]]) {
+      const response = await fetch(`${baseUrl}/api/buzzer/leaderboard`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ nickname, score }),
+      });
+      assert.equal(response.status, 201);
+    }
+    const payload = await (await fetch(`${baseUrl}/api/buzzer/leaderboard`)).json();
+    assert.deepEqual(payload.entries.map((entry) => entry.score), [22, 15, 10]);
+  });
+});
+
 test('creates, joins, readies, and starts a two-player room over HTTP', async () => {
   await withServer(async (baseUrl) => {
     const createResponse = await post(baseUrl, '/api/rooms', { name: 'Aaron Wang' });

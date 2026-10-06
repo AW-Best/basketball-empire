@@ -25,6 +25,10 @@
       {
         "name": "VISITOR_COUNTER",
         "class_name": "VisitorCounter"
+      },
+      {
+        "name": "BUZZER_LEADERBOARD",
+        "class_name": "BuzzerLeaderboard"
       }
     ]
   },
@@ -34,6 +38,10 @@
       "storage": "sqlite"
     },
     "VisitorCounter": {
+      "type": "durable-object",
+      "storage": "sqlite"
+    },
+    "BuzzerLeaderboard": {
       "type": "durable-object",
       "storage": "sqlite"
     }
