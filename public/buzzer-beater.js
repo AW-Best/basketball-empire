@@ -75,6 +75,15 @@
     calloutTimer = setTimeout(() => { callout.className = 'buzzer-callout'; }, 780);
   }
 
+  function updatePowerMeter(speed = 0, charging = false) {
+    const percent = Math.round(Math.min(100, Math.max(0, (speed / 1100) * 100)));
+    const meter = document.querySelector('#buzzer-power');
+    document.querySelector('#buzzer-power-fill').style.width = `${percent}%`;
+    document.querySelector('#buzzer-power-value').textContent = `${percent}%`;
+    meter.setAttribute('aria-valuenow', String(percent));
+    meter.classList.toggle('is-charging', charging);
+  }
+
   function renderLeaderboard() {
     const list = document.querySelector('#buzzer-leaderboard-list');
     list.replaceChildren();
@@ -431,7 +440,7 @@
     if (!dragging) return;
     const velocity = engine.calculateLaunchVelocity(ball, pointer);
     const speed = Math.hypot(velocity.x, velocity.y);
-    document.querySelector('#buzzer-power-fill').style.width = `${Math.min(100, (speed / 1100) * 100)}%`;
+    updatePowerMeter(speed, true);
     for (let step = 1; step <= 8; step += 1) {
       const time = step * 0.085;
       const x = ball.x + velocity.x * time;
@@ -510,7 +519,7 @@
     centerHoop();
     ball = makeBall();
     dragging = false;
-    document.querySelector('#buzzer-power-fill').style.width = '0%';
+    updatePowerMeter();
     document.querySelector('#buzzer-result').classList.add('is-hidden');
     document.querySelector('#buzzer-record-dialog').classList.add('is-hidden');
     document.querySelector('#buzzer-start-overlay').classList.remove('is-hidden');
@@ -524,6 +533,7 @@
     if (Math.hypot(point.x - ball.x, point.y - ball.y) > BALL_RADIUS * 2.2) return;
     dragging = true;
     pointer = point;
+    updatePowerMeter(0, true);
     canvas.setPointerCapture(event.pointerId);
   });
   canvas.addEventListener('pointermove', (event) => {
@@ -536,7 +546,7 @@
     pointer = canvasPoint(event);
     const velocity = engine.calculateLaunchVelocity(ball, pointer);
     if (Math.hypot(velocity.x, velocity.y) < 130 || velocity.y >= -40) {
-      document.querySelector('#buzzer-power-fill').style.width = '0%';
+      updatePowerMeter();
       showCallout('PULL BACK & UP', 'is-miss');
       return;
     }
@@ -545,9 +555,9 @@
     ball.inFlight = true;
     ball.scored = false;
     shotAge = 0;
-    document.querySelector('#buzzer-power-fill').style.width = '0%';
+    updatePowerMeter();
   });
-  canvas.addEventListener('pointercancel', () => { dragging = false; });
+  canvas.addEventListener('pointercancel', () => { dragging = false; updatePowerMeter(); });
   document.querySelector('#buzzer-start').addEventListener('click', startGame);
   document.querySelector('#buzzer-play-again').addEventListener('click', startGame);
   document.querySelector('#buzzer-save-nickname').addEventListener('click', () => {

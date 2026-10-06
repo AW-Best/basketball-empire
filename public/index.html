@@ -18,7 +18,7 @@
       href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Nunito+Sans:wght@600;700;800;900&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20261006a" />
+    <link rel="stylesheet" href="styles.css?v=20261006b" />
   </head>
   <body>
     <div class="arena-shell">
@@ -128,7 +128,11 @@
               <div><small>STREAK</small><strong id="buzzer-streak">0</strong></div>
               <div><small>BEST</small><strong id="buzzer-best">0</strong></div>
             </div>
-            <div class="buzzer-power"><span>SHOT POWER</span><div><i id="buzzer-power-fill"></i></div></div>
+            <div class="buzzer-power" id="buzzer-power" role="meter" aria-label="Shot power" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+              <div class="buzzer-power-heading"><span>SHOT POWER</span><strong class="buzzer-power-value" id="buzzer-power-value">0%</strong></div>
+              <div class="buzzer-power-track"><i id="buzzer-power-fill"></i><span></span><span></span><span></span></div>
+              <small>DRAG FARTHER FOR MORE POWER</small>
+            </div>
             <p><b>HOW TO SHOOT</b> Press the ball, drag backward, then release. Longer pull = more power.</p>
             <section class="buzzer-leaderboard" id="buzzer-leaderboard" aria-labelledby="buzzer-leaderboard-title">
               <div><small>ALL-TIME</small><strong id="buzzer-leaderboard-title">TOP 5</strong></div>
@@ -140,10 +144,15 @@
             <canvas class="buzzer-court" id="buzzer-court" width="1000" height="625" aria-label="Interactive basketball shooting court"></canvas>
             <div class="buzzer-callout" id="buzzer-callout" aria-live="assertive">READY?</div>
             <div class="buzzer-start-overlay" id="buzzer-start-overlay">
-              <span class="buzzer-ball-mark" aria-hidden="true"></span>
               <small>LEVEL 1 · MAKE 4 SHOTS IN 60 SECONDS · SWIPE TO SHOOT</small>
               <h2>BEAT THE<br /><em>RIM.</em></h2>
-              <p>Drag back from the ball and release toward the rim.</p>
+              <div class="buzzer-shot-demo" aria-label="Animated example: drag the basketball backward, release it, and aim for the rim">
+                <span class="buzzer-demo-rim" aria-hidden="true"></span>
+                <span class="buzzer-demo-arc" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+                <span class="buzzer-demo-ball" aria-hidden="true"></span>
+                <span class="buzzer-demo-hand" aria-hidden="true">☝</span>
+              </div>
+              <div class="buzzer-demo-steps"><span><b>1</b> DRAG BACK</span><span><b>2</b> RELEASE</span><span><b>3</b> AIM FOR THE RIM</span></div>
               <button id="buzzer-start" type="button">START LEVEL 1</button>
             </div>
             <section class="buzzer-result is-hidden" id="buzzer-result" aria-live="polite">

@@ -342,3 +342,11 @@
 - [x] GREEN: implement the global leaderboard and nickname/Anonymous flow.
 - [x] Verify the full 175-test suite and responsive browser presentation.
 - [x] Commit, deploy, and verify the production leaderboard endpoint.
+
+## Sprint 051 — Buzzer Onboarding and Power Feedback
+
+- [x] Define architecture, UI direction, acceptance criteria, and accessibility behavior.
+- [x] RED: specify the animated three-step tutorial and semantic live power meter.
+- [x] GREEN: implement tutorial motion, percentage feedback, charging emphasis, and mobile visibility.
+- [x] Verify the full suite and browser presentation.
+- [ ] Commit and deploy.
