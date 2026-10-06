@@ -358,3 +358,10 @@
 - [x] GREEN: implement the timed lesson, front-facing hoop and net, captions, and replay controls.
 - [x] Verify the full suite and browser presentation.
 - [x] Commit and deploy.
+
+## Sprint 053 — School Story Page
+
+- [x] Record the English, Year 8, text-only presentation requirements.
+- [x] RED: specify story content, keyboard navigation, and print support.
+- [x] GREEN: build the presentation page and natural speaking script.
+- [x] Run the full suite and verify the page locally.

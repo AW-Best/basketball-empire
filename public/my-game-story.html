@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#081b2b" />
+    <title>How I Made Basketball Empire</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Nunito+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="story.css?v=20261006a" />
+  </head>
+  <body>
+    <header class="story-bar">
+      <a href="/" aria-label="Back to Basketball Empire"><span class="word-ball" aria-hidden="true">BE</span><b>BASKETBALL EMPIRE</b></a>
+      <div class="story-progress" aria-label="Presentation progress"><i id="story-progress"></i></div>
+      <span id="story-counter">01 / 09</span>
+    </header>
+
+    <aside class="chapter-rail" aria-label="Story chapters">
+      <ol id="chapter-nav"></ol>
+    </aside>
+
+    <main id="story" tabindex="-1">
+      <section class="story-section cover" data-story-section data-label="Start">
+        <div class="section-number">01</div>
+        <p class="kicker">A YEAR 8 PROJECT</p>
+        <h1>How I Made<br /><em>Basketball Empire</em></h1>
+        <p class="standfirst">I am 14 and I am in Year 8. This is the story of how an idea I had for a basketball board game became a real website that my friends could play.</p>
+        <div class="speaker-note"><b>OPEN WITH</b><span>"I started with no finished game. I only had an idea that sounded fun."</span></div>
+        <button class="next-section" type="button">START THE STORY <span>↓</span></button>
+      </section>
+
+      <section class="story-section" data-story-section data-label="The idea">
+        <div class="section-number">02</div>
+        <div class="story-copy">
+          <p class="kicker">WHERE IT STARTED</p>
+          <h2>Basketball plus a board game</h2>
+          <p>I like basketball, and I also like games where people buy places, make deals and try to finish with the most money. I wondered what would happen if those two things were put together.</p>
+          <p>Instead of buying streets, players could own basketball teams. Instead of building houses, they could recruit star players. That was the first version of the idea.</p>
+          <p class="aside-line">The name came later: <strong>Basketnopoly</strong>, a mix of basketball and Monopoly.</p>
+        </div>
+        <div class="word-court" aria-hidden="true"><span>TEAMS</span><span>TRADES</span><b>BASKETNOPOLY</b><span>RECRUITS</span><span>PTS</span></div>
+      </section>
+
+      <section class="story-section" data-story-section data-label="The rules">
+        <div class="section-number">03</div>
+        <div class="story-copy wide">
+          <p class="kicker">MAKING IT PLAYABLE</p>
+          <h2>The theme was easy.<br />The rules were harder.</h2>
+          <p>I had to decide what every part of the board meant. Teams became the main properties. Game Time and Team Operations became card spaces. Routes and training labs had their own prices and payments.</p>
+          <div class="rule-board">
+            <span><b>01</b> Roll two dice</span>
+            <span><b>02</b> Move block by block</span>
+            <span><b>03</b> Buy or auction a team</span>
+            <span><b>04</b> Recruit better players</span>
+            <span><b>05</b> Trade with your friends</span>
+            <span><b>06</b> Finish with the most PTS</span>
+          </div>
+          <p>I changed the rules many times after playing. A rule can sound fine on paper and still feel unfair in a real game.</p>
+        </div>
+      </section>
+
+      <section class="story-section" data-story-section data-label="Codex">
+        <div class="section-number">04</div>
+        <div class="story-copy">
+          <p class="kicker">TURNING WORDS INTO CODE</p>
+          <h2>How I worked with Codex</h2>
+          <p>I used Codex to help write and change the code. I did not give it one giant instruction and get a finished game. I worked feature by feature.</p>
+          <blockquote>"Let four players join the same room."</blockquote>
+          <blockquote>"Move the piece one block at a time after the dice stop."</blockquote>
+          <blockquote>"Show who owns the team, not only the word owned."</blockquote>
+          <p>The more exact my instructions became, the better the result was. I still had to decide what the game should do, test it and point out what felt wrong.</p>
+        </div>
+        <div class="code-conversation" aria-label="Example development loop"><b>MY IDEA</b><i></i><b>CODEX BUILDS</b><i></i><b>I TEST</b><i></i><b>WE FIX IT</b></div>
+      </section>
+
+      <section class="story-section" data-story-section data-label="Problems">
+        <div class="section-number">05</div>
+        <div class="story-copy wide">
+          <p class="kicker">THE PART PEOPLE DO NOT SEE</p>
+          <h2>A lot of things broke</h2>
+          <p>Some bugs were obvious. A button did nothing. A phone could not connect. The wrong player became champion. Other bugs were strange, like the game history appearing on top of the auction screen.</p>
+          <div class="bug-log">
+            <span><time>BUG 01</time> Failed to create a room</span>
+            <span><time>BUG 02</time> Phone connection closed</span>
+            <span><time>BUG 03</time> Recruit button did nothing</span>
+            <span><time>BUG 04</time> History covered the bid controls</span>
+          </div>
+          <p>For each bug, I tried to describe exactly what I clicked, what I expected and what happened instead. Screenshots helped a lot. Fixing bugs took more time than making some of the first features.</p>
+        </div>
+      </section>
+
+      <section class="story-section" data-story-section data-label="Online">
+        <div class="section-number">06</div>
+        <div class="story-copy">
+          <p class="kicker">FROM MY LAPTOP TO MY FRIENDS</p>
+          <h2>Getting the game online</h2>
+          <p>At first, the game only worked on my laptop at a localhost address. That was useful for testing, but nobody at another house could join.</p>
+          <p>I used GitHub to save the code and its history. I first shared the running game through Tailscale Funnel. I also learnt how a hosting service can keep a website online when my laptop is turned off.</p>
+          <p>The multiplayer test was simple: create a room on one device, join on another, then check that both screens showed the same turn.</p>
+        </div>
+        <ol class="deploy-path" aria-label="Deployment path"><li>LAPTOP</li><li>GITHUB</li><li>SERVER</li><li>FRIEND'S PHONE</li></ol>
+      </section>
+
+      <section class="story-section" data-story-section data-label="Domain">
+        <div class="section-number">07</div>
+        <div class="story-copy wide">
+          <p class="kicker">GIVING IT AN ADDRESS</p>
+          <h2>Why buy a domain?</h2>
+          <p>A temporary server link is difficult to remember. A domain gives the game a proper web address that I can say in class or send to a friend.</p>
+          <p>Buying the domain is only one step. I also need to connect its DNS records to the place where the game is hosted, turn on HTTPS and test that the address works on both Wi-Fi and mobile data.</p>
+          <div class="domain-board"><small>TYPE THIS</small><strong>basketball-empire.[domain]</strong><span>DOMAIN → DNS → HOSTING → GAME</span></div>
+          <p class="aside-line">I learnt that a domain is the address. The server is the computer that actually runs the game.</p>
+        </div>
+      </section>
+
+      <section class="story-section" data-story-section data-label="Visits">
+        <div class="section-number">08</div>
+        <div class="story-copy">
+          <p class="kicker">AFTER PEOPLE ARRIVE</p>
+          <h2>Checking daily visits</h2>
+          <p>Once the site was online, I wanted to know whether anybody was using it. I added a visit counter and looked at the daily visits instead of guessing.</p>
+          <p>The useful questions are quite basic: How many people opened the site today? Did they use a phone or computer? Did they reach the game, or leave on the first page?</p>
+          <p>I do not need people's real names for this. A simple anonymous count is enough to see whether a change helped.</p>
+        </div>
+        <div class="visit-chart" aria-label="Example daily visit chart"><span style="--h:31%"><b>MON</b></span><span style="--h:52%"><b>TUE</b></span><span style="--h:43%"><b>WED</b></span><span style="--h:76%"><b>THU</b></span><span style="--h:91%"><b>FRI</b></span></div>
+      </section>
+
+      <section class="story-section finish" data-story-section data-label="What I learnt">
+        <div class="section-number">09</div>
+        <p class="kicker">WHAT I WOULD TELL ANOTHER STUDENT</p>
+        <h2>Start with the smallest version</h2>
+        <p class="standfirst">I did not know every step when I began. I made one screen, then one room, then one working turn. Each problem showed me what I needed to learn next.</p>
+        <div class="final-lines"><span>Have an idea you care about.</span><span>Explain one feature clearly.</span><span>Test it with real people.</span><span>Keep the parts that are fun.</span></div>
+        <p class="closing-line">Basketball Empire is still not finished. That is probably why I still enjoy working on it.</p>
+        <div class="end-actions"><button type="button" id="restart-story">BACK TO THE START</button><button type="button" onclick="window.print()">PRINT SPEAKER NOTES</button></div>
+      </section>
+    </main>
+
+    <footer class="story-help"><span>Use ↑ ↓ or ← → to move</span><span>Basketball Empire, 2026</span></footer>
+
+    <script>
+      const sections = [...document.querySelectorAll('[data-story-section]')];
+      const progress = document.querySelector('#story-progress');
+      const counter = document.querySelector('#story-counter');
+      const nav = document.querySelector('#chapter-nav');
+
+      const goTo = (index) => sections[Math.max(0, Math.min(sections.length - 1, index))].scrollIntoView({ behavior: 'smooth' });
+      sections.forEach((section, index) => {
+        const item = document.createElement('li');
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.textContent = section.dataset.label;
+        button.setAttribute('aria-label', `Go to chapter ${index + 1}: ${section.dataset.label}`);
+        button.addEventListener('click', () => goTo(index));
+        item.append(button);
+        nav.append(item);
+      });
+
+      const updateChapter = () => {
+        const index = sections.reduce((best, section, current) => Math.abs(section.getBoundingClientRect().top) < Math.abs(sections[best].getBoundingClientRect().top) ? current : best, 0);
+        progress.style.width = `${((index + 1) / sections.length) * 100}%`;
+        counter.textContent = `${String(index + 1).padStart(2, '0')} / ${String(sections.length).padStart(2, '0')}`;
+        [...nav.querySelectorAll('button')].forEach((button, current) => button.classList.toggle('is-current', current === index));
+      };
+
+      document.addEventListener('keydown', (event) => {
+        if (!['ArrowDown', 'ArrowRight', 'ArrowUp', 'ArrowLeft'].includes(event.key)) return;
+        event.preventDefault();
+        const current = sections.findIndex((section) => Math.abs(section.getBoundingClientRect().top) < innerHeight * .35);
+        goTo(current + (['ArrowDown', 'ArrowRight'].includes(event.key) ? 1 : -1));
+      });
+      document.querySelector('.next-section').addEventListener('click', () => goTo(1));
+      document.querySelector('#restart-story').addEventListener('click', () => goTo(0));
+      document.querySelector('#story').addEventListener('scroll', updateChapter, { passive: true });
+      updateChapter();
+    </script>
+  </body>
+</html>
