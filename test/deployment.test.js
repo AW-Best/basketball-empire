@@ -37,7 +37,7 @@ test('Cloudflare configuration binds static assets and a SQLite Durable Object',
   assert.match(config, /"name"\s*:\s*"play"/);
   assert.match(config, /"main"\s*:\s*"cloudflare\/worker\.mjs"/);
   assert.match(config, /"directory"\s*:\s*"\.\/public"/);
-  assert.match(config, /"run_worker_first"\s*:\s*\[\s*"\/api\/\*"\s*\]/);
+  assert.deepEqual(JSON.parse(config).assets.run_worker_first, ['/api/*', '/ads.txt']);
   assert.match(config, /"name"\s*:\s*"ROOMS"/);
   assert.match(config, /"class_name"\s*:\s*"BasketballRoom"/);
   assert.match(config, /"storage"\s*:\s*"sqlite"/);

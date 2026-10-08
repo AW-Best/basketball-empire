@@ -105,6 +105,22 @@ test('Cloudflare worker serves health and delegates static assets', async () => 
   assert.equal(await page.text(), 'Basketball Empire page');
 });
 
+test('Cloudflare worker serves ads.txt directly without depending on static assets', async () => {
+  const { worker, env } = await createRuntime();
+  env.ASSETS.fetch = async () => {
+    throw new Error('ads.txt must not use the static asset binding');
+  };
+
+  const response = await worker.fetch(new Request('https://hoopire.com/ads.txt'), env);
+
+  assert.equal(response.status, 200);
+  assert.equal(response.headers.get('content-type'), 'text/plain; charset=utf-8');
+  assert.equal(
+    (await response.text()).trim(),
+    'google.com, pub-6603520082677971, DIRECT, f08c47fec0942fa0',
+  );
+});
+
 test('Cloudflare worker creates and persists a multiplayer room', async () => {
   const { worker, env, objects } = await createRuntime();
 

@@ -24,6 +24,7 @@ const CODE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 const RECORD_KEY = 'record';
 const VISITOR_COUNT_KEY = 'visits';
 const LEADERBOARD_KEY = 'top-five';
+const ADS_TXT = 'google.com, pub-6603520082677971, DIRECT, f08c47fec0942fa0\n';
 
 function randomCode() {
   const bytes = crypto.getRandomValues(new Uint8Array(6));
@@ -309,6 +310,15 @@ export class BasketballRoom {
 const worker = {
   async fetch(request, env) {
     const url = new URL(request.url);
+    if ((request.method === 'GET' || request.method === 'HEAD') && url.pathname === '/ads.txt') {
+      return new Response(request.method === 'HEAD' ? null : ADS_TXT, {
+        headers: {
+          'cache-control': 'public, max-age=300',
+          'content-type': 'text/plain; charset=utf-8',
+          'x-content-type-options': 'nosniff',
+        },
+      });
+    }
     if (request.method === 'GET' && url.pathname === '/api/health') {
       return json({ ok: true, game: 'Basketball Empire', runtime: 'cloudflare' });
     }

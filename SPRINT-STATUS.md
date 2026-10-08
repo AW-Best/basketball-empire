@@ -410,3 +410,11 @@
 - [x] RED: specify level advancement and bounded hoop movement.
 - [x] GREEN: continue after Level 1 with a fresh clock and moving rim.
 - [x] Run the full suite, commit, deploy, and verify production.
+
+## Sprint 060 — ads.txt Reliability
+
+- [x] Diagnose the repeated AdSense `Not found` report against production.
+- [x] RED: prove `/ads.txt` still depends on the static asset binding.
+- [x] GREEN: serve the publisher record directly from the Worker.
+- [x] Route `/ads.txt` through the Worker and pass all 189 tests.
+- [ ] Commit, deploy, and verify production.
