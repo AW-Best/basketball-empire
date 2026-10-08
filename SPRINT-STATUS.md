@@ -417,4 +417,4 @@
 - [x] RED: prove `/ads.txt` still depends on the static asset binding.
 - [x] GREEN: serve the publisher record directly from the Worker.
 - [x] Route `/ads.txt` through the Worker and pass all 189 tests.
-- [ ] Commit, deploy, and verify production.
+- [x] Commit, deploy, and verify production.

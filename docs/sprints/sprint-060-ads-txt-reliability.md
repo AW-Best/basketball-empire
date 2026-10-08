@@ -17,4 +17,4 @@ Keep the AdSense authorization file available during static asset deployment and
 - [x] Add a dedicated Worker response for `/ads.txt`.
 - [x] Route `/ads.txt` through the Worker before static assets.
 - [x] Run the complete 189-test suite.
-- [ ] Deploy and verify the production response.
+- [x] Deploy and verify the production response.
