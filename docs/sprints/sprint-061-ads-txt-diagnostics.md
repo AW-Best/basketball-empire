@@ -24,5 +24,7 @@ Workers Logs has short retention (currently Free 3 days / Paid 7 days); query or
 - [x] Implement bounded event and explicit persistence config.
 - [x] Full test suite: 193 passing; Wrangler 4.145.0 dry run passes.
 - [x] Independent quality/security and privacy engineering review; no blocking findings.
-- [ ] Validate production event.
-- [ ] Commit and record deployment.
+- [x] Production GET/HEAD return 200; tail shows both diagnostic events. Workers dataset confirms persisted HEAD event at 2026-10-16 11:55:12 GMT+8 with test UA and status 200.
+- [x] Implementation commit 98fc4c0 deployed as Worker version 71f05fac-9c65-4ce0-bb80-b60de8d1b831.
+
+User subsequently requested no TDD workflow for this task; tests already completed were retained, with remaining verification performed directly in production.

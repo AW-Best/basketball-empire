@@ -424,4 +424,4 @@
 - [x] Acceptance criteria, independent architecture and privacy/quality review.
 - [x] RED/GREEN: bounded GET/HEAD diagnostics and explicit log persistence.
 - [x] Full suite: 193 passing; Wrangler deployment dry run passes.
-- [ ] Deploy and verify a production diagnostic.
+- [x] Deployed version 71f05fac-9c65-4ce0-bb80-b60de8d1b831; GET/HEAD 200 verified and HEAD diagnostic confirmed in persisted Workers Logs.
