@@ -418,3 +418,10 @@
 - [x] GREEN: serve the publisher record directly from the Worker.
 - [x] Route `/ads.txt` through the Worker and pass all 189 tests.
 - [x] Commit, deploy, and verify production.
+
+## Sprint 061 — ads.txt request diagnostics
+
+- [x] Acceptance criteria, independent architecture and privacy/quality review.
+- [x] RED/GREEN: bounded GET/HEAD diagnostics and explicit log persistence.
+- [x] Full suite: 193 passing; Wrangler deployment dry run passes.
+- [ ] Deploy and verify a production diagnostic.

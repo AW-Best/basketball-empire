@@ -311,13 +311,24 @@ const worker = {
   async fetch(request, env) {
     const url = new URL(request.url);
     if ((request.method === 'GET' || request.method === 'HEAD') && url.pathname === '/ads.txt') {
-      return new Response(request.method === 'HEAD' ? null : ADS_TXT, {
+      const response = new Response(request.method === 'HEAD' ? null : ADS_TXT, {
         headers: {
           'cache-control': 'public, max-age=300',
           'content-type': 'text/plain; charset=utf-8',
           'x-content-type-options': 'nosniff',
         },
       });
+      console.info({
+        event: 'ads_txt_request',
+        timestamp: new Date().toISOString(),
+        method: request.method,
+        hostname: url.hostname,
+        path: url.pathname,
+        userAgent: (request.headers.get('user-agent') || '').slice(0, 256),
+        rayId: (request.headers.get('cf-ray') || '').slice(0, 128),
+        status: response.status,
+      });
+      return response;
     }
     if (request.method === 'GET' && url.pathname === '/api/health') {
       return json({ ok: true, game: 'Basketball Empire', runtime: 'cloudflare' });
