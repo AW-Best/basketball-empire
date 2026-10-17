@@ -483,4 +483,4 @@
 - [x] /arch + /ui approve dual-rig presentation and result lifecycle.
 - [x] Implement dual crew, contest/knockdown/recovery, deferred result summary and original celebration; user explicitly waived automated tests to prioritize the effect.
 - [x] Actual home/away preview at390×844 and320×568; no console errors. Static /rev found background fallback timing; fixed to count visible time only. Automated tests deliberately not run.
-- [ ] Publish and verify hoopire.com.
+- [x] 7bcdf67 pushed as Aaron to AW-Best; Cloudflare0079ef65-05bd-4cf9-85f7-f64cd84bbd85 published. Live?v=12 loaded dual 3D actors; both preview roles played. First asset fetch failed transiently; reload loaded 3D, motion URL returned200. Automated tests deferred per user.

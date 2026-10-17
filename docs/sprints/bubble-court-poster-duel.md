@@ -33,3 +33,6 @@ Architecture and UI approved by design_review: distinct teams, impact-driven kno
 - Preview each winner without changing challenge counters. Final home dunk holds losing rival down; challenge loss plays the rival winner before opening summary. 2D fallback carries the same roles and token.
 - /rev and /ui static review passed except background-time fallback; corrected fallback to accumulate capped visible ticks only. Role and resource cancellation reviewed.
 - User requested no automated tests this iteration. JavaScript syntax checked; real phone-size browser preview inspected for both teams at390×844 and320×568 with no console warning/error. No device-performance benchmark or network multiplayer claimed.
+
+## Release
+Commit7bcdf67 pushed as Aaron Wang to AW-Best/basketball-empire. Cloudflare Workerplay version0079ef65-05bd-4cf9-85f7-f64cd84bbd85 serves https://hoopire.com/bubble-court/?v=12 . Live page showed both previews, both winner roles played with true3D and unchanged0score/0energy/30shots. First request experienced an asset fetch failure and used2D; reload loaded3D. Motion asset HEAD returned200. No automated test run this iteration.
