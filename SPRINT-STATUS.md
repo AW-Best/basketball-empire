@@ -448,4 +448,5 @@
 - [x] Red/green tests for lowest row clearing, activation guards and non-energy clear labels.
 - [x] Staggered colored bursts/falling balls, bounded energy motes and golden row sweep.
 - [x] Rim-contact clear, input lock, reset cancellation, preview isolation and one-shot fallback for background tabs.
-- [ ] Production deployment and live mobile smoke check.
+- [x] 220 tests pass. Production version 27107c77-2ed3-4964-b9f2-e9de03883334 deployed to hoopire.com; commit b329c08 pushed as Aaron.
+- [x] Live 390×844 browser smoke: shots charged 48 → 96 → 100, dunk spent bar to 0, score became 02, deepest single occupied row cleared, controls unlocked afterward; no browser errors.
