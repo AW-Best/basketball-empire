@@ -492,3 +492,9 @@
 - [x] Slow motion, scrub, roles/cameras and desktop/390×844/320×568 visual inspection.
 - [x] Static /rev approved after bfcache lifecycle fix. Automated suite deferred under user visual-first instruction.
 - [ ] Publish standalone demo and inspect live.
+
+## Comic victory moment — local only
+- [x] User scope/AC documented in docs/sprints/bubble-court-comic-win.md.
+- [x] Architecture/UI approved; original2D SVG art +1.5s motion implemented.
+- [x] Actual local normal/slow playback, rim impact/final poster, CSS320×568/390×844 framing; no console errors. /rev approved. Syntax checked; automated suite deferred per user.
+- [x] Local preview ready at http://localhost:8772/bubble-court/win-lab/ . No push or publication performed.
