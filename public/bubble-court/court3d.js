@@ -1,16 +1,16 @@
 import * as T from '../vendor/three.module.min.js';
-import {buildStreetScene} from './street-scene.js?v=9';
-import {renderBudget,renderInterval,DunkClock} from './street-motion.js?v=9';
-import {dunkTime} from './effects.js?v=9';
-import {STREET} from './Constants.js?v=9';
-import {emit,Events} from './EventBus.js?v=9';
+import {buildStreetScene} from './street-scene.js?v=10';
+import {renderBudget,renderInterval,DunkClock} from './street-motion.js?v=10';
+import {dunkTime} from './effects.js?v=10';
+import {STREET} from './Constants.js?v=10';
+import {emit,Events} from './EventBus.js?v=10';
 
 export class StreetCourt{
- constructor(canvas,onLoss){
+ constructor(canvas,onLoss,player){
   this.canvas=canvas;this.clock=new DunkClock();this.paused=false;this.last=0;this.lastRender=0;this.slowCount=0;this.slow=false;this.disposed=false;this.reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
   const context=canvas.getContext('webgl2',{alpha:false,antialias:false,powerPreference:'low-power'});if(!context)throw new Error('WebGL2 unavailable');
   this.renderer=new T.WebGLRenderer({canvas,context,antialias:false,alpha:false,powerPreference:'low-power'});this.renderer.outputColorSpace=T.SRGBColorSpace;this.renderer.toneMapping=T.ACESFilmicToneMapping;this.renderer.toneMappingExposure=1.1;this.renderer.shadowMap.enabled=false;
-  this.art=buildStreetScene();this.camera=new T.PerspectiveCamera(37,2,.1,45);this.camera.position.set(4.2,3.2,7.2);this.camera.lookAt(.15,1.85,0);this.base=this.camera.position.clone();
+  this.art=buildStreetScene(player);this.camera=new T.PerspectiveCamera(30,2,.1,45);this.camera.position.set(4.2,3.2,7.2);this.camera.lookAt(.15,1.85,0);this.base=this.camera.position.clone();
   this.observer=new ResizeObserver(()=>this.resize());this.observer.observe(canvas);this.resize();
   canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();if(this.disposed)return;this.dispose();onLoss();},{once:true});
   this.visibility=()=>{this.last=0;};document.addEventListener('visibilitychange',this.visibility);this.tick=this.tick.bind(this);this.raf=requestAnimationFrame(this.tick);canvas.dataset.renderer='webgl';
@@ -24,7 +24,7 @@ export class StreetCourt{
   const elapsed=this.lastRender?now-this.lastRender:0;this.lastRender=now;if(wasActive&&!this.slow&&elapsed>STREET.slowFrameMs){if(++this.slowCount>=STREET.slowFrames){this.slow=true;this.resize();}}else if(wasActive)this.slowCount=Math.max(0,this.slowCount-1);
   let t=state.t;if(this.reduced&&this.clock.active)t=(state.impact||this.clock.impacted)? .72:0;else t=dunkTime(t,this.reduced);this.art.pose(t,now/1000);
   this.camera.position.copy(this.base);if(wasActive&&!this.reduced){const push=Math.sin(state.t*Math.PI)*.35;this.camera.position.z-=push;this.camera.position.x-=push*.7;this.camera.lookAt(.15+push*.4,1.85+push*.15,0);}
-  this.renderer.render(this.art.scene,this.camera);this.canvas.dataset.phase=this.clock.active?(state.t<.17?'gather':state.t<.55?'rise':state.t<.72?'impact':'land'):'idle';
+  this.renderer.render(this.art.scene,this.camera);this.canvas.dataset.phase=this.clock.active?(t<.22?'approach':t<.36?'gather':t<.55?'rise':t<.66?'impact':t<.84?'land':'recover'):'idle';
  }
  dispose(){if(this.disposed)return;this.disposed=true;cancelAnimationFrame(this.raf);this.observer.disconnect();document.removeEventListener('visibilitychange',this.visibility);this.art.dispose();this.renderer.dispose();}
 }

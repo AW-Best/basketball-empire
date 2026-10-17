@@ -1,11 +1,11 @@
-import {AimControl} from './controls.js?v=9';
-import {BubbleEffects} from './effects.js?v=9';
-import {events,Events,emit} from './EventBus.js?v=9';
-import {traceAim,bubbleRadius} from './motion.js?v=9';
-import {createCourt} from './court-loader.js?v=9';
-import {StreetSession} from './session.js?v=9';
-import {STREET} from './Constants.js?v=9';
-import {initialBoard,neighbors,resolveShot,activateDunk,clearBottomRow,touchesLaunch} from './engine.js?v=9';
+import {AimControl} from './controls.js?v=10';
+import {BubbleEffects} from './effects.js?v=10';
+import {events,Events,emit} from './EventBus.js?v=10';
+import {traceAim,bubbleRadius} from './motion.js?v=10';
+import {createCourt} from './court-loader.js?v=10';
+import {StreetSession} from './session.js?v=10';
+import {STREET} from './Constants.js?v=10';
+import {initialBoard,neighbors,resolveShot,activateDunk,clearBottomRow,touchesLaunch} from './engine.js?v=10';
 const $=s=>document.querySelector(s),canvas=$('#board'),ctx=canvas.getContext('2d');
 const visualEffects=new BubbleEffects(canvas);
 events.addEventListener(Events.POP,e=>{visualEffects.pop(e.detail);if(!visualEffects.reduced)document.querySelector('.energy').animate([{filter:'brightness(1)'},{filter:'brightness(1.8)'},{filter:'brightness(1)'}],{duration:500});});
@@ -105,5 +105,6 @@ ctx.strokeStyle='#3190b7';ctx.lineWidth=3;ctx.beginPath();ctx.arc(w/2,launch,r+7
 visualEffects.draw(dt,r);
 ctx.globalAlpha=1;requestAnimationFrame(frame);}
 document.addEventListener('visibilitychange',()=>{last=0;cancelAim();});
+$('#preview-dunk').disabled=false;
 new ResizeObserver(resize).observe(canvas);reset();resize();requestAnimationFrame(frame);
 try{if(localStorage.getItem('hoopire-bubble-guide-v1')!=='seen')openGuide();}catch{openGuide();}

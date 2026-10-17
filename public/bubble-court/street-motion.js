@@ -1,4 +1,4 @@
-import {STREET} from './Constants.js?v=9';
+import {STREET} from './Constants.js?v=10';
 // Authored joint poses in metres: gather → rise → rim → hang → recovery.
 const keys=[
  [0,-1.7,1.0,-1.12,1.28,-1.92,.1,-1.42,.1],

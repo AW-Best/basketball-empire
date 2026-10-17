@@ -461,3 +461,11 @@
 - [x] Full231tests green; low-poly geometry and static architecture instancing cut draw calls.
 - [x] af23022 pushed as Aaron to AW-Best; Cloudflare production version37876d07-b38c-42cd-85b2-efe33005100c deployed.
 - [x] Livehoopire.com/bubble-court/?v=9: first guide, WebGL impact,390×844 fit (footer839/document844,buffer388×186), danger failure, successful challenge-copy and replay reset verified; no console errors.
+
+## Skinned athlete revision
+- [x] /arch and /ui approve local CC0 skinned athlete, fixed bone offsets and contact-correct original clip.
+- [x] New red/green tests on real asset: constant bone lengths/offsets, planted feet, palm/rim continuity, mobile geometry and approach momentum.
+- [x] Continuous skinned body, street uniform, hair/sneakers and baked quaternion AnimationClip.
+- [x] Primary browser playback QA at390×844/320×568; actual100-energy dunk cleared one row once, score02/progress1of3/energy0/unlocked.
+- [x] Independent /rev passed; timeout and skeleton disposal suggestions fixed and re-reviewed.239regression tests pass.
+- [ ] Publish v10 and verify production assets/animation.

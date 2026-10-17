@@ -1,4 +1,4 @@
-import {FX,CLEAR_FX} from './Constants.js?v=9';
+import {FX,CLEAR_FX} from './Constants.js?v=10';
 export function popFeedback({popped,dropped,gained,reduced=false,dunk=false}){return {label:dunk?'BOTTOM ROW CLEARED!':dropped?'DROP BONUS':popped>=6?'BIG CLEAR!':'NICE SHOT!',amount:dunk?`${popped} BUBBLES · SPACE TO PLAY`:`+${gained} ENERGY`,particles:reduced?0:Math.min(FX.particleLimit,(popped+dropped)*6)};}
 export function energyPoint(a,b,t){const u=1-Math.pow(1-Math.max(0,Math.min(1,t)),3);return {x:a.x+(b.x-a.x)*u+Math.sin(Math.PI*u)*22,y:a.y+(b.y-a.y)*u};}
 export function dunkTime(t,reduced=false){if(reduced)return t;if(t<FX.impactStart)return t/FX.impactStart*.6;if(t<FX.impactEnd)return .6;return .6+(t-FX.impactEnd)/(1-FX.impactEnd)*.4;}
