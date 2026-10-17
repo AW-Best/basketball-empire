@@ -432,4 +432,6 @@
 - Added independent static mode with coarse aim, relative fine adjustment, explicit fire and launch-zone game over.
 - Integration red/green and all 214 regression tests pass.
 - Git commit identity: Aaron Wang <aaronwang2030@gmail.com>.
-- GitHub push and Cloudflare production release pending.
+- Pushed to AW-Best/basketball-empire main (a7bf690), author Aaron Wang.
+- Cloudflare production deployed, version 3f5a6298-ae7a-43e7-9f04-d905dd411258.
+- Verified live HTML contains fine-aim, shoot, game-over and play-again; live script includes launch-zone failure. Entry: https://hoopire.com/bubble-court/index.html
