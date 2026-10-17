@@ -27,3 +27,6 @@ Added Acclaim parser tests for units/degree axes/omitted channels and actual com
 
 ## Local acceptance
 Full254tests pass. Independent final /rev passed, including the corrected quaternion seam. Primary browser checked actual approach/impact/return at390×844; camera adjustment restored full foot visibility during return. Four real shots (including a miss) charged100energy; realDUNK showed the new skin, score02, progress1/3, exactly one bottom-row clear, energy0 and unlocked input. Preview disabled repeat click during playback and changed no counters.320×568 actual impact remained legible and full-page dimensions were320×568 with no overflow. Reset restored0score/0energy/30shots/idle3D. Browser warning/error log empty. Physical-phone FPS is not claimed; scene/pixel limits, adaptive pacing, baked clip and lightweight lighting are verified.
+
+## Production release
+Code commit b7498cd pushed as Aaron Wang to AW-Best/basketball-empire. Cloudflare Worker play deployed as076815b1-5ca3-4742-924f-a49d2a162760. Actual https://hoopire.com/bubble-court/?v=11 confirmed app.js?v=11, renderer3d, new imported-motion impact playback, and empty browser warning/error log.

@@ -476,4 +476,4 @@
 - [x] Acquire free CMU124_06 full-body layup; retarget and adapt rim contact into dunk, provenance/conditions/hash recorded.
 - [x] Test-first Acclaim parser, actual imported clip, return/ball/camera continuity, cold-load parallelism and dusk lighting.
 - [x] Actual390×844 and320×568 playback, four real shots charging100 then one dunk/one bottom-row clear, reset/no overflow;254tests pass and independent /rev approved.
-- [ ] Publish v11 and verify production animation.
+- [x] b7498cd pushed as Aaron to AW-Best; Cloudflare076815b1-5ca3-4742-924f-a49d2a162760 deployed. Live?v=11 HTML,3D renderer, imported motion impact playback and no console warnings/errors verified.
