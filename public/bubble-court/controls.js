@@ -1,7 +1,11 @@
 const LIMIT=1.25,SPEED=680,FINE_RADIANS_PER_PIXEL=.0025;
 export class AimControl{
  constructor(){this.reset();}
- reset(){this.angle=0;this.busy=false;this.pointer=null;this.lastX=0;}
+ reset(){this.gesture=null;this.angle=0;this.busy=false;this.pointer=null;this.lastX=0;}
+ beginGesture(id,x,y,ox,oy){if(this.busy||this.gesture!==null)return;this.gesture=id;this.aimAt(x,y,ox,oy);}
+ moveGesture(id,x,y,ox,oy){if(this.gesture===id)this.aimAt(x,y,ox,oy);}
+ cancelGesture(id){if(this.gesture===id)this.gesture=null;}
+ endGesture(id){if(this.gesture!==id)return null;this.gesture=null;return this.precise?null:this.fire();}
  setBusy(value){this.busy=value;}
  nudge(delta){if(!this.busy)this.angle=Math.max(-LIMIT,Math.min(LIMIT,this.angle+delta));}
  aimAt(x,y,originX,originY){if(this.busy)return;this.angle=Math.max(-LIMIT,Math.min(LIMIT,Math.atan2(x-originX,Math.max(30,originY-y))));}

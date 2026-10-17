@@ -84,3 +84,5 @@ Source: `public/bubble-court/`. Tests: `test/bubble-court.test.js` and `test/bub
 4. Verify `https://hoopire.com/bubble-court/index.html` and the existing modes. GitHub push alone does not deploy: no automatic deployment workflow is configured in this checkout.
 
 The separate chatgpt.site prototype is hosted through Sites and has its own source/version/deployment workflow; it is not the production Hoopire deployment.
+
+Bubble Court now defaults to quick controls: tap the board to fire; hold and drag to aim, release to fire. Moving outside the board/launch area cancels. The optional Fine aim toggle expands the previous ruler and explicit SHOOT controls. Launch-zone failure and dunk scoring are unchanged.

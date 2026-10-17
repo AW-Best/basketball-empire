@@ -435,3 +435,9 @@
 - Pushed to AW-Best/basketball-empire main (a7bf690), author Aaron Wang.
 - Cloudflare production deployed, version 3f5a6298-ae7a-43e7-9f04-d905dd411258.
 - Verified live HTML contains fine-aim, shoot, game-over and play-again; live script includes launch-zone failure. Entry: https://hoopire.com/bubble-court/index.html
+
+## Bubble Court — quick mobile input
+- Default: tap to fire, hold/drag to preview and release to fire. Releasing outside the target area or pointer cancellation never fires.
+- Fine ruler and explicit Shoot moved into collapsed optional precision mode.
+- Removed fixed minimum screen heights, fitted bubble size to playfield height, retained red-line loss/replay and dunk behavior.
+- Architecture: gesture state in AimControl; existing physics/scoring unchanged. New tests observed red then green; 216 regression tests pass. Browser preview navigation unavailable; real-device smoke verification pending.
