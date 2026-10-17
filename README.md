@@ -69,3 +69,18 @@ Rooms are held in server memory for this first playable version. Restarting the 
 The included `render.yaml` defines a free Node.js web service with `/api/health` as its health check. Connect this repository to Render and deploy it as a Blueprint. Render supplies the `PORT` environment variable automatically, and the server already reads it.
 
 Free Render services may sleep when idle. Because rooms are held in memory, sleeping, restarting, or redeploying the service clears active rooms.
+
+## Bubble Court
+
+Solo bubble-shooter basketball practice is available from the mode hub or `/bubble-court/index.html`. Tap a target, slide the relative fine-aim ruler, then press SHOOT. Popping bubbles charges DUNK. Remaining bubbles that reach the red launch boundary end the session; PLAY AGAIN resets it.
+
+Source: `public/bubble-court/`. Tests: `test/bubble-court.test.js` and `test/bubble-court/`. Run `npm test` before release.
+
+### Production release
+
+1. Commit as Aaron Wang using this repository's local Git identity.
+2. Push to `origin` (`github-aaronwang2030:AW-Best/basketball-empire.git`). The SSH host alias chooses the configured key; GitHub reports its authenticated identity as AW-Best.
+3. Run `npm run deploy:cloudflare` with the authorized Cloudflare login. This invokes `wrangler deploy`, deploying `cloudflare/worker.mjs` and `public/` using `wrangler.jsonc`.
+4. Verify `https://hoopire.com/bubble-court/index.html` and the existing modes. GitHub push alone does not deploy: no automatic deployment workflow is configured in this checkout.
+
+The separate chatgpt.site prototype is hosted through Sites and has its own source/version/deployment workflow; it is not the production Hoopire deployment.

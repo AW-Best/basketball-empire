@@ -1,0 +1,7 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import * as motion from '../../public/bubble-court/motion.js';
+test('aim path reflects at the exact wall and reaches the ceiling',()=>{assert.equal(typeof motion.traceAim,'function');const p=motion.traceAim({x:50,y:150,vx:1,vy:-1,left:10,right:90,ceiling:10,balls:[],radius:10});assert.deepEqual(p[1],{x:90,y:110,bounce:true});assert.equal(p.at(-1).y,10);assert.ok(p.every(q=>q.x>=10&&q.x<=90));});
+test('aim terminates at first bubble collision rather than drawing through it',()=>{assert.equal(typeof motion.traceAim,'function');const p=motion.traceAim({x:50,y:150,vx:0,vy:-1,left:10,right:90,ceiling:10,balls:[{x:50,y:70}],radius:10});assert.ok(Math.abs(p.at(-1).y-88.7)<1e-8);assert.equal(p.at(-1).hit,true);});
+test('ball stays in hand through the gather, rise and rim contact',()=>{assert.equal(typeof motion.dunkPose,'function');for(const t of [0,.12,.3,.5,.6]){const p=motion.dunkPose(t);assert.deepEqual(p.ball,p.hand);}});
+test('dunk has anticipation, lift, ball falling through rim, and grounded recovery',()=>{assert.equal(typeof motion.dunkPose,'function');const start=motion.dunkPose(0),crouch=motion.dunkPose(.12),peak=motion.dunkPose(.5),drop=motion.dunkPose(.74),end=motion.dunkPose(1);assert.ok(crouch.hip.y>start.hip.y);assert.ok(peak.hip.y<start.hip.y-40);assert.ok(drop.ball.y>132);assert.ok(drop.ball.x>285&&drop.ball.x<325);assert.equal(end.foot.y,224);});
