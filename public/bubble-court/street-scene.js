@@ -1,5 +1,5 @@
 import * as T from '../vendor/three.module.min.js';
-import {STREET,COURT_LIGHTING as LIGHT} from './Constants.js?v=11';
+import {STREET,COURT_LIGHTING as LIGHT} from './Constants.js?v=12';
 
 /** Original instanced street environment with a locally loaded skinned athlete. */
 export function buildStreetScene(player){
@@ -33,15 +33,24 @@ export function buildStreetScene(player){
  const ringGeo=new T.TorusGeometry(.31,.032,6,30);resources.add(ringGeo);const rim=mesh(ringGeo,mat('#ff8139'));rim.name='rim';rim.rotation.x=Math.PI/2;rim.position.set(2.1,3.05,.35);
  const net=new T.Group();net.name='net';net.position.set(2.1,3.05,.35);scene.add(net);const netPoints=[];for(let i=0;i<12;i++){const a=i/12*Math.PI*2,b=a+.32;netPoints.push([Math.cos(a)*.29,0,Math.sin(a)*.29],[Math.cos(b)*.19,-.47,Math.sin(b)*.19]);}for(const y of [-.16,-.31,-.46]){const radius=.29+y*.2;for(let i=0;i<20;i++){const a=i/20*Math.PI*2,b=(i+1)/20*Math.PI*2;netPoints.push([Math.cos(a)*radius,y,Math.sin(a)*radius],[Math.cos(b)*radius,y,Math.sin(b)*radius]);}}lines(netPoints,'#f4eee2',.82,net);
  // Coherent skinned character, animated exclusively by its quaternion clip.
- const athlete=new T.Group();athlete.name='athlete';athlete.add(player.root);scene.add(athlete);
+ const athlete=new T.Group();athlete.name='athlete';athlete.add(player.root);if(player.rival)athlete.add(player.rival.root);scene.add(athlete);
  const ball=orb(0,0,0,.13,.13,.13,'#f79138');ball.name='basketball';const seamGeo=new T.TorusGeometry(1,.035,4,24);resources.add(seamGeo);for(let i=0;i<3;i++){const seam=mesh(seamGeo,mat('#653c25'),ball);seam.rotation.set(i===0?Math.PI/2:0,i===1?Math.PI/2:0,i===2?.5:0);}
  // Soft blob shadow, no realtime shadow map passes.
  const shadowGeo=new T.CircleGeometry(1,24);resources.add(shadowGeo);const size=LIGHT.shadowSize,pixels=new Uint8Array(size*size*4);for(let y=0;y<size;y++)for(let x=0;x<size;x++){const i=(y*size+x)*4,r=Math.hypot((x+.5-size/2)/(size/2),(y+.5-size/2)/(size/2)),alpha=Math.round(Math.pow(Math.max(0,1-r*r),2)*255);pixels.set([alpha,alpha,alpha,alpha],i);}const shadowTexture=new T.DataTexture(pixels,size,size,T.RGBAFormat);shadowTexture.needsUpdate=true;shadowTexture.magFilter=T.LinearFilter;resources.add(shadowTexture);const shadowMat=new T.MeshBasicMaterial({color:'#030d19',alphaMap:shadowTexture,transparent:true,opacity:LIGHT.shadowOpacity,depthWrite:false});resources.add(shadowMat);const shadow=mesh(shadowGeo,shadowMat);shadow.name='contact-shadow';shadow.rotation.x=-Math.PI/2;shadow.position.y=.04;
- function pose(t){player.sample(t);const hip=player.rig.pelvis.getWorldPosition(new T.Vector3());ball.position.copy(player.ballAt(t));ball.rotation.z=-t*8;shadow.position.x=hip.x;shadow.position.z=hip.z;shadow.scale.set(Math.max(.25,.65-(hip.y-1)*.18),Math.max(.18,.43-(hip.y-1)*.12),1);shadowMat.opacity=LIGHT.shadowOpacity*Math.max(.35,1-(hip.y-1)*.45);
+ const rivalShadow=player.rival?mesh(shadowGeo,shadowMat.clone()):null;if(rivalShadow){resources.add(rivalShadow.material);rivalShadow.rotation.x=-Math.PI/2;rivalShadow.position.y=.041;}
+ let duel={winner:'home',finale:false};
+ function setDuel(options={}){duel={winner:options.winner==='away'?'away':'home',finale:Boolean(options.finale)};}
+ function placeShadow(actor,blob){const hip=actor.rig.pelvis.getWorldPosition(new T.Vector3());blob.position.x=hip.x;blob.position.z=hip.z;blob.scale.set(Math.max(.3,.65-(hip.y-1)*.18),Math.max(.2,.43-(hip.y-1)*.12),1);blob.material.opacity=LIGHT.shadowOpacity*Math.max(.35,1-(hip.y-1)*.45);}
+ const waveGeo=new T.RingGeometry(.9,1,36);resources.add(waveGeo);const waveMat=new T.MeshBasicMaterial({color:'#ffd69b',transparent:true,opacity:0,depthWrite:false,side:T.DoubleSide});resources.add(waveMat);const wave=mesh(waveGeo,waveMat);wave.rotation.x=-Math.PI/2;wave.position.set(1.8,.055,1);
+ function pose(t){
+  const attacker=duel.winner==='away'&&player.rival?player.rival:player,defender=attacker===player?player.rival:player,attackT=duel.finale?Math.min(t,.83):t;
+  attacker.sample(attackT);if(duel.finale)attacker.celebrate(t);if(defender)defender.defend(t,duel);
+  ball.position.copy(attacker.ballAt(attackT));ball.rotation.z=-t*8;placeShadow(player,shadow);if(rivalShadow)placeShadow(player.rival,rivalShadow);
   const impact=t>=.6&&t<.8?Math.sin((t-.6)/.2*Math.PI):0;net.scale.y=1+impact*.3;rim.position.y=3.05-impact*.025;
+  const u=Math.max(0,Math.min(1,(t-.72)/.14));wave.scale.setScalar(.2+u*.85);waveMat.opacity=t>=.72&&t<.86?(1-u)*.55:0;
  }
  // Batch the skyline, windows and architecture by material into a few draw calls.
  for(const [color,transforms] of staticBoxes){const group=new T.InstancedMesh(box,mat(color),transforms.length);transforms.forEach((matrix,i)=>group.setMatrixAt(i,matrix));group.instanceMatrix.needsUpdate=true;group.computeBoundingSphere();scene.add(group);resources.add(group);}
  pose(0);
- return {scene,ball,athlete,pose,dispose(){player.dispose();for(const r of resources)r.dispose();scene.clear();}};
+ return {scene,ball,athlete,pose,setDuel,dispose(){player.dispose();for(const r of resources)r.dispose();scene.clear();}};
 }

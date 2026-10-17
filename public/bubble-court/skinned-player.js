@@ -39,10 +39,10 @@ function handTarget(t,x,y){const keys=[
  ];let i=0;while(i<keys.length-2&&t>keys[i+1][0])i++;const a=keys[i],b=keys[i+1],u=ease((t-a[0])/(b[0]-a[0]));return point(a[1]+(b[1]-a[1])*u,a[2]+(b[2]-a[2])*u,.35);}
 
 /** Genuine continuous CC0 skin; original dunk is baked to quaternion tracks on its real skeleton. */
-export function createSkinnedPlayer(model,motion=null){
+export function createSkinnedPlayer(model,motion=null,{jerseyColor='#0899b4',number='07'}={}){
  const root=new T.Group();root.name='AthleteRoot';model.scale.setScalar(1.12);root.add(model);root.updateMatrixWorld(true);
  const bones=[],rig={};model.traverse(n=>{if(n.isBone){bones.push(n);rig[n.name]=n;}});if(!rig.hand_r||!rig.foot_r)throw new Error('Unsupported humanoid rig');
- const owned=new Set(),skeletons=new Set();const skin=new T.Color('#a76b49'),jersey=new T.Color('#0899b4'),navy=new T.Color('#102d48'),white=new T.Color('#e7e9d9'),trim=new T.Color('#ffb758');
+ const owned=new Set(),skeletons=new Set();const skin=new T.Color('#a76b49'),jersey=new T.Color(jerseyColor),navy=new T.Color('#102d48'),white=new T.Color('#e7e9d9'),trim=new T.Color('#ffb758');
  model.traverse(o=>{if(!o.isMesh)return;if(o.isSkinnedMesh)skeletons.add(o.skeleton);o.frustumCulled=false;owned.add(o.geometry);if(o.material)owned.add(o.material);
   const material=new T.MeshStandardMaterial({color:o.name==='Eyebrows'?'#1b2027':o.name==='Eyes'?'#f0e8d7':'#ffffff',roughness:.82,metalness:0,side:T.FrontSide});owned.add(material);o.material=material;
   if(o.name==='SuperHero_Male'){const position=o.geometry.attributes.position,colors=new Float32Array(position.count*3);for(let i=0;i<position.count;i++){const x=position.getX(i),y=position.getY(i);let c=skin;if(y<.12)c=navy;else if(y<.23)c=white;else if(y>.67&&y<1.00)c=navy;else if(y>=1.00&&y<1.48&&Math.abs(x)<.285)c=Math.abs(x)>.235?trim:jersey;colors.set(c.toArray(),i*3);}o.geometry.setAttribute('color',new T.BufferAttribute(colors,3));material.vertexColors=true;}
@@ -53,7 +53,7 @@ export function createSkinnedPlayer(model,motion=null){
  for(const side of ['r','l']){const foot=rig['foot_'+side],pos=foot.getWorldPosition(new T.Vector3());accessory(new RoundedBoxGeometry(.19,.12,.34,2,.035),'#e4e8de',foot,pos.clone().add(point(0,-.035,.075)));accessory(new RoundedBoxGeometry(.20,.03,.35,1,.012),'#153a50',foot,pos.clone().add(point(0,-.081,.075)));accessory(new T.BoxGeometry(.201,.027,.13),'#ffad49',foot,pos.clone().add(point(0,-.025,.075)));}
  for(const x of [-.035,.035])accessory(new T.SphereGeometry(.014,8,6),'#12212c',rig.Head,point(x,1.904,.093));
  if(typeof document!=='undefined'){
-  const canvas=document.createElement('canvas');canvas.width=128;canvas.height=128;const c=canvas.getContext('2d');c.fillStyle='#fff4d8';c.font='900 84px sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText('07',64,68);const texture=new T.CanvasTexture(canvas);texture.colorSpace=T.SRGBColorSpace;owned.add(texture);const material=new T.MeshBasicMaterial({map:texture,transparent:true,depthWrite:false});owned.add(material);const geometry=new T.PlaneGeometry(.22,.22);owned.add(geometry);attach(new T.Mesh(geometry,material),rig.spine_03,point(0,1.49,.174));
+  const canvas=document.createElement('canvas');canvas.width=128;canvas.height=128;const c=canvas.getContext('2d');c.fillStyle='#fff4d8';c.font='900 84px sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText(number,64,68);const texture=new T.CanvasTexture(canvas);texture.colorSpace=T.SRGBColorSpace;owned.add(texture);const material=new T.MeshBasicMaterial({map:texture,transparent:true,depthWrite:false});owned.add(material);const geometry=new T.PlaneGeometry(.22,.22);owned.add(geometry);attach(new T.Mesh(geometry,material),rig.spine_03,point(0,1.49,.174));
  }
  root.updateMatrixWorld(true);
  const rests=bones.map(b=>({bone:b,q:b.quaternion.clone()})),footOrientation={r:rig.foot_r.getWorldQuaternion(new T.Quaternion()),l:rig.foot_l.getWorldQuaternion(new T.Quaternion())},restHip=rig.pelvis.getWorldPosition(new T.Vector3()).y;
@@ -70,16 +70,39 @@ export function createSkinnedPlayer(model,motion=null){
  const samples=121,times=[],positions=[],orientations=[],values=bones.map(()=>[]);for(let i=0;!motion&&i<samples;i++){const t=i/(samples-1);author(t);times.push(t);positions.push(...root.position.toArray());orientations.push(...root.quaternion.toArray());bones.forEach((b,j)=>values[j].push(...b.quaternion.toArray()));}
  const tracks=motion?[]:[new T.VectorKeyframeTrack('AthleteRoot.position',times,positions),new T.QuaternionKeyframeTrack('AthleteRoot.quaternion',times,orientations),...bones.map((b,i)=>new T.QuaternionKeyframeTrack(`${b.name}.quaternion`,times,values[i]))];
  const clip=motion?T.AnimationClip.parse(motion.clip):new T.AnimationClip('Hoopire_SingleHandDunk',1,tracks),mixer=new T.AnimationMixer(root),action=mixer.clipAction(clip);action.setLoop(T.LoopOnce,1);action.clampWhenFinished=true;
- function sample(t){action.reset().play();mixer.setTime(Math.max(0,Math.min(1,t)));root.updateMatrixWorld(true);}
+ function neutral(){mixer.stopAllAction();rests.forEach(r=>r.bone.quaternion.copy(r.q));root.position.set(0,0,0);root.quaternion.identity();root.updateMatrixWorld(true);}
+ function sample(t){root.quaternion.identity();action.reset().play();mixer.setTime(Math.max(0,Math.min(1,t)));root.updateMatrixWorld(true);}
  const getGrip=()=>rig.hand_r.localToWorld(gripOffset.clone());sample(.6);const release=getGrip();sample(0);
  function ballAt(t){if(t<=.6||motion&&t>=.84)return getGrip();if(motion){const floor=release.clone().add(point(.30,-2.90,.10));if(t<=.77){const u=(t-.6)/.17;return release.clone().lerp(floor,u*u);}return floor.lerp(getGrip(),ease((t-.77)/.07));}const u=Math.min(1,(t-.6)/.4),fall=ease(u);return release.clone().add(point(.38*fall,-2.85*fall,.18*fall));}
- return {root,bones,rig,clip,mixer,sample,getGrip,ballAt,dispose(){mixer.stopAllAction();mixer.uncacheRoot(root);for(const skeleton of skeletons)skeleton.dispose();for(const r of owned)r.dispose();root.removeFromParent();}};
+ function defend(t,{finale=false}={}){
+  neutral();const smooth=(a,b)=>ease((t-a)/(b-a)),fall=smooth(.6,.76),recovery=finale?0:smooth(.86,1),down=fall*(1-recovery),contest=Math.sin(Math.PI*Math.max(0,Math.min(1,(t-.38)/.34)))*.52*(1-fall);
+  const x=1.05,z=.90,y=restHip-.08+contest;root.position.set(x,y-restHip,z);root.quaternion.setFromAxisAngle(UP,-Math.PI/2);root.updateMatrixWorld(true);
+  const reach=smooth(.25,.49)*(1-down),brace=down;
+  for(const [side,sign] of [['r',1],['l',-1]]){
+   const hand=point(x-.20+brace*.22,y+.26+reach*.84-brace*.48,z+sign*(.26+brace*.18));
+   solveChain(rig['upperarm_'+side],rig['lowerarm_'+side],rig['hand_'+side],hand,point(.4,0,sign));
+   const foot=point(x+.10+sign*.11,y-restHip+.10,z+sign*.22);
+   solveChain(rig['thigh_'+side],rig['calf_'+side],rig['foot_'+side],foot,point(-1,0,sign*.15));
+  }
+  root.updateMatrixWorld(true);const pivot=rig.pelvis.getWorldPosition(new T.Vector3()),tilt=new T.Quaternion().setFromAxisAngle(Z,-down*1.46);root.quaternion.premultiply(tilt);root.position.sub(pivot).applyQuaternion(tilt).add(pivot);root.position.x+=down*.72;root.position.z+=down*.14;root.position.y-=down*.69;root.updateMatrixWorld(true);
+  let low=Infinity;for(const name of ['Head','hand_r','hand_l','foot_r','foot_l','pelvis','calf_r','calf_l'])low=Math.min(low,rig[name].getWorldPosition(new T.Vector3()).y-.115);if(low<.045){root.position.y+=.045-low;root.updateMatrixWorld(true);}
+ }
+ function celebrate(t){const u=ease((t-.83)/.14);if(!u)return;const grip=getGrip(),hip=rig.pelvis.getWorldPosition(new T.Vector3()),target=point(hip.x-.05,hip.y+.96,hip.z+.30);solveChain(rig.upperarm_r,rig.lowerarm_r,rig.hand_r,grip.lerp(target,u),point(-1,0,1));root.updateMatrixWorld(true);}
+ let disposed=false;
+ return {root,bones,rig,clip,mixer,sample,neutral,defend,celebrate,getGrip,ballAt,dispose(){if(disposed)return;disposed=true;mixer.stopAllAction();mixer.uncacheRoot(root);for(const skeleton of skeletons)skeleton.dispose();for(const r of owned)r.dispose();root.removeFromParent();}};
 }
 export async function loadSkinnedPlayer({timeout=10000,fetcher=fetch}={}){
- const controller=new AbortController();let timer;
+ const controller=new AbortController();let timer,home,rival;
  const expired=new Promise((_resolve,reject)=>{timer=setTimeout(()=>{const error=new DOMException('Player model load timed out','TimeoutError');controller.abort(error);reject(error);},timeout);});
  const work=(async()=>{const {GLTFLoader}=await import('../vendor/loaders/GLTFLoader.js');if(controller.signal.aborted)throw controller.signal.reason;
-  const options={signal:controller.signal},[response,motionResponse]=await Promise.all([fetcher(new URL('./assets/player-base.glb',import.meta.url).href,options),fetcher(new URL('./assets/dunk-motion.json?v=11',import.meta.url).href,options)]);
-  if(!response.ok||!motionResponse.ok)throw new Error('Player or dunk motion unavailable');const[bytes,motion]=await Promise.all([response.arrayBuffer(),motionResponse.json()]),gltf=await new GLTFLoader().parseAsync(bytes,new URL('./assets/',import.meta.url).href);if(controller.signal.aborted)throw controller.signal.reason;return createSkinnedPlayer(gltf.scene,motion);})();
- try{return await Promise.race([work,expired]);}finally{clearTimeout(timer);}
+  const options={signal:controller.signal},[response,motionResponse]=await Promise.all([fetcher(new URL('./assets/player-base.glb',import.meta.url).href,options),fetcher(new URL('./assets/dunk-motion.json?v=12',import.meta.url).href,options)]);
+  if(!response.ok||!motionResponse.ok)throw new Error('Player or dunk motion unavailable');const[bytes,motion]=await Promise.all([response.arrayBuffer(),motionResponse.json()]);
+  const base=new URL('./assets/',import.meta.url).href;
+  home=createSkinnedPlayer((await new GLTFLoader().parseAsync(bytes,base)).scene,motion);
+  if(controller.signal.aborted){home.dispose();throw controller.signal.reason;}
+  rival=createSkinnedPlayer((await new GLTFLoader().parseAsync(bytes,base)).scene,motion,{jerseyColor:'#f18435',number:'23'});
+  const dispose=home.dispose;home.rival=rival;home.dispose=()=>{dispose();rival.dispose();};
+  if(controller.signal.aborted){home.dispose();throw controller.signal.reason;}return home;
+ })();
+ try{return await Promise.race([work,expired]);}catch(error){controller.abort(error);home?.dispose();rival?.dispose();throw error;}finally{clearTimeout(timer);}
 }

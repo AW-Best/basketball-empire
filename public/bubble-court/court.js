@@ -1,21 +1,21 @@
-import {events,Events,emit} from './EventBus.js?v=11';
-import {dunkTime} from './effects.js?v=11';
-import {DunkClock} from './street-motion.js?v=11';
-import {FX} from './Constants.js?v=11';
+import {events,Events,emit} from './EventBus.js?v=12';
+import {dunkTime} from './effects.js?v=12';
+import {DunkClock} from './street-motion.js?v=12';
+import {FX} from './Constants.js?v=12';
 import {dunkPose} from './motion.js';
 /** A joint-based 2D player. Every limb is interpolated; the ball follows the hand until rim contact. */
 export class CourtAnimation{
  constructor(canvas){this.canvas=canvas;this.ctx=canvas.getContext('2d');this.clock=new DunkClock(FX.dunkDuration);this.last=0;this.start=0;this.rest=0;this.active=false;this.paused=false;this.pauseStart=0;this.reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;new ResizeObserver(()=>this.resize()).observe(canvas);this.resize();this.tick=this.tick.bind(this);requestAnimationFrame(this.tick);}
  resize(){const r=this.canvas.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);this.canvas.width=Math.max(1,r.width*d);this.canvas.height=Math.max(1,r.height*d);}
- play({preview=false}={}){this.clock.play(preview);this.last=performance.now();this.preview=preview;this.impacted=false;this.start=performance.now();this.active=true;}
+ play(options={}){const preview=Boolean(options.preview);this.playback={...options,preview};this.clock.play(preview);this.last=performance.now();this.preview=preview;this.impacted=false;this.start=performance.now();this.active=true;}
  reset(){this.clock.reset();this.last=0;this.active=false;this.rest=0;}
  line(points,color,width){const c=this.ctx;c.strokeStyle=color;c.lineWidth=width;c.lineCap='round';c.lineJoin='round';c.beginPath();points.forEach((p,i)=>i?c.lineTo(p.x,p.y):c.moveTo(p.x,p.y));c.stroke();}
  ellipse(x,y,rx,ry,color){const c=this.ctx;c.fillStyle=color;c.beginPath();c.ellipse(x,y,rx,ry,0,0,Math.PI*2);c.fill();}
  setPaused(value){this.paused=value;this.last=0;}
- tick(now){if(document.hidden||this.paused){this.last=0;requestAnimationFrame(this.tick);return;}const delta=this.last?Math.min(100,now-this.last):0;this.last=now;const state=this.clock.advance(delta);this.active=this.clock.active;if(state.impact)emit(Events.IMPACT,{preview:state.preview});if(state.done)emit(Events.DUNK_END,{preview:state.preview});const c=this.ctx,W=this.canvas.width,H=this.canvas.height;c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,W,H);c.scale(W/390,H/240);
+ tick(now){if(document.hidden||this.paused){this.last=0;requestAnimationFrame(this.tick);return;}const delta=this.last?Math.min(100,now-this.last):0;this.last=now;const state=this.clock.advance(delta);this.active=this.clock.active;if(state.impact)emit(Events.IMPACT,{...this.playback,preview:state.preview});if(state.done)emit(Events.DUNK_END,{...this.playback,preview:state.preview});const c=this.ctx,W=this.canvas.width,H=this.canvas.height;c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,W,H);c.scale(W/390,H/240);
  let t=state.t;if(this.reduced&&this.active)t=.74;
  const visualT=dunkTime(t,this.reduced);
- const p=dunkPose(visualT),hip=p.hip,shoulder={x:hip.x-5,y:hip.y-34},head={x:shoulder.x-1,y:shoulder.y-15},impact=visualT>=.59&&visualT<.8,shake=impact&&!this.reduced?Math.sin((visualT-.59)*120)*2*(1-(visualT-.59)/.21):0;
+ const p=dunkPose(this.playback?.finale?Math.min(visualT,.86):visualT),hip=p.hip,shoulder={x:hip.x-5,y:hip.y-34},head={x:shoulder.x-1,y:shoulder.y-15},impact=visualT>=.59&&visualT<.8,shake=impact&&!this.reduced?Math.sin((visualT-.59)*120)*2*(1-(visualT-.59)/.21):0;
  const phase=visualT;
  c.save();if(this.active&&!this.reduced&&impact)c.translate(shake*.8,shake*.5);
  // Court spectators react as the ball passes through the hoop.
@@ -27,12 +27,15 @@ export class CourtAnimation{
  this.ellipse(hip.x,227,Math.max(13,24-(190-hip.y)*.15),4,'#020c2088');
  // Backboard support and glass, with a subtle impact vibration.
  this.line([{x:358,y:222},{x:358,y:95},{x:331,y:100}],'#13283b',7);c.fillStyle='#c7edf33b';c.strokeStyle='#d2f6ffbb';c.lineWidth=2;c.beginPath();c.moveTo(283,92);c.lineTo(336,84);c.lineTo(336,128);c.lineTo(283,136);c.closePath();c.fill();c.stroke();c.strokeStyle='#effaff';c.strokeRect(298,108,24,20);
+ // Opposing crew contests, then falls backwards at rim contact.
+ const ease=u=>{u=Math.max(0,Math.min(1,u));return u*u*(3-2*u);},down=ease((visualT-.60)/.16)*(this.playback?.finale?1:1-ease((visualT-.86)/.14)),away=this.playback?.winner==='away',defenderColour=away?'#13b4c9':'#f18435';
+ c.save();c.translate(245+down*29,203+down*13);c.rotate(down*Math.PI*.47);this.ellipse(0,-51,8,10,'#bc805b');this.line([{x:0,y:-39},{x:0,y:-15}],defenderColour,21);this.line([{x:-4,y:-14},{x:-12,y:9}],'#a56e50',7);this.line([{x:5,y:-14},{x:12,y:9}],'#a56e50',7);this.line([{x:-14,y:11},{x:-4,y:11}],'#ecf4ed',5);this.line([{x:10,y:11},{x:20,y:11}],'#ecf4ed',5);const contestReach=ease((visualT-.25)/.25)*(1-down);for(const sign of [-1,1])this.line([{x:sign*9,y:-37},{x:sign*18,y:-39-contestReach*17},{x:sign*19,y:-30-contestReach*43}],'#bc805b',6);c.fillStyle='#fff0d7';c.font='bold 11px sans-serif';c.textAlign='center';c.fillText(away?'07':'23',0,-20);c.restore();
  // Far leg first, then near leg; outlined limbs create a coherent silhouette.
  const drawLeg=(k,f,near)=>{this.line([hip,k,f],'#08162a',15);this.line([hip,k],near?'#197dcc':'#115c9e',11);this.line([k,{x:f.x,y:f.y-4}],near?'#bf805b':'#945d43',7);this.line([{x:f.x-5,y:f.y-1},{x:f.x+9,y:f.y-1}],'#d5f5ff',7);this.line([{x:f.x-5,y:f.y+2},{x:f.x+9,y:f.y+2}],'#193a50',2);};drawLeg(p.knee2,p.foot2,false);
  const reach=this.active?Math.sin(phase*Math.PI)*16:0,backHand={x:shoulder.x-22-reach,y:shoulder.y+17-reach},backElbow={x:shoulder.x-22-reach*.5,y:shoulder.y-1};this.line([shoulder,backElbow,backHand],'#102034',12);this.line([shoulder,backElbow,backHand],'#a86e4c',8);
  drawLeg(p.knee,p.foot,true);
  // Jersey and shorts follow the torso, with shoulders and a tapered waist.
- const g=c.createLinearGradient(hip.x-20,0,hip.x+12,0);g.addColorStop(0,'#094b8a');g.addColorStop(.5,'#32b7e8');g.addColorStop(1,'#0f72b6');c.fillStyle=g;c.strokeStyle='#091f37';c.lineWidth=2;c.beginPath();c.moveTo(shoulder.x-12,shoulder.y);c.lineTo(shoulder.x+11,shoulder.y);c.lineTo(hip.x+12,hip.y);c.lineTo(hip.x-14,hip.y);c.closePath();c.fill();c.stroke();this.line([{x:shoulder.x-8,y:shoulder.y+5},{x:hip.x-10,y:hip.y-4}],'#adf2ff',2);c.fillStyle='#e1fbff';c.font='bold 13px sans-serif';c.textAlign='center';c.fillText('07',hip.x-3,hip.y-11);
+ const g=c.createLinearGradient(hip.x-20,0,hip.x+12,0);g.addColorStop(0,away?'#a9461b':'#094b8a');g.addColorStop(.5,away?'#ffae53':'#32b7e8');g.addColorStop(1,away?'#df6c2c':'#0f72b6');c.fillStyle=g;c.strokeStyle='#091f37';c.lineWidth=2;c.beginPath();c.moveTo(shoulder.x-12,shoulder.y);c.lineTo(shoulder.x+11,shoulder.y);c.lineTo(hip.x+12,hip.y);c.lineTo(hip.x-14,hip.y);c.closePath();c.fill();c.stroke();this.line([{x:shoulder.x-8,y:shoulder.y+5},{x:hip.x-10,y:hip.y-4}],'#adf2ff',2);c.fillStyle='#e1fbff';c.font='bold 13px sans-serif';c.textAlign='center';c.fillText(away?'23':'07',hip.x-3,hip.y-11);
  this.ellipse(head.x,head.y,9,11,'#c68c63');this.ellipse(head.x+8,head.y+1,2,3,'#bd7d55');c.fillStyle='#101b2a';c.beginPath();c.arc(head.x,head.y-4,10,Math.PI,Math.PI*2);c.lineTo(head.x+8,head.y-2);c.lineTo(head.x-9,head.y-1);c.fill();c.fillStyle='#162636';c.fillRect(head.x+4,head.y-1,2,1.6);
  const elbow={x:shoulder.x+(p.hand.x-shoulder.x)*.55+5,y:shoulder.y+(p.hand.y-shoulder.y)*.5+6};this.line([shoulder,elbow,p.hand],'#101e30',13);this.line([shoulder,elbow,p.hand],'#c58a62',9);this.ellipse(p.hand.x,p.hand.y,5,4,'#d29b71');
  // Ball is physically attached to the hand until release, then falls through the hoop.

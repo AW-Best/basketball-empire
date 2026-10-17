@@ -20,3 +20,13 @@
 @media(max-height:700px){#street-court{top:30px;height:calc(100% - 30px)}}
 
 #game-over.victory h2{color:#84f0ed}
+
+/* Two-team poster dunk presentation, with phone-sized preview targets. */
+.duel-preview{position:absolute;bottom:0;right:0;display:flex;z-index:8;gap:1px;background:#08182ce8;border-radius:8px 0 0 0;overflow:hidden}
+.duel-preview button,#preview-dunk{position:static;min-height:44px;min-width:100px;border:0;border-radius:0;background:transparent;padding:0 9px;font:800 9px sans-serif;color:#a2f8ff;letter-spacing:.4px;touch-action:manipulation}
+.duel-preview #preview-rival{color:#ffc38a}.duel-preview i{display:inline-block;width:6px;height:6px;background:#16becb;border-radius:50%;margin-right:3px}.duel-preview #preview-rival i{background:#f18435}.duel-preview button:disabled{opacity:.4}
+.court{height:30%;min-height:210px}.court-caption{bottom:8px;font-size:6px;max-width:calc(100% - 210px)}#court-callout{bottom:46px;left:12px;font-size:13px}
+#street-court{top:36px;height:calc(100% - 62px)}
+@media(max-height:700px){.court{height:33%;min-height:184px}.duel-preview button,#preview-dunk{min-height:44px;font-size:8px;min-width:95px}#street-court{top:30px;height:calc(100% - 54px)}#court-callout{bottom:44px;font-size:11px}.court-caption{font-size:5px}}
+
+.court-caption{color:#d3e4ef;background:#0b1c30d9;padding:4px 6px;letter-spacing:.5px;font-weight:700}.duel-preview{border-top:1px solid #6594aa33}#court-callout{max-width:calc(100% - 20px)}
