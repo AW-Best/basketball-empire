@@ -1,21 +1,22 @@
-import {events,Events,emit} from './EventBus.js?v=8';
-import {dunkTime} from './effects.js?v=8';
-import {FX} from './Constants.js?v=8';
+import {events,Events,emit} from './EventBus.js?v=9';
+import {dunkTime} from './effects.js?v=9';
+import {DunkClock} from './street-motion.js?v=9';
+import {FX} from './Constants.js?v=9';
 import {dunkPose} from './motion.js';
 /** A joint-based 2D player. Every limb is interpolated; the ball follows the hand until rim contact. */
 export class CourtAnimation{
- constructor(canvas){this.canvas=canvas;this.ctx=canvas.getContext('2d');this.start=0;this.rest=0;this.active=false;this.reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;new ResizeObserver(()=>this.resize()).observe(canvas);this.resize();this.tick=this.tick.bind(this);requestAnimationFrame(this.tick);}
+ constructor(canvas){this.canvas=canvas;this.ctx=canvas.getContext('2d');this.clock=new DunkClock();this.last=0;this.start=0;this.rest=0;this.active=false;this.paused=false;this.pauseStart=0;this.reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;new ResizeObserver(()=>this.resize()).observe(canvas);this.resize();this.tick=this.tick.bind(this);requestAnimationFrame(this.tick);}
  resize(){const r=this.canvas.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);this.canvas.width=Math.max(1,r.width*d);this.canvas.height=Math.max(1,r.height*d);}
- play({preview=false}={}){this.preview=preview;this.impacted=false;this.start=performance.now();this.active=true;}
- reset(){this.active=false;this.rest=0;}
+ play({preview=false}={}){this.clock.play(preview);this.last=performance.now();this.preview=preview;this.impacted=false;this.start=performance.now();this.active=true;}
+ reset(){this.clock.reset();this.last=0;this.active=false;this.rest=0;}
  line(points,color,width){const c=this.ctx;c.strokeStyle=color;c.lineWidth=width;c.lineCap='round';c.lineJoin='round';c.beginPath();points.forEach((p,i)=>i?c.lineTo(p.x,p.y):c.moveTo(p.x,p.y));c.stroke();}
  ellipse(x,y,rx,ry,color){const c=this.ctx;c.fillStyle=color;c.beginPath();c.ellipse(x,y,rx,ry,0,0,Math.PI*2);c.fill();}
- tick(now){const c=this.ctx,W=this.canvas.width,H=this.canvas.height;c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,W,H);c.scale(W/390,H/240);
- let t=this.active?Math.min(1,(now-this.start)/FX.dunkDuration):this.rest;if(t>=1){this.active=false;this.rest=1;}if(this.reduced&&this.active)t=.74;
+ setPaused(value){this.paused=value;this.last=0;}
+ tick(now){if(document.hidden||this.paused){this.last=0;requestAnimationFrame(this.tick);return;}const delta=this.last?Math.min(100,now-this.last):0;this.last=now;const state=this.clock.advance(delta);this.active=this.clock.active;if(state.impact)emit(Events.IMPACT,{preview:state.preview});if(state.done)emit(Events.DUNK_END,{preview:state.preview});const c=this.ctx,W=this.canvas.width,H=this.canvas.height;c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,W,H);c.scale(W/390,H/240);
+ let t=state.t;if(this.reduced&&this.active)t=.74;
  const visualT=dunkTime(t,this.reduced);
  const p=dunkPose(visualT),hip=p.hip,shoulder={x:hip.x-5,y:hip.y-34},head={x:shoulder.x-1,y:shoulder.y-15},impact=visualT>=.59&&visualT<.8,shake=impact&&!this.reduced?Math.sin((visualT-.59)*120)*2*(1-(visualT-.59)/.21):0;
  const phase=visualT;
- if(this.active&&phase>=.6&&!this.impacted){this.impacted=true;emit(Events.IMPACT,{preview:this.preview});}
  c.save();if(this.active&&!this.reduced&&impact)c.translate(shake*.8,shake*.5);
  // Court spectators react as the ball passes through the hoop.
  for(let i=0;i<13;i++){const x=18+i*28,y=207+(i%3)*2,lift=impact?Math.sin(i+phase*30)*3:0;this.ellipse(x,y-14+lift,3.6,4,'#10233ce6');this.line([{x,y:y-9+lift},{x:x+1,y:y+3}],'#172e48',6);this.line([{x:x-6,y:y-5-(impact?8:0)},{x,y:y-9+lift},{x:x+7,y:y-4-(impact?9:0)}],'#17314d',2);}

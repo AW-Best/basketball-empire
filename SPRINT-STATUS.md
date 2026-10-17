@@ -450,3 +450,13 @@
 - [x] Rim-contact clear, input lock, reset cancellation, preview isolation and one-shot fallback for background tabs.
 - [x] 220 tests pass. Production version 27107c77-2ed3-4964-b9f2-e9de03883334 deployed to hoopire.com; commit b329c08 pushed as Aaron.
 - [x] Live 390×844 browser smoke: shots charged 48 → 96 → 100, dunk spent bar to 0, score became 02, deepest single occupied row cleared, controls unlocked afterward; no browser errors.
+
+## Sunset Court 3D challenge
+- [x] /po vision, /sm AC, independent /arch and /ui design approval in docs/sprints/bubble-court-3d.md.
+- [x] Test-first session outcomes, streak/stars, 3D keyframes, pixel budget, geometry budget and pause/impact clock.
+- [x] Local low-poly 3D court/athlete, 2D fallback, bounded resolution and frame pacing.
+- [x] 3-dunk/30-shot challenge, win/loss summary, guide and copyable challenge result.
+- [x] Independent /rev approved after fallback lifecycle fixes; /ui layout approved.
+- [x] Local390×844 actual9-shot/3-dunk three-star win, replay,5-shot danger failure;320×568guide/viewport fit, actualWebGL impact and no browser errors.
+- [x] Full231tests green; low-poly geometry and static architecture instancing cut draw calls.
+- [ ] Production deploy and live verification.

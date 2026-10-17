@@ -72,7 +72,7 @@ Free Render services may sleep when idle. Because rooms are held in memory, slee
 
 ## Bubble Court
 
-Solo bubble-shooter basketball practice is available from the mode hub or `/bubble-court/index.html`. Tap a target, slide the relative fine-aim ruler, then press SHOOT. Popping bubbles charges DUNK. Remaining bubbles that reach the red launch boundary end the session; PLAY AGAIN resets it.
+Sunset Court is a solo 3D basketball bubble challenge at `/bubble-court/`: land 3 dunks in 30 shots. Tap a target to shoot, or hold/drag/release to aim. Fine aim remains optional. Match 3+ bubbles to charge DUNK; rim impact clears the deepest occupied row without generating energy. Danger-line contact loses. A charged final shot still permits one last dunk. Win/loss show stats, efficiency stars and replay; local best shot count persists. The ? button reopens the first-visit guide. COPY CHALLENGE LINK copies a run summary for the player to paste; nothing is automatically posted.
 
 Source: `public/bubble-court/`. Tests: `test/bubble-court.test.js` and `test/bubble-court/`. Run `npm test` before release.
 
@@ -85,4 +85,9 @@ Source: `public/bubble-court/`. Tests: `test/bubble-court.test.js` and `test/bub
 
 The separate chatgpt.site prototype is hosted through Sites and has its own source/version/deployment workflow; it is not the production Hoopire deployment.
 
-Bubble Court now defaults to quick controls: tap the board to fire; hold and drag to aim, release to fire. Moving outside the board/launch area cancels. The optional Fine aim toggle expands the previous ruler and explicit SHOOT controls. Launch-zone failure and dunk scoring are unchanged.
+Bubble Court now defaults to quick controls: tap the board to fire; hold and drag to aim, release to fire. Moving outside the board/launch area cancels. The optional Fine aim toggle expands the previous ruler and explicit SHOOT controls. Launch-zone failure and +2 dunk scoring remain; the new challenge wraps them with a finite goal.
+
+### 3D mobile rendering
+The local Three.js scene uses original procedural mesh art and shared low-poly geometry. It caps DPR at1.5 and its drawing buffer at240,000pixels, renders idle at15fps and active at up to60fps with a30fps slow-frame fallback. No realtime shadow maps, postprocessing, remote model downloads or CDN are needed. Background/guide pause simulation; reduced-motion avoids camera movement. Unsupported or lost WebGL2 falls back to the existing2D animation with the same impact/completion clock. These are rendering limits, not a frame-rate guarantee on every phone.
+
+Try390×844 and320×568 layouts, play a full three-dunk win, trigger danger failure, replay, reopen Help and check no stats change during preview. Run `npm test` before release. Implementation/design: `docs/sprints/bubble-court-3d.md`.
