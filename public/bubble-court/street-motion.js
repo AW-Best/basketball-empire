@@ -1,4 +1,4 @@
-import {STREET} from './Constants.js?v=10';
+import {STREET} from './Constants.js?v=11';
 // Authored joint poses in metres: gather → rise → rim → hang → recovery.
 const keys=[
  [0,-1.7,1.0,-1.12,1.28,-1.92,.1,-1.42,.1],
@@ -16,8 +16,8 @@ export function streetPose(value){const t=Math.max(0,Math.min(1,value));let i=0;
 export function renderBudget(width,height,dpr=1){const ratio=Math.min(STREET.maxDpr,Math.max(1,dpr)),scale=Math.min(1,Math.sqrt(STREET.maxPixels/(Math.max(1,width)*Math.max(1,height)*ratio*ratio)));return {width:Math.max(1,Math.floor(width*ratio*scale)),height:Math.max(1,Math.floor(height*ratio*scale)),ratio:ratio*scale};}
 export function renderInterval({active=false,slow=false,hidden=false}={}){return hidden?Infinity:1000/(active?(slow?STREET.slowFps:STREET.activeFps):STREET.idleFps);}
 export class DunkClock{
- constructor(){this.reset();}
+ constructor(duration=STREET.duration){this.duration=duration;this.reset();}
  reset(){this.elapsed=0;this.active=false;this.impacted=false;this.preview=false;}
  play(preview=false){this.reset();this.active=true;this.preview=preview;}
- advance(ms,{paused=false}={}){let impact=false,done=false;if(this.active&&!paused){this.elapsed+=Math.max(0,ms);if(!this.impacted&&this.elapsed>=STREET.duration*STREET.impactTime){this.impacted=true;impact=true;}if(this.elapsed>=STREET.duration){this.active=false;done=true;}}return {t:Math.min(1,this.elapsed/STREET.duration),impact,done,preview:this.preview};}
+ advance(ms,{paused=false}={}){let impact=false,done=false;if(this.active&&!paused){this.elapsed+=Math.max(0,ms);if(!this.impacted&&this.elapsed>=this.duration*STREET.impactTime){this.impacted=true;impact=true;}if(this.elapsed>=this.duration){this.active=false;done=true;}}return {t:Math.min(1,this.elapsed/this.duration),impact,done,preview:this.preview};}
 }

@@ -1,11 +1,11 @@
-import {events,Events,emit} from './EventBus.js?v=10';
-import {dunkTime} from './effects.js?v=10';
-import {DunkClock} from './street-motion.js?v=10';
-import {FX} from './Constants.js?v=10';
+import {events,Events,emit} from './EventBus.js?v=11';
+import {dunkTime} from './effects.js?v=11';
+import {DunkClock} from './street-motion.js?v=11';
+import {FX} from './Constants.js?v=11';
 import {dunkPose} from './motion.js';
 /** A joint-based 2D player. Every limb is interpolated; the ball follows the hand until rim contact. */
 export class CourtAnimation{
- constructor(canvas){this.canvas=canvas;this.ctx=canvas.getContext('2d');this.clock=new DunkClock();this.last=0;this.start=0;this.rest=0;this.active=false;this.paused=false;this.pauseStart=0;this.reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;new ResizeObserver(()=>this.resize()).observe(canvas);this.resize();this.tick=this.tick.bind(this);requestAnimationFrame(this.tick);}
+ constructor(canvas){this.canvas=canvas;this.ctx=canvas.getContext('2d');this.clock=new DunkClock(FX.dunkDuration);this.last=0;this.start=0;this.rest=0;this.active=false;this.paused=false;this.pauseStart=0;this.reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;new ResizeObserver(()=>this.resize()).observe(canvas);this.resize();this.tick=this.tick.bind(this);requestAnimationFrame(this.tick);}
  resize(){const r=this.canvas.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);this.canvas.width=Math.max(1,r.width*d);this.canvas.height=Math.max(1,r.height*d);}
  play({preview=false}={}){this.clock.play(preview);this.last=performance.now();this.preview=preview;this.impacted=false;this.start=performance.now();this.active=true;}
  reset(){this.clock.reset();this.last=0;this.active=false;this.rest=0;}

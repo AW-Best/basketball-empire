@@ -1,24 +1,24 @@
-import {AimControl} from './controls.js?v=10';
-import {BubbleEffects} from './effects.js?v=10';
-import {events,Events,emit} from './EventBus.js?v=10';
-import {traceAim,bubbleRadius} from './motion.js?v=10';
-import {createCourt} from './court-loader.js?v=10';
-import {StreetSession} from './session.js?v=10';
-import {STREET} from './Constants.js?v=10';
-import {initialBoard,neighbors,resolveShot,activateDunk,clearBottomRow,touchesLaunch} from './engine.js?v=10';
+import {AimControl} from './controls.js?v=11';
+import {BubbleEffects} from './effects.js?v=11';
+import {events,Events,emit} from './EventBus.js?v=11';
+import {traceAim,bubbleRadius} from './motion.js?v=11';
+import {createCourt} from './court-loader.js?v=11';
+import {StreetSession} from './session.js?v=11';
+import {STREET} from './Constants.js?v=11';
+import {initialBoard,neighbors,resolveShot,activateDunk,clearBottomRow,touchesLaunch} from './engine.js?v=11';
 const $=s=>document.querySelector(s),canvas=$('#board'),ctx=canvas.getContext('2d');
 const visualEffects=new BubbleEffects(canvas);
 events.addEventListener(Events.POP,e=>{visualEffects.pop(e.detail);if(!visualEffects.reduced)document.querySelector('.energy').animate([{filter:'brightness(1)'},{filter:'brightness(1.8)'},{filter:'brightness(1)'}],{duration:500});});
 events.addEventListener(Events.ROW_CLEAR,e=>visualEffects.pop({...e.detail,dropped:[],gained:0,dunk:true}));
 events.addEventListener(Events.RESET,()=>visualEffects.clear());
 const courtAnimation=await createCourt(document.querySelector('#court-animation'));
-events.addEventListener(Events.DUNK,e=>courtAnimation.play(e.detail));
+events.addEventListener(Events.DUNK,e=>{previewActive=Boolean(e.detail.preview);courtAnimation.play(e.detail);update();});
 events.addEventListener(Events.IMPACT,e=>{tone(120);if(!e.detail.preview){clearDunkRow();}if(!e.detail.preview)document.querySelector('#score').animate([{transform:'scale(1)'},{transform:'scale(1.35)',color:'#ffc26d'},{transform:'scale(1)'}],{duration:400});});
 const aiming=new AimControl();
 const fineAim=document.querySelector('#fine-aim');
 let coarsePointer=null;
 const colors=['#29c7ff','#ff993b','#ae65f1','#35d5bc'];
-let gameOver=false,pendingDunk=false,helpOpen=false,session=new StreetSession(),returnFocus=null;
+let gameOver=false,previewActive=false,pendingDunk=false,helpOpen=false,session=new StreetSession(),returnFocus=null;
 let board,energy=0,score=0,current=0,next=1,shot=null,last=0,locked=false,muted=true,audio,best=0,w=0,h=0,r=0,step=0,top=0,launch=0,toastTimer,dunkTimer,bestShots=0;
 try{best=Number(localStorage.getItem('hoopire-best')||0);bestShots=Number(localStorage.getItem('hoopire-bubble-best-shots')||0);}catch{}
 function resize(){const b=canvas.getBoundingClientRect();w=b.width;h=b.height;const d=Math.min(devicePixelRatio||1,2);canvas.width=w*d;canvas.height=h*d;ctx.setTransform(d,0,0,d,0,0);r=bubbleRadius(w,h);step=r*1.74;top=34+r;launch=h-42;}
@@ -34,13 +34,13 @@ function update(){
  $('#shots-left').textContent=empty?'LAST CHANCE · DUNK!':`${session.shotLimit-session.shots} SHOTS LEFT`;
  $('#streak-label').textContent=session.streak>=2?`${session.streak}× STREAK`:'MAKE YOUR RUN';
  document.querySelectorAll('.dunk-progress i').forEach((dot,i)=>dot.classList.toggle('done',i<session.dunks));$('.dunk-progress').setAttribute('aria-label',`${session.dunks} of ${session.target} dunks`);
- $('#energy-number').textContent=`${energy} / 100`;$('#energy-fill').style.width=energy+'%';$('#dunk').disabled=busy||energy<100;$('#dunk small').textContent=energy>=100?'SLAM · CLEAR BOTTOM ROW':'CHARGE TO 100';
+ $('#energy-number').textContent=`${energy} / 100`;$('#energy-fill').style.width=energy+'%';$('#preview-dunk').disabled=busy||previewActive;$('#dunk').disabled=busy||previewActive||energy<100;$('#dunk small').textContent=energy>=100?'SLAM · CLEAR BOTTOM ROW':'CHARGE TO 100';
  $('#hint').textContent=energy>=100?'Ready! Dunk clears the lowest row.':'Match 3+ to charge your dunk';
  $('#next').style.background=`radial-gradient(circle at 30% 25%,#fff,${colors[next]} 35%,#102442)`;
 }
 function cancelAim(){if(coarsePointer!==null){aiming.cancelGesture(coarsePointer);try{canvas.releasePointerCapture(coarsePointer);}catch{}}coarsePointer=null;aiming.pointer=null;fineAim.classList.remove('adjusting');}
 function reset(){
- pendingDunk=false;gameOver=false;session=new StreetSession();if($('#game-over').open)$('#game-over').close();emit(Events.RESET);clearTimeout(dunkTimer);board=initialBoard();energy=score=0;shot=null;aiming.reset();cancelAim();syncAim();locked=false;$('.court').classList.remove('dunking');courtAnimation.reset();$('#court-callout').textContent='OWN THE NIGHT.';$('#combo').textContent='LET’S BALL';current=available();next=available();update();message('3 dunks. 30 shots. Own the court.');
+ pendingDunk=false;previewActive=false;gameOver=false;session=new StreetSession();if($('#game-over').open)$('#game-over').close();emit(Events.RESET);clearTimeout(dunkTimer);board=initialBoard();energy=score=0;shot=null;aiming.reset();cancelAim();syncAim();locked=false;$('.court').classList.remove('dunking');courtAnimation.reset();$('#court-callout').textContent='OWN THE NIGHT.';$('#combo').textContent='LET’S BALL';current=available();next=available();update();message('3 dunks. 30 shots. Own the court.');
 }
 function showResult(){
  if(gameOver)return;gameOver=true;pendingDunk=false;shot=null;cancelAim();clearTimeout(dunkTimer);locked=false;$('.court').classList.remove('dunking');const result=session.summary(),won=result.status==='won';
@@ -84,11 +84,11 @@ function clearDunkRow(){
  if(board.flat().every(v=>v===null)){board=initialBoard();message('SLAM! Board cleared · new wave');}
  current=board.flat().includes(current)?current:available();next=board.flat().includes(next)?next:available();update();
 }
-$('#dunk').addEventListener('click',()=>{if(gameOver||helpOpen||locked)return;const s=activateDunk({energy,score,shot,locked,gameOver});if(!s.fired)return;energy=s.energy;score=s.score;best=Math.max(best,score);try{localStorage.setItem('hoopire-best',best);}catch{}locked=true;pendingDunk=true;$('.court').classList.add('dunking');emit(Events.DUNK,{preview:false});$('#court-callout').textContent='SLAM DUNK! +2';message('Watch the rim · bottom row clears on impact!');tone(260);update();armDunkFallback();});
+$('#dunk').addEventListener('click',()=>{if(gameOver||helpOpen||locked||previewActive)return;const s=activateDunk({energy,score,shot,locked,gameOver});if(!s.fired)return;energy=s.energy;score=s.score;best=Math.max(best,score);try{localStorage.setItem('hoopire-best',best);}catch{}locked=true;pendingDunk=true;$('.court').classList.add('dunking');emit(Events.DUNK,{preview:false});$('#court-callout').textContent='SLAM DUNK! +2';message('Watch the rim · bottom row clears on impact!');tone(260);update();armDunkFallback();});
 function finishDunk(){if(!locked)return;courtAnimation.complete();clearTimeout(dunkTimer);clearDunkRow();locked=false;$('.court').classList.remove('dunking');$('#court-callout').textContent='OWN THE NIGHT.';assess();update();}
 function armDunkFallback(){clearTimeout(dunkTimer);dunkTimer=setTimeout(()=>{if(document.hidden){armDunkFallback();return;}finishDunk();},STREET.duration+1400);}
-events.addEventListener(Events.DUNK_END,e=>{if(!e.detail.preview)finishDunk();});
-$('#preview-dunk').addEventListener('click',()=>{if(!gameOver&&!helpOpen&&!locked&&!shot)emit(Events.DUNK,{preview:true});});
+events.addEventListener(Events.DUNK_END,e=>{if(e.detail.preview){previewActive=false;update();}else finishDunk();});
+$('#preview-dunk').addEventListener('click',()=>{if(!gameOver&&!helpOpen&&!locked&&!shot&&!previewActive)emit(Events.DUNK,{preview:true});});
 $('#sound').addEventListener('click',()=>{muted=!muted;$('#sound').setAttribute('aria-pressed',String(!muted));$('#sound').textContent=muted?'♪':'♫';tone();});$('#reset').addEventListener('click',reset);
 function frame(time){if(document.hidden||helpOpen){last=0;requestAnimationFrame(frame);return;}const dt=Math.min((time-last)/1000||.016,.025);last=time;ctx.clearRect(0,0,w,h);if(shot){for(let k=0;k<4&&shot;k++){shot.x+=shot.vx*dt/4;shot.y+=shot.vy*dt/4;if(shot.x<r){shot.x=r;shot.vx=Math.abs(shot.vx);}if(shot.x>w-r){shot.x=w-r;shot.vx=-Math.abs(shot.vx);}let hit=null;for(let a=0;a<12&&!hit;a++)for(let b=0;b<8;b++)if(board[a][b]!==null){const p=pos(a,b);if(Math.hypot(p.x-shot.x,p.y-shot.y)<r*1.87){hit=[a,b];break;}}if(hit||shot.y<=top)settle(hit);}}
 ctx.save();ctx.setLineDash([6,6]);ctx.strokeStyle='#ff785dcc';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(8,launch-r*2);ctx.lineTo(w-8,launch-r*2);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#fa9b85';ctx.font='8px sans-serif';ctx.textAlign='left';ctx.fillText('DANGER · KEEP CLEAR',10,launch-r*2-7);ctx.restore();

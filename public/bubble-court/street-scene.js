@@ -1,7 +1,7 @@
 import * as T from '../vendor/three.module.min.js';
-import {STREET} from './Constants.js?v=10';
+import {STREET,COURT_LIGHTING as LIGHT} from './Constants.js?v=11';
 
-/** Original procedural art: shared low-poly primitives, no downloaded character assets. */
+/** Original instanced street environment with a locally loaded skinned athlete. */
 export function buildStreetScene(player){
  if(!player)throw new Error('Skinned athlete must load before scene creation');
  const scene=new T.Scene();scene.background=new T.Color(STREET.palette.sky);scene.fog=new T.Fog(STREET.palette.fog,13,29);
@@ -13,7 +13,7 @@ export function buildStreetScene(player){
  const orb=(x,y,z,rx,ry,rz,color,parent=scene)=>{const m=mesh(sphere,mat(color),parent);m.position.set(x,y,z);m.scale.set(rx,ry,rz);return m;};
  const lines=(points,color,opacity=1,parent=scene)=>{const g=new T.BufferGeometry().setFromPoints(points.map(p=>new T.Vector3(...p))),m=new T.LineBasicMaterial({color,transparent:opacity<1,opacity});resources.add(g);resources.add(m);const l=new T.LineSegments(g,m);parent.add(l);return l;};
  const segmentPoints=(points)=>points.slice(1).flatMap((p,i)=>[points[i],p]);
- scene.add(new T.HemisphereLight('#c2dfff','#46322b',2.4));const sun=new T.DirectionalLight('#ffbc83',3);sun.position.set(-4,7,5);scene.add(sun);const blue=new T.DirectionalLight('#60d7ff',1.6);blue.position.set(5,3,-4);scene.add(blue);
+ const fill=new T.HemisphereLight(LIGHT.fillSky,LIGHT.fillGround,LIGHT.fillPower);fill.name='court-fill';scene.add(fill);const sun=new T.DirectionalLight(LIGHT.keyColor,LIGHT.keyPower);sun.name='court-key';sun.position.set(...LIGHT.keyPosition);scene.add(sun);const blue=new T.DirectionalLight(LIGHT.rimColor,LIGHT.rimPower);blue.name='court-rim';blue.position.set(...LIGHT.rimPosition);scene.add(blue);
  block(0,-.1,0,13,.2,10,STREET.palette.floor);block(1,.006,0,4.8,.012,4.2,STREET.palette.paint);
  const courtLines=[[-1.4,.025,-2.1],[-1.4,.025,2.1],[3.4,.025,2.1],[3.4,.025,-2.1],[-1.4,.025,-2.1]];
  lines(segmentPoints(courtLines),'#e6dac3',.7);const arc=[];for(let i=0;i<=44;i++){const a=-Math.PI/2+i/44*Math.PI;arc.push([-1.4-Math.cos(a)*2.3,.026,Math.sin(a)*2.3]);}lines(segmentPoints(arc),'#cddbd3',.7);
@@ -36,8 +36,8 @@ export function buildStreetScene(player){
  const athlete=new T.Group();athlete.name='athlete';athlete.add(player.root);scene.add(athlete);
  const ball=orb(0,0,0,.13,.13,.13,'#f79138');ball.name='basketball';const seamGeo=new T.TorusGeometry(1,.035,4,24);resources.add(seamGeo);for(let i=0;i<3;i++){const seam=mesh(seamGeo,mat('#653c25'),ball);seam.rotation.set(i===0?Math.PI/2:0,i===1?Math.PI/2:0,i===2?.5:0);}
  // Soft blob shadow, no realtime shadow map passes.
- const shadowGeo=new T.CircleGeometry(1,24);resources.add(shadowGeo);const shadowMat=new T.MeshBasicMaterial({color:'#030d19',transparent:true,opacity:.3,depthWrite:false});resources.add(shadowMat);const shadow=mesh(shadowGeo,shadowMat);shadow.rotation.x=-Math.PI/2;shadow.position.y=.04;
- function pose(t){player.sample(t);const hip=player.rig.pelvis.getWorldPosition(new T.Vector3());ball.position.copy(player.ballAt(t));ball.rotation.z=-t*8;shadow.position.x=hip.x;shadow.position.z=hip.z;shadow.scale.setScalar(Math.max(.25,.55-(hip.y-1)*.2));
+ const shadowGeo=new T.CircleGeometry(1,24);resources.add(shadowGeo);const size=LIGHT.shadowSize,pixels=new Uint8Array(size*size*4);for(let y=0;y<size;y++)for(let x=0;x<size;x++){const i=(y*size+x)*4,r=Math.hypot((x+.5-size/2)/(size/2),(y+.5-size/2)/(size/2)),alpha=Math.round(Math.pow(Math.max(0,1-r*r),2)*255);pixels.set([alpha,alpha,alpha,alpha],i);}const shadowTexture=new T.DataTexture(pixels,size,size,T.RGBAFormat);shadowTexture.needsUpdate=true;shadowTexture.magFilter=T.LinearFilter;resources.add(shadowTexture);const shadowMat=new T.MeshBasicMaterial({color:'#030d19',alphaMap:shadowTexture,transparent:true,opacity:LIGHT.shadowOpacity,depthWrite:false});resources.add(shadowMat);const shadow=mesh(shadowGeo,shadowMat);shadow.name='contact-shadow';shadow.rotation.x=-Math.PI/2;shadow.position.y=.04;
+ function pose(t){player.sample(t);const hip=player.rig.pelvis.getWorldPosition(new T.Vector3());ball.position.copy(player.ballAt(t));ball.rotation.z=-t*8;shadow.position.x=hip.x;shadow.position.z=hip.z;shadow.scale.set(Math.max(.25,.65-(hip.y-1)*.18),Math.max(.18,.43-(hip.y-1)*.12),1);shadowMat.opacity=LIGHT.shadowOpacity*Math.max(.35,1-(hip.y-1)*.45);
   const impact=t>=.6&&t<.8?Math.sin((t-.6)/.2*Math.PI):0;net.scale.y=1+impact*.3;rim.position.y=3.05-impact*.025;
  }
  // Batch the skyline, windows and architecture by material into a few draw calls.

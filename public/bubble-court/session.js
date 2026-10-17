@@ -1,4 +1,4 @@
-import {CHALLENGE} from './Constants.js?v=10';
+import {CHALLENGE} from './Constants.js?v=11';
 /** Challenge accounting is independent of ball physics and rendering. */
 export class StreetSession {
  constructor({shotLimit=CHALLENGE.shotLimit,target=CHALLENGE.target}={}){this.shotLimit=shotLimit;this.target=target;this.shots=0;this.dunks=0;this.cleared=0;this.streak=0;this.bestStreak=0;this.status='playing';this.reason='';}

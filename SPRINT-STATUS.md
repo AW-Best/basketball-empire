@@ -469,3 +469,11 @@
 - [x] Primary browser playback QA at390×844/320×568; actual100-energy dunk cleared one row once, score02/progress1of3/energy0/unlocked.
 - [x] Independent /rev passed; timeout and skeleton disposal suggestions fixed and re-reviewed.239regression tests pass.
 - [x] Publish v10 and verify actual new skinned preview rim contact on hoopire.com. Official Three.js blending/IK examples reviewed. Added cold-load preloads and fallback diagnostics;241tests green.
+
+## Complete dunk motion asset revision
+- [x] /po vision and /sm AC recorded in docs/sprints/bubble-court-motion-asset.md.
+- [x] /arch + /ui approve offline retarget/transition/light design and free CMU layup adaptation.
+- [x] Acquire free CMU124_06 full-body layup; retarget and adapt rim contact into dunk, provenance/conditions/hash recorded.
+- [x] Test-first Acclaim parser, actual imported clip, return/ball/camera continuity, cold-load parallelism and dusk lighting.
+- [x] Actual390×844 and320×568 playback, four real shots charging100 then one dunk/one bottom-row clear, reset/no overflow;254tests pass and independent /rev approved.
+- [ ] Publish v11 and verify production animation.

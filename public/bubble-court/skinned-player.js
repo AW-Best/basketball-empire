@@ -39,7 +39,7 @@ function handTarget(t,x,y){const keys=[
  ];let i=0;while(i<keys.length-2&&t>keys[i+1][0])i++;const a=keys[i],b=keys[i+1],u=ease((t-a[0])/(b[0]-a[0]));return point(a[1]+(b[1]-a[1])*u,a[2]+(b[2]-a[2])*u,.35);}
 
 /** Genuine continuous CC0 skin; original dunk is baked to quaternion tracks on its real skeleton. */
-export function createSkinnedPlayer(model){
+export function createSkinnedPlayer(model,motion=null){
  const root=new T.Group();root.name='AthleteRoot';model.scale.setScalar(1.12);root.add(model);root.updateMatrixWorld(true);
  const bones=[],rig={};model.traverse(n=>{if(n.isBone){bones.push(n);rig[n.name]=n;}});if(!rig.hand_r||!rig.foot_r)throw new Error('Unsupported humanoid rig');
  const owned=new Set(),skeletons=new Set();const skin=new T.Color('#a76b49'),jersey=new T.Color('#0899b4'),navy=new T.Color('#102d48'),white=new T.Color('#e7e9d9'),trim=new T.Color('#ffb758');
@@ -67,17 +67,19 @@ export function createSkinnedPlayer(model){
   for(const bone of bones){if(/^(index|middle|ring|pinky)_0[123]_r$/.test(bone.name))bone.quaternion.multiply(new T.Quaternion().setFromAxisAngle(X,t<.62?.48:.15));}
   root.updateMatrixWorld(true);
  }
- const samples=121,times=[],positions=[],orientations=[],values=bones.map(()=>[]);for(let i=0;i<samples;i++){const t=i/(samples-1);author(t);times.push(t);positions.push(...root.position.toArray());orientations.push(...root.quaternion.toArray());bones.forEach((b,j)=>values[j].push(...b.quaternion.toArray()));}
- const tracks=[new T.VectorKeyframeTrack('AthleteRoot.position',times,positions),new T.QuaternionKeyframeTrack('AthleteRoot.quaternion',times,orientations),...bones.map((b,i)=>new T.QuaternionKeyframeTrack(`${b.name}.quaternion`,times,values[i]))];
- const clip=new T.AnimationClip('Hoopire_SingleHandDunk',1,tracks),mixer=new T.AnimationMixer(root),action=mixer.clipAction(clip);action.setLoop(T.LoopOnce,1);action.clampWhenFinished=true;
+ const samples=121,times=[],positions=[],orientations=[],values=bones.map(()=>[]);for(let i=0;!motion&&i<samples;i++){const t=i/(samples-1);author(t);times.push(t);positions.push(...root.position.toArray());orientations.push(...root.quaternion.toArray());bones.forEach((b,j)=>values[j].push(...b.quaternion.toArray()));}
+ const tracks=motion?[]:[new T.VectorKeyframeTrack('AthleteRoot.position',times,positions),new T.QuaternionKeyframeTrack('AthleteRoot.quaternion',times,orientations),...bones.map((b,i)=>new T.QuaternionKeyframeTrack(`${b.name}.quaternion`,times,values[i]))];
+ const clip=motion?T.AnimationClip.parse(motion.clip):new T.AnimationClip('Hoopire_SingleHandDunk',1,tracks),mixer=new T.AnimationMixer(root),action=mixer.clipAction(clip);action.setLoop(T.LoopOnce,1);action.clampWhenFinished=true;
  function sample(t){action.reset().play();mixer.setTime(Math.max(0,Math.min(1,t)));root.updateMatrixWorld(true);}
  const getGrip=()=>rig.hand_r.localToWorld(gripOffset.clone());sample(.6);const release=getGrip();sample(0);
- function ballAt(t){if(t<=.6)return getGrip();const u=Math.min(1,(t-.6)/.4),fall=ease(u);return release.clone().add(point(.38*fall,-2.85*fall,.18*fall));}
+ function ballAt(t){if(t<=.6||motion&&t>=.84)return getGrip();if(motion){const floor=release.clone().add(point(.30,-2.90,.10));if(t<=.77){const u=(t-.6)/.17;return release.clone().lerp(floor,u*u);}return floor.lerp(getGrip(),ease((t-.77)/.07));}const u=Math.min(1,(t-.6)/.4),fall=ease(u);return release.clone().add(point(.38*fall,-2.85*fall,.18*fall));}
  return {root,bones,rig,clip,mixer,sample,getGrip,ballAt,dispose(){mixer.stopAllAction();mixer.uncacheRoot(root);for(const skeleton of skeletons)skeleton.dispose();for(const r of owned)r.dispose();root.removeFromParent();}};
 }
 export async function loadSkinnedPlayer({timeout=10000,fetcher=fetch}={}){
  const controller=new AbortController();let timer;
  const expired=new Promise((_resolve,reject)=>{timer=setTimeout(()=>{const error=new DOMException('Player model load timed out','TimeoutError');controller.abort(error);reject(error);},timeout);});
- const work=(async()=>{const {GLTFLoader}=await import('../vendor/loaders/GLTFLoader.js');if(controller.signal.aborted)throw controller.signal.reason;const url=new URL('./assets/player-base.glb',import.meta.url);const response=await fetcher(url.href,{signal:controller.signal});if(!response.ok)throw new Error('Player model unavailable');const bytes=await response.arrayBuffer(),gltf=await new GLTFLoader().parseAsync(bytes,new URL('./assets/',import.meta.url).href);if(controller.signal.aborted)throw controller.signal.reason;return createSkinnedPlayer(gltf.scene);})();
+ const work=(async()=>{const {GLTFLoader}=await import('../vendor/loaders/GLTFLoader.js');if(controller.signal.aborted)throw controller.signal.reason;
+  const options={signal:controller.signal},[response,motionResponse]=await Promise.all([fetcher(new URL('./assets/player-base.glb',import.meta.url).href,options),fetcher(new URL('./assets/dunk-motion.json?v=11',import.meta.url).href,options)]);
+  if(!response.ok||!motionResponse.ok)throw new Error('Player or dunk motion unavailable');const[bytes,motion]=await Promise.all([response.arrayBuffer(),motionResponse.json()]),gltf=await new GLTFLoader().parseAsync(bytes,new URL('./assets/',import.meta.url).href);if(controller.signal.aborted)throw controller.signal.reason;return createSkinnedPlayer(gltf.scene,motion);})();
  try{return await Promise.race([work,expired]);}finally{clearTimeout(timer);}
 }
