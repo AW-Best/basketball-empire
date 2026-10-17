@@ -459,4 +459,5 @@
 - [x] Independent /rev approved after fallback lifecycle fixes; /ui layout approved.
 - [x] Local390×844 actual9-shot/3-dunk three-star win, replay,5-shot danger failure;320×568guide/viewport fit, actualWebGL impact and no browser errors.
 - [x] Full231tests green; low-poly geometry and static architecture instancing cut draw calls.
-- [ ] Production deploy and live verification.
+- [x] af23022 pushed as Aaron to AW-Best; Cloudflare production version37876d07-b38c-42cd-85b2-efe33005100c deployed.
+- [x] Livehoopire.com/bubble-court/?v=9: first guide, WebGL impact,390×844 fit (footer839/document844,buffer388×186), danger failure, successful challenge-copy and replay reset verified; no console errors.

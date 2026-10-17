@@ -39,3 +39,6 @@ UI-R2: BEST SHOTS should expose the persistent efficiency target after victory, 
 - 320×568: guide scrolls within viewport with visible start action; footer bottom568, documentheight568, no page overflow. WebGL buffer318×109. Rim visible belowHUD, impact sampled during preview; preview spends no shots/energy.
 - UI-R1 fixed and verified: fresh/replayedrun caption LET’S BALL. UI-R2 uses persistent BEST SHOTS (09after winning run).
 - Physical low-end phone FPS is not measurable in the desktop browser. Hardware-friendly caps and adaptive pacing are implemented and budgets unit-tested.
+
+## Production release
+Code commit af23022, author Aaron Wang, pushed to AW-Best/basketball-empire main. Released with npm run deploy:cloudflare, Worker play version37876d07-b38c-42cd-85b2-efe33005100c. Live entry https://hoopire.com/bubble-court/?v=9. Verified initial guide,3D impact,390×844 fit (WebGL388×186),6-shot danger failure, copy confirmation and replay reset; no console errors. Node scene budget49mesh draw objects/4780triangles (browser adds3small text planes); architecture/window meshes instanced by material.
