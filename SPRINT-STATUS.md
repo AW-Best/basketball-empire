@@ -468,4 +468,4 @@
 - [x] Continuous skinned body, street uniform, hair/sneakers and baked quaternion AnimationClip.
 - [x] Primary browser playback QA at390×844/320×568; actual100-energy dunk cleared one row once, score02/progress1of3/energy0/unlocked.
 - [x] Independent /rev passed; timeout and skeleton disposal suggestions fixed and re-reviewed.239regression tests pass.
-- [ ] Publish v10 and verify production assets/animation.
+- [x] Publish v10 and verify actual new skinned preview rim contact on hoopire.com. Official Three.js blending/IK examples reviewed. Added cold-load preloads and fallback diagnostics;241tests green.
