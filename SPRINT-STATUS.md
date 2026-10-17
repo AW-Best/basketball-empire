@@ -441,3 +441,4 @@
 - Fine ruler and explicit Shoot moved into collapsed optional precision mode.
 - Removed fixed minimum screen heights, fitted bubble size to playfield height, retained red-line loss/replay and dunk behavior.
 - Architecture: gesture state in AimControl; existing physics/scoring unchanged. New tests observed red then green; 216 regression tests pass. Browser preview navigation unavailable; real-device smoke verification pending.
+- Live smoke review exposed inadequate board headroom on short/wide viewports. Added tested responsive radius with at least three extra rows before danger line; cache-versioned changed input/layout modules. All 217 tests pass. Quick mode release first deployed as 6441a89b-653c-4c61-9770-361bdee743e7; layout follow-up pending.

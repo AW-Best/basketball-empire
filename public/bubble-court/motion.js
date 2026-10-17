@@ -19,3 +19,4 @@ const keys=[
  [1,280,190,308,178,266,224,300,224,267,208,297,208]
 ];
 export function dunkPose(t){t=Math.max(0,Math.min(1,t));let i=0;while(i<keys.length-2&&t>keys[i+1][0])i++;const a=keys[i],b=keys[i+1],u=(t-a[0])/(b[0]-a[0]),s=u*u*(3-2*u),v=a.map((n,j)=>n+(b[j]-n)*s),hip={x:v[1],y:v[2]},hand={x:v[3],y:v[4]},foot={x:v[5],y:v[6]};return {hip,hand,foot,foot2:{x:v[7],y:v[8]},knee:{x:v[9],y:v[10]},knee2:{x:v[11],y:v[12]},ball:t<=.6?{...hand}:{x:307+(t-.6)*24,y:132+Math.min(1,(t-.6)/.4)**1.4*102},released:t>.6};}
+export function bubbleRadius(width,height){return Math.min(width/18,Math.max(4,(height-100)/17.2));}

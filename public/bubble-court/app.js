@@ -1,7 +1,7 @@
-import {AimControl} from './controls.js';
+import {AimControl} from './controls.js?v=7';
 import {BubbleEffects} from './effects.js';
 import {events,Events,emit} from './EventBus.js';
-import {traceAim} from './motion.js';
+import {traceAim,bubbleRadius} from './motion.js?v=7';
 import {CourtAnimation} from './court.js';
 import {initialBoard,neighbors,resolveShot,spendEnergy,touchesLaunch} from './engine.js';
 const $=s=>document.querySelector(s),canvas=$('#board'),ctx=canvas.getContext('2d');
@@ -18,7 +18,7 @@ const colors=['#29c7ff','#ff993b','#ae65f1','#35d5bc'];
 let gameOver=false;
 let board,energy=0,score=0,current=0,next=1,shot=null,last=0,locked=false,muted=true,audio,best=0,w=0,h=0,r=0,step=0,top=0,launch=0,toastTimer,dunkTimer;
 try{best=Number(localStorage.getItem('hoopire-best')||0);}catch{}
-function resize(){const b=canvas.getBoundingClientRect();w=b.width;h=b.height;const d=Math.min(devicePixelRatio||1,2);canvas.width=w*d;canvas.height=h*d;ctx.setTransform(d,0,0,d,0,0);r=Math.min(w/18,Math.max(6,(h-115)/10));step=r*1.74;top=34+r;launch=h-42;}
+function resize(){const b=canvas.getBoundingClientRect();w=b.width;h=b.height;const d=Math.min(devicePixelRatio||1,2);canvas.width=w*d;canvas.height=h*d;ctx.setTransform(d,0,0,d,0,0);r=bubbleRadius(w,h);step=r*1.74;top=34+r;launch=h-42;}
 function pos(row,col){return {x:(w-18*r)/2+r*1.5+col*r*2+(row%2)*r,y:top+row*step};}
 function message(t){$('#toast').textContent=t;$('#toast').style.opacity='1';clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('#toast').style.opacity='.35',2200);}
 function tone(freq=500){if(muted)return;try{audio??=new(window.AudioContext||window.webkitAudioContext)();audio.resume();const o=audio.createOscillator(),g=audio.createGain();o.connect(g);g.connect(audio.destination);o.frequency.value=freq;g.gain.setValueAtTime(.045,audio.currentTime);g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+.13);o.start();o.stop(audio.currentTime+.14);}catch{}}
