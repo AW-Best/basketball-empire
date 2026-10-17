@@ -442,3 +442,10 @@
 - Removed fixed minimum screen heights, fitted bubble size to playfield height, retained red-line loss/replay and dunk behavior.
 - Architecture: gesture state in AimControl; existing physics/scoring unchanged. New tests observed red then green; 216 regression tests pass. Browser preview navigation unavailable; real-device smoke verification pending.
 - Live smoke review exposed inadequate board headroom on short/wide viewports. Added tested responsive radius with at least three extra rows before danger line; cache-versioned changed input/layout modules. All 217 tests pass. Quick mode release first deployed as 6441a89b-653c-4c61-9770-361bdee743e7; layout follow-up pending.
+
+## Bubble Court — clear feedback and dunk rescue
+- [x] Acceptance criteria and architecture/UI review recorded in docs/sprints/bubble-court-feedback.md.
+- [x] Red/green tests for lowest row clearing, activation guards and non-energy clear labels.
+- [x] Staggered colored bursts/falling balls, bounded energy motes and golden row sweep.
+- [x] Rim-contact clear, input lock, reset cancellation, preview isolation and one-shot fallback for background tabs.
+- [ ] Production deployment and live mobile smoke check.

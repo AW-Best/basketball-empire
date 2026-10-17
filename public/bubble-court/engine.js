@@ -4,3 +4,7 @@ export function resolveShot(b,r,c,color,energy){if(b[r]?.[c]!==null)return {popp
 export function spendEnergy(energy,score){return energy>=100?{energy:0,score:score+2,fired:true}:{energy,score,fired:false};}
 export function initialBoard(){return Array.from({length:12},(_,r)=>Array.from({length:8},(_,c)=>r<5?(Math.floor(c/2)+Math.floor(r/2))%4:null));}
 export function touchesLaunch(board,top,step,radius,line){return board.some((row,r)=>row.some(v=>v!==null&&top+r*step+radius>=line));}
+
+// Reserve a dunk only while the board is idle; its impact clears the row later.
+export function activateDunk({energy,score,shot=false,locked=false,gameOver=false}){return shot||locked||gameOver?{energy,score,fired:false}:spendEnergy(energy,score);}
+export function clearBottomRow(board){const row=board.findLastIndex(cells=>cells.some(color=>color!==null));if(row<0)return [];const cleared=[];board[row].forEach((color,col)=>{if(color!==null){cleared.push({row,col,color});board[row][col]=null;}});return cleared;}

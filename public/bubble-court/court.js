@@ -1,6 +1,6 @@
-import {events,Events,emit} from './EventBus.js';
-import {dunkTime} from './effects.js';
-import {FX} from './Constants.js';
+import {events,Events,emit} from './EventBus.js?v=8';
+import {dunkTime} from './effects.js?v=8';
+import {FX} from './Constants.js?v=8';
 import {dunkPose} from './motion.js';
 /** A joint-based 2D player. Every limb is interpolated; the ball follows the hand until rim contact. */
 export class CourtAnimation{

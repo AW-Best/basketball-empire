@@ -3,3 +3,5 @@ test('pop effect distinguishes falling balls and caps particles for mobile',()=>
 test('energy mote travels from the popped group to the energy bar',()=>{assert.equal(typeof fx.energyPoint,'function');let a={x:10,y:20},b={x:90,y:200};assert.deepEqual(fx.energyPoint(a,b,0),a);assert.deepEqual(fx.energyPoint(a,b,1),b);assert.ok(fx.energyPoint(a,b,.5).y>20);});
 test('dunk impact holds the rim-contact pose briefly and settles by end',()=>{assert.equal(typeof fx.dunkTime,'function');assert.equal(fx.dunkTime(.55),.60);assert.equal(fx.dunkTime(.58),.60);assert.equal(fx.dunkTime(1),1);assert.equal(fx.dunkTime(0),0);});
 test('reduced motion suppresses bursts and removes hit stop',()=>{assert.equal(typeof fx.popFeedback,'function');assert.equal(fx.popFeedback({popped:6,dropped:0,gained:96,reduced:true}).particles,0);assert.equal(fx.dunkTime(.55,true),.55);});
+
+test('clear feedback never promises energy for dunk-cleared bubbles',()=>{const f=fx.popFeedback({popped:8,dropped:0,gained:0,dunk:true});assert.equal(f.label,'BOTTOM ROW CLEARED!');assert.equal(f.amount,'8 BUBBLES · SPACE TO PLAY');});
