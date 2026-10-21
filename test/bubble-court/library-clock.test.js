@@ -1,0 +1,3 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';
+const m=await import('../../public/bubble-court/action-library/clock.mjs').catch(()=>({}));
+test('classic preview clock pauses without accumulating walltime and only completes once',()=>{assert.equal(typeof m.PreviewClock,'function');const c=new m.PreviewClock();c.start();c.step(0);c.step(50);assert.equal(c.time,.05);c.pause(true);c.step(8000);c.pause(true);assert.equal(c.phase,'paused');c.pause(false);c.step(9000);assert.equal(c.time,.05);c.speed('0.5');c.step(9050);assert.equal(c.time,.07500000000000001);c.speed('9');assert.equal(c.rate,.5);c.speed('1');let complete=0;for(let t=9100;t<12000;t+=50)complete+=Number(c.step(t));assert.equal(complete,1);assert.equal(c.time,1.5);});

@@ -1,0 +1,2 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import {landingPose} from '../../public/bubble-court/duel-lab/slam/motion.mjs';
+test('body arches during backswing and follows arms forward during dunk',()=>{assert.ok(landingPose(540).tilt<-9);assert.ok(landingPose(880).tilt>4);assert.equal(landingPose(1500).tilt,0);for(let t=1;t<1500;t++)assert.ok(Math.abs(landingPose(t).tilt-landingPose(t-1).tilt)<.2);});
