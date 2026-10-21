@@ -1,0 +1,22 @@
+{
+  "version": "0db5a3fd-0f8a-4e4c-8ecc-f49ddce23b2f",
+  "previous": "c815671d-c66b-44e7-8c35-02f492cebed1",
+  "live": "https://hoopire.com/bubble-court/duel/",
+  "demo": "https://hoopire.com/bubble-court/duel/?room=DEMO01",
+  "releaseFiles": 122,
+  "delta": "8 UI files + 3 backend error-copy files",
+  "tests": {
+    "targeted": 33,
+    "passed": 33,
+    "full": 488,
+    "fullPassed": 487,
+    "knownFailure": "unchanged legacy athlete: palm misses the rim"
+  },
+  "qa": {
+    "phone": "390x844 English board, move picker, defeat, replay and guide",
+    "onlineRoom": "2YCUAW",
+    "rematch": "A invited; B saw Accept Rematch / Not Now, accepted; round 2 countdown, scores and shots reset",
+    "consoleWarningsErrors": []
+  },
+  "gitCommitOrPush": false
+}

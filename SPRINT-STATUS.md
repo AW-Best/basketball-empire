@@ -1,5 +1,98 @@
 # Sprint Status — Auction, History, and Team Card Polish
 
+## 砸筐闪电与同画面定格 — 2026-10-18，仅本地
+- [x] /sm AC、/arch /ui预审与/rev最终复审通过。
+- [x] 接触即闪电、100ms后飞球、末姿约2秒定格重叠；整段3秒，总流程6秒。
+- [x] 去POWER/BREAK THEM大字提示层，保留小来源/数量及教学；真实镜头原点、末端carrier保留。
+- [x] 8项新增RED→GREEN，102相关回归通过；四招实际flight/hold与恢复检查，详情docs/sprints/bubble-court-contact-hold.md。
+- [x] 仅本地；没有提交、推送、部署。
+
+## 四招统一3秒动作 — 2026-10-18，仅本地
+- [x] /sm AC、/arch /ui预审；完整源片保留重点段相对慢放，统一映射3000ms。
+- [x] 6项新增测试RED→GREEN；倒数3000 + 动作3000 + 爆发320 + 飞入600，总6920ms。
+- [x] 卡片、指南、规则、独立对照页同步；原LAN/动作库时域兼容。
+- [x] 94条相关回归通过，四招浏览器逐一实播、爆发/飞入与恢复正常；/rev最终复审通过。未提交、推送、部署。
+
+## Dunk爆发与失败过渡 — 2026-10-18，仅本地
+- [x] /sm AC、/arch /ui预审；规则文档合并为当前DEMO01基准。
+- [x] 320ms闪电冲击 + 600ms实际干扰飞入；规则冻结覆盖尾段，0数量不补球。
+- [x] 保留终局棋盘，逐渐去色后中文结果与再来一局；本地普通压力触底预览。
+- [x] 新增测试RED→GREEN，详见docs/sprints/bubble-court-spectacle-ending.md。
+- [x] 最终/rev + /ui通过；88相关 + 4HTTP测试通过；实际burst→flight、棋盘不变、失败与重赛已检查。未提交/推送/部署。
+
+## 攻防反馈、干扰抵消与紧凑球场 — 2026-10-18，仅本地
+- [x] game-designer审查、/sm /arch /ui /rev及用户追加方向要求完成，详见docs/sprints/bubble-court-combat-polish.md。
+- [x] 平时58px状态条，攻击浮层与大字冲击；灰球橙边裂纹闪电及常驻邻近三连破解提示。
+- [x] 3秒来源倒数、3.8秒砸筐落入、同次普通消除3:1 FIFO抵消、待落上限8、实际发送0～4；灰球/Dunk不刷能量或抵消，只触底结算。
+- [x] 中文青绿“你→对手”/橙红“对手→你”及相反粒子流向，idle双方DUNK次数、收到对手干扰提示；空闲SVG不重绘。
+- [x] TDD新增15项；全套357项356过（方向追加前），唯一既有旧athlete失败；方向追加相关9项绿。手机390×844实测Dunk前后board rect完全一致(0,187,390,534)。
+- [x] 规则文档已同步，8780本地运行，未提交/推送/部署。
+
+## 单人模拟对战 DEMO01 — 2026-10-18，仅本地
+- [x] 用户确认对模拟对手；/sm、/arch、/ui及最终/rev审查通过，详见docs/sprints/bubble-court-solo-demo.md。
+- [x] 固定DEMO01入口（按钮/链接/房间码），每页独立；模拟对手自动准备、真实发射蓄能反击，不需要第二部手机。
+- [x] TDD新增5项红→绿；相关规则/客户端33、HTTP联网4项通过，实际BOT自然DUNK、真人扣完继续发射及单人触底后重赛通过。
+- [x] 手机390×844操作区完整，模拟标签/指南明确且隐藏真人邀请。8780服务可试玩；未提交、推送、部署。
+
+## Dunk可重复局内攻击 — 2026-10-18，仅本地
+- [x] /sm AC、/arch与/rev审查；诊断与修复见docs/sprints/bubble-court-repeat-dunk.md。
+- [x] 无合法落点拒发且不耗球；仅实际危险线接触结算，记录触线原因，保留同刻平局。
+- [x] 普通消除自然蓄能两次DUNK回归；动画中继续射击；纯规则26/26通过，HTTP自然循环通过。
+- [x] 浏览器双页同局DUNK两次、对方8灰球、双方继续射击，phase=playing、round=1。
+- [x] 全套339项338通过、1项既有旧3D athlete失败；补充危险线边界测试通过。本地8780服务运行，未提交/推送/部署。
+
+## LAN 双手机对战与双手扣篮 — 2026-10-18，仅本地
+
+- [x] /sm /arch /ui审查通过；AC与结果在docs/sprints/bubble-court-network-duel.md。
+- [x] 真实Dunkademics视频0.25倍速对照，增加躯干蓄力与前送；共享2.5D场景，头前手后透视，预览STUDY16。
+- [x] 原生HTTP房间服务、自动座位与房间码、服务器时钟、验证动作/幂等/隐私；手机LAN HTTP无需WebLocks。
+- [x] 两客户端互发DUNK与4灰球、刷新恢复/胜负；390×844实际布局与LAN邀请验证。
+- [x] 新增24测试与原规则21测试通过；全334项333通过，唯一既有3D掌心碰筐测试失败。
+- [x] 8780本地LAN服务已启动；未提交、未push、未部署。实体两手机同Wi-Fi体验待用户试玩。
+
+## Hand transfer05 — local only, 2026-10-17
+
+- [x] /sm /arch /ui approval, AC and verification in docs/sprints/bubble-court-hand-transfer.md.
+- [x] TDD bounded wrist flex, near-surface ball grip, gradual800–860ms rim closure and later thumb transfer; short round pads replace full-length hooks.
+- [x] Preserve storyboard04 timing, ball/net pocket and game rules; improve six-keyframe preview with two-row touch controls.
+- [x] /rev passes;46targeted tests green; full300tests299pass with only pre-existing3D palm test failure.
+- [x] Actual585/830/975ms,normal/half speed and320/390 phone inspection. No commit,push or deployment.
+
+## DUNK storyboard04 — local only,2026-10-17
+
+- [x] /sm /arch /ui approve the user's1.5s storyboard; AC in docs/sprints/bubble-court-storyboard.md.
+- [x] TDD:600–800ms accelerating wrist slam,late carrying-to-rim transition,1150ms release and local net pocket;43related tests pass.
+- [x] Renderer draws bag-shaped net around the descending ball;attack badge avoids the net and travels during the finish.
+- [x] /rev passes;normal/slow,keyframes,phone sizing and reduced-motion preview checked.
+- [x] Full suite297:296pass,only known old3D athlete palm failure. No commit,push or deployment.
+
+## Comic hand study03 — local only, 2026-10-17
+
+- [x] /sm /arch /ui approval and AC in docs/sprints/bubble-court-comic-hand.md.
+- [x] TDD articulated palm/thumb/three finger groups, shared wrist rotation, fixed rim contacts and gradual release before withdrawal.
+- [x] Warm skin silhouette, tapered dark sleeve and team cuff; shared in-game/preview renderer; new wrist/release keyframes.
+- [x] /rev passes;40targeted tests pass,hand sampler100%line coverage. Full294tests293pass with only pre-existing3D palm failure.
+- [x] Actual phone framing,normal/half speed,reduced-motion and A DUNK/B +4gray verified. No commit,push or deployment.
+
+## Comic DUNK polish — local only, 2026-10-17
+
+- [x] /sm AC and /arch /ui approval in docs/sprints/bubble-court-comic-dunk-polish.md.
+- [x] TDD pure motion sampler: gather/lift/slam,800ms contact,60ms visual hold,hand gripping rim,independent ball descent,damped net;10new tests green.
+- [x] Original vector comic, uniform scaling, layered net/ball/fingers, bounded camera impact and +4 indicator; rules untouched.
+- [x] Shared-renderer local preview with replay,half speed,keyframes,scrub,roles and reduced-motion control.
+- [x] /rev passes;31targeted tests pass;full285tests284pass with only known old3D palm failure.
+- [x] Actual phone framing/keyframe checks and real A DUNK/B simultaneous shot/+4garbage verified. No commit,push or deployment.
+
+## Local Bubble Court duel — 2026-10-17, uncommitted
+
+- [x] Save agreed Chinese rules in docs/bubble-court-duel-rules.md and AC in docs/sprints/bubble-court-local-duel.md.
+- [x] /sm, /arch, /ui approve isolated local two-tab mode and Web Locks transactions.
+- [x] TDD: 21 room/rule/transport tests green; model + room line coverage100%, branch>90%.
+- [x] Implement simultaneous boards, shared countdown, pop energy, manual comic DUNK, own bottom-row rescue, opponent +4 gray bubbles, pressure, danger result and rematch.
+- [x] Fix review findings: freeze at presence expiry across simultaneous sleep; reject old snapshots; keep footer visible on320×568; spread attack across the current frontier; allow reclaiming an expired seat.
+- [x] /rev passes. Actual local A/B attacks, touch-style pop (+48 energy),390×844/320×568 framing, refresh, A win/B loss and both-ready rematch verified; no console warnings/errors.
+- [x] Existing 3D athlete palm test still fails; unchanged original3D files, independent local duel passes. No commit, push or deployment per user instruction.
+
 ## Sprint 048 — Straight-On End-Court Camera
 
 - [x] Record acceptance criteria, architecture, and original UI direction.
@@ -498,3 +591,120 @@
 - [x] Architecture/UI approved; original2D SVG art +1.5s motion implemented.
 - [x] Actual local normal/slow playback, rim impact/final poster, CSS320×568/390×844 framing; no console errors. /rev approved. Syntax checked; automated suite deferred per user.
 - [x] Local preview ready at http://localhost:8772/bubble-court/win-lab/ . No push or publication performed.
+
+## Standalone full-player comic dunk — local only
+- [x] User scope: replace hand with full player only in independent preview; do not integrate into duel.
+- [x] /sm AC, /arch + /ui approval in docs/sprints/bubble-court-player-preview.md.
+- [x] Test-first fixed-length full-body motion, ball/rim contact, grounded landing and reduced-motion poses; original2D jersey/shorts/shoes/face art.
+- [x]10 new tests and56 related tests pass; /rev approved after net/rim layer repair. Full npm suite not run because escalation declined.
+- [x] Actual local playback/half-speed and scrubbing inspected; screenshot /tmp/hoopire-duel-preview/player-study-v6.jpg.
+- [x] Local independent preview ready; no commit, push or deploy.
+
+- 2026-10-18追加：DEMO01轻松节奏（5秒射击/扣篮后8秒恢复/35秒压力），3秒倒数后再显示扣篮；暂停恢复和全抵消演出TDD修复，独立追加审查通过。最后全套362项361过，之后新增3项相关回归通过；不提交/部署。
+
+### DEMO01 四招选招（本地，不提交不部署）
+- [x] /sm AC、/arch 与 /ui 设计预审，/rev 复查
+- [x] 四卡选择/取消与重复操作保护
+- [x] 四招相同100能量、底排清除、最多4干扰与防守规则
+- [x] 原动作Canvas接入；3秒预告、各自命中时刻、来源与独立待落显示
+- [x] 轻松BOT轮换、可收起演出、30fps/DPR1.5、降动态与加载回退
+- [x] 新测试RED→GREEN与相关规则/网络回归
+- [x] 最终浏览器四招与手机尺寸检查（390×844、390×650；取消、重复蓄能、演出发射、双向同时来袭、收起）
+
+### 固定棋盘与叠加扣篮（本地）
+- [x] /sm、/arch、/ui AC预审
+- [x] 实际浏览器先红：倒数导致棋盘下移27px
+- [x] 固定58px场景槽和32px状态行，动画绝对定位、输入穿透
+- [x] 保留手势、收起与既有攻击规则；相关23项测试通过
+- [x] 两种手机尺寸实际浏览器几何复测与/rev：390×844、390×650均一致；演出覆盖处点击仍发射
+
+### 攻击身份双视角设计（独立稿）
+- [x] /sm、/arch、/ui预审与/rev通过
+- [x] 同一攻击的发送/接收身份、上行/下行、目标/来源和能量差异
+- [x] 三阶段关键帧、部分/全部抵消示意，0落球与BLOCK状态
+- [x] 4项展示测试与桌面/390px浏览器检查
+- [x] 仅本地设计页，不接入真实对战，不提交、不部署
+
+### 居中受击 + 关键段慢放（本地DEMO01）
+- [x] /sm、/arch、/ui预审与/rev；飞球覆盖灰球问题RED复现后修复
+- [x] 虚拟比赛钟暂停双方规则，独立演出时钟，结束幂等落灰
+- [x] 4招局部慢放，基础2.1s；原LAN兼容
+- [x] 试玩接招入口、独立对照页居中演出与真实慢放播放按钮
+- [x] 84相关测试 + 4HTTP回归通过
+- [x] 最终实战画面与恢复验证：居中+暗背板、禁用输入、棋盘rect不变；结束后shots从0到1
+
+## 2026-10-18 — 完整大招与顶部反馈（本地）
+
+- 已完成：后三招释放、飞行、命中后才定格；接收特效横铺游戏容器，得分提示移到棋盘外固定HUD。
+- 108项相关测试通过；浏览器实际三招、受击全宽、真实消除反馈检查完成，棋盘位置尺寸稳定。
+- 详见 docs/sprints/bubble-court-skill-release.md；不提交、不部署。
+
+## 2026-10-18 — 后三招动作特写（本地）
+
+- 已去掉风车/黑洞/巨猫演出内的两块假棋盘与能量条，改为完整动作与球的跟随特写；命中后保留人物/猫爪收势。
+- 新增5条RED→GREEN，113条相关测试通过；浏览器三招、末姿、横铺接收与继续游戏实际检查完成。
+- 详见 docs/sprints/bubble-court-action-closeup.md；不提交、不部署。
+
+## 2026-10-18 — 巨猫放慢（本地）
+
+- 巨猫演出改4秒，1.5秒拍击、2.8秒命中、3.2秒收爪；其余三招仍3秒。前倒数与伤害规则不变。
+- 新增3条RED→GREEN，116条相关测试通过；浏览器完整播放验证，未提交/推送/部署。
+- 详见 docs/sprints/bubble-court-cat-slow.md。
+
+## 2026-10-18 — 后三招末端爆破慢放（本地）
+
+- 用户澄清后，风车/黑洞/巨猫统一4秒，最后2200～3100ms动态爆破慢放；不再只巨猫前段变慢。双手重扣3秒不变。
+- 123项相关测试通过；浏览器三招及接收方实际连贯回放，末端持续展开、4秒单次落灰恢复。
+- 详见 docs/sprints/bubble-court-impact-slow.md；不提交、不部署。
+
+## 2026-10-18 — 四招独立工作台（本地）
+
+- 新增move-lab独立静态页面与隔离的纯动作runtime快照，localhost:8788不依赖游戏后端。
+- 四招直接播放；支持暂停/重播/半速/时间轴/关键点/循环/示意特效开关，浏览器实际检查完成。
+- 后续先只改工作台，视觉确认后再显式集成；本轮原对战无净改动，不提交、不部署。
+- 详见 docs/sprints/bubble-court-move-lab.md。
+
+## 2026-10-19～20 — 独立四招工作台 V2（本地）
+
+- 六款官方竞品比较与设计取舍完成；调研页可从工作台打开。
+- 后三招共享原创人物/手掌/道具；爆破时主体与落点同框；原球命中后才分四球。
+- 基础扣篮补完贯网松手落地，后三招爆破完整淡出，四槽传出与四招连播可直接检查。
+- 37相关测试、完整原速/半速、390×844与整组循环/手动退出通过；复审通过，原game48文件hash一致。
+- 不集成对战、不提交、不部署；详见docs/sprints/bubble-court-move-lab-v2.md。
+
+## 2026-10-21 — 公网双人模式与实玩
+
+- 新增权威房间 Session、Node/Cloudflare适配、固定V2四招runtime、服务器控制演出与落灰；房间码/重连/持久化/限流/TTL回收。
+- 实际两页正常射击蓄满首招、双向四招、连续Dunk、触底灰化结算、双方重赛和离线恢复已检查。
+- 完整回归475项474通过，剩余既有旧3D手掌测试失败；新相关测试通过。发布预检发现并修正exports/migrations互斥，补红绿回归。
+- 最终476项475通过，仍仅旧3D既有失败。隔离发布完成，现网真实两页自然蓄能、风车落4灰和恢复发射验收通过；线上禁充能与身份/房满检查通过。
+- 现网 /bubble-court/duel/，版本3e5b2761；未commit/push。详见docs/sprints/bubble-court-online-duel.md及docs/evidence/online-duel-20261021/release.json。
+
+## 2026-10-21 — 原房间一键重赛
+
+- AC/架构/UI方案已记录：双人结束后任意一方一键重开，保留房间身份，3秒倒数；对手离线等待，重复请求只开一局。
+- 4条新增RED→GREEN，相关19项通过，全套480项479通过（仅旧3D既有失败）。本地两页单方启动与离线返回通过；现网97C2RP只点A后两边round1→2、同步倒数。
+- 已发布版本1f26be5e；详见docs/sprints/bubble-court-one-click-rematch.md和docs/evidence/rematch-20261021/；不commit/push。
+
+## 2026-10-21 — 双方同意再战（取代真人一键重开）
+
+- 用户确认双方邀请/接受/暂不，等待保留结算；DEMO01仍一键。AC及架构/UI方案见docs/sprints/bubble-court-consent-rematch.md。
+- 新契约10条RED→GREEN，相关41项通过；全套486项485通过，仍仅旧3D既有失败。
+- 本地/线上双页均验证邀请不清空、暂不保留、重新邀请/接受才开局；线上刷新保留邀请，新局双方可发射。DEMO01线上/本地均一键重开通过。
+- 已发布c815671d，证据docs/evidence/consent-rematch-20261021/；不commit/push。
+
+## English Duel — 2026-10-21
+- [x] AC, architecture/UI approach and failing English contract tests recorded.
+- [x] English lobby, instructions, actions, combat notices, results, consent controls and API errors.
+- [x] Regression, mobile browser QA and isolated production release: 33 targeted tests passed; 487/488 full tests passed (known legacy 3D failure). Published 0db5a3fd; online English two-player rematch verified.
+
+## Code curation and batch submission — 2026-10-21
+- [x] Recorded acceptance criteria, dependency-aware commit boundaries and source map.
+- [x] Verified Aaron Wang identity, Aaron SSH route and AW-Best remote.
+- [x] Added portable development/testing commands via RED→GREEN command-contract test.
+- [x] Verified staged snapshots and prepared four dependency-aware batches; push verification recorded after submission. No deployment.
+- [x] Batch 1 `e425635`: shared foundation; isolated 173/173 targeted tests.
+- [x] Batch 2 `1a38883`: independent workbench and pinned approved runtime; isolated 193/193 accumulated tests.
+
+- [x] Batch 3 `f0e640c`: English online duel/solo/consent rematches; isolated 233/233 duel + 10/10 deployment tests, build dry-run passed.
+- [x] Batch 4: rules/source map/history/evidence curated; unrelated AdSense report excluded. Full suite 488/489; original HEAD reproduces the same legacy 3D failure.

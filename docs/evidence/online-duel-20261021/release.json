@@ -1,0 +1,38 @@
+{
+  "version": "3e5b2761-4292-4e2c-9def-4afc80ff36e3",
+  "previousVersion": "414adfeb-6817-4206-90f4-0d09446bbf43",
+  "url": "https://hoopire.com/bubble-court/duel/",
+  "preview": "https://hoopire.com/bubble-court/move-lab/",
+  "sourceCommit": "a483127 (base only; online changes uncommitted)",
+  "gitCommitOrPush": false,
+  "isolatedAssets": 121,
+  "verifiedPreservedAssets": 47,
+  "tests": {
+    "total": 476,
+    "pass": 475,
+    "fail": 1,
+    "knownFailure": "unchanged old 3D athlete palm misses rim"
+  },
+  "browserSmoke": {
+    "room": "WGP7HS",
+    "seats": [
+      "A",
+      "B"
+    ],
+    "naturalScore": 90,
+    "naturalEnergyBeforeDunk": 100,
+    "move": "windmill",
+    "receivedGray": 4,
+    "shotsAfterReceipt": 1,
+    "phaseAfterReceipt": "playing",
+    "consoleErrorsOrWarnings": 0
+  },
+  "apiSmoke": {
+    "room": "5EGHFU",
+    "create": 201,
+    "full": 409,
+    "charge": 400,
+    "endCinema": 400,
+    "anonymous": 401
+  }
+}

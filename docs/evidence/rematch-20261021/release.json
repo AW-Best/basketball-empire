@@ -1,0 +1,20 @@
+{
+  "version": "1f26be5e-e07a-4ffa-b4a5-bfad8da4d9c3",
+  "previousVersion": "3e5b2761-4292-4e2c-9def-4afc80ff36e3",
+  "newTests": 4,
+  "focusedPassed": 19,
+  "fullTests": 480,
+  "fullPass": 479,
+  "knownFailure": "unchanged old 3D palm misses rim",
+  "localRoom": "6WVDQG",
+  "liveRoom": "97C2RP",
+  "liveSingleClickRematch": {
+    "clickedSeat": "A",
+    "otherSeatClicked": false,
+    "roundBefore": 1,
+    "roundAfter": 2,
+    "roomUnchanged": true,
+    "bothCountdown": true
+  },
+  "gitCommitOrPush": false
+}

@@ -1,0 +1,58 @@
+{
+  "date": "2026-10-21",
+  "repository": "AW-Best/basketball-empire",
+  "author": {
+    "name": "Aaron Wang",
+    "email": "aaronwang2030@gmail.com"
+  },
+  "sshAlias": "github-aaronwang2030",
+  "authenticatedGitHubLogin": "AW-Best",
+  "startingLocalHead": "a483127b785e4aed7ecfa49578ca43ebeed03c60",
+  "startingRemoteHead": "695a080779f57b60b080fd8f75f94d34f2b7b1fb",
+  "batches": [
+    {
+      "commit": "e425635",
+      "area": "shared duel and motion foundations",
+      "files": 65,
+      "isolatedTests": 173,
+      "isolatedPassed": 173
+    },
+    {
+      "commit": "1a38883",
+      "area": "independent workbench and approved motion snapshot",
+      "files": 57,
+      "accumulatedIsolatedTests": 193,
+      "accumulatedIsolatedPassed": 193
+    },
+    {
+      "commit": "f0e640c",
+      "area": "English online game, solo practice, consensual rematches",
+      "files": 24,
+      "duelTests": 233,
+      "duelPassed": 233,
+      "deploymentTests": 10,
+      "deploymentPassed": 10
+    },
+    {
+      "area": "rules, source map, history and relevant visual/release evidence"
+    }
+  ],
+  "fullRegression": {
+    "tests": 489,
+    "passed": 488,
+    "failed": 1,
+    "failure": "legacy athlete: palm misses the rim",
+    "reproducedAtStartingHead": true
+  },
+  "syntaxAndRelativeImports": {
+    "modules": 122,
+    "passed": true
+  },
+  "pinnedMotionHashes": {
+    "files": 20,
+    "passed": true
+  },
+  "cloudflareDryRun": "passed",
+  "deploymentPerformed": false,
+  "excluded": "unrelated untracked AdSense report; ignored .spike and generated outputs"
+}

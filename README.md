@@ -96,3 +96,11 @@ Try390×844 and320×568 layouts, play a full three-dunk win, trigger danger fail
 Asset provenance and hash: `public/bubble-court/assets/CREDITS.md`. The GLB is741,320bytes; Node scene verification totals17,544triangles/33mesh draw objects before browser-only lettering. GLTFLoader and BufferGeometryUtils are same-version local Three.js helpers. Model loading has a10-second timeout to2D fallback; disposal releases shared skeleton textures once.
 
 `test/bubble-court/athlete.test.js` samples the actual loaded skin and mixer for invariant segment lengths/offsets/scales, running/gather/landing contacts, approach momentum, hand-ball release continuity, rim contact, asset budget and timeout/resource cleanup. Developer browser QA at390×844 and320×568 inspects approach/gather/rise/impact/recovery and a real energy-charged dunk/row clear, not just geometry assertions. The current runtime loads `dunk-motion.json`: captured CMU124_06 layup motion adapted for rim contact and a continuous return jog. Source provenance, conditions and hashes are in CREDITS. Offline bake: `node tools/motion/bake-dunk.js`. Real3D animation is3.6seconds; 2D fallback remains2.3seconds. `mocap-dunk.test.js` checks the imported clip, real bone offsets, source seam, contacts, return continuity, ball pickup, camera bounds and concurrent resource loading. Warm key/cool fill/rim lighting uses three lights and one64px soft-shadow texture, with no shadow-map passes.
+
+### Bubble Court online duel
+
+The current English multiplayer game is [Bubble Court Duel](https://hoopire.com/bubble-court/duel/). [DEMO01](https://hoopire.com/bubble-court/duel/?room=DEMO01) is a private solo match against a bot.
+
+Run `npm run dev:duel` and open `http://localhost:8780/bubble-court/duel/`. Run `npm run test:duel` for the duel and motion regression suite. The older single-player game remains separate.
+
+See [the source map](docs/bubble-court-code-map.md) for module ownership, motion snapshot isolation, local phone testing, known legacy test limitations and the curated production release procedure. Git push does not deploy Hoopire.

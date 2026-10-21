@@ -1,0 +1,41 @@
+{
+  "version": "c815671d-c66b-44e7-8c35-02f492cebed1",
+  "previousVersion": "1f26be5e-e07a-4ffa-b4a5-bfad8da4d9c3",
+  "tests": {
+    "total": 486,
+    "pass": 485,
+    "knownFailure": "unchanged old3D palm misses rim"
+  },
+  "localRoom": "6WWCB6",
+  "liveRoom": "CGXMT2",
+  "inviteOnly": {
+    "phase": "finished",
+    "round": 1,
+    "scoreA": 60,
+    "energyA": 96,
+    "normalA": 44
+  },
+  "decline": {
+    "phase": "finished",
+    "round": 1,
+    "scoreA": 60,
+    "energyA": 96
+  },
+  "accepted": {
+    "phase": "countdown",
+    "round": 2,
+    "roomUnchanged": true,
+    "allRoundDataReset": true
+  },
+  "afterAccepted": {
+    "bothPhase": "playing",
+    "bothShots": 1
+  },
+  "refreshKeepsInvite": true,
+  "solo": {
+    "room": "DEMO01",
+    "singleClickRound": 2,
+    "phase": "countdown"
+  },
+  "gitCommitOrPush": false
+}
