@@ -1,0 +1,15 @@
+/* Preserve the final board beneath a separate, fully colored result layer. */
+.board-wrap.result-ending #board{filter:grayscale(var(--ending-gray,0)) brightness(calc(1 - var(--ending-dim,0)))}
+.board-wrap.result-ending::after{content:'';position:absolute;inset:0;z-index:3;pointer-events:none;background:radial-gradient(ellipse at 50% 42%,transparent 20%,#07131cc9 100%);opacity:var(--ending-gray,0)}
+.board-wrap.result-ending #toast,.board-wrap.result-ending #incoming,.board-wrap.result-ending #combat-notice{visibility:hidden}
+#overlay.result-reveal{background:#0c253a70;opacity:var(--result-opacity,0);color:#fff1cc;overflow-y:auto;justify-content:flex-start}
+#overlay.result-reveal>*{flex-shrink:0}
+#rematch-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;max-width:100%}
+#overlay #rematch-cancel{min-height:44px;border:1px solid #b2c7c5;background:#16313bbf;color:#fff1cc;padding:8px 16px}
+#overlay.result-reveal h1{font-size:46px;letter-spacing:2px;color:#ffcfac;text-shadow:0 3px 15px #091922}
+#overlay.result-reveal[data-result="win"] h1{color:#8ff2cd}
+#overlay.result-reveal[data-result="draw"] h1{color:#eee3b5}
+#overlay.result-reveal #ready{background:#ffb16c;border-color:#ffdfac;color:#16313b;min-height:48px}
+#test-failure{min-height:32px;touch-action:manipulation;border:1px dashed #a48e77;color:#e8c9a3;background:none;border-radius:4px;padding:4px 6px;font-size:9px}
+@media(prefers-reduced-motion:reduce){#overlay.result-reveal{transition:none}}
+@media(max-height:650px){#overlay.result-reveal{padding:8px 10px;gap:4px}#overlay.result-reveal h1{font-size:28px}#overlay.result-reveal>.eyebrow{display:none}#overlay.result-reveal #ready{min-height:44px;padding:8px 16px}}

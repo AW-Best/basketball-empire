@@ -34,6 +34,10 @@
       {
         "name": "BUZZER_LEADERBOARD",
         "class_name": "BuzzerLeaderboard"
+      },
+      {
+        "name": "BUBBLE_ROOMS",
+        "class_name": "BubbleDuelRoom"
       }
     ]
   },
@@ -49,6 +53,10 @@
     "BuzzerLeaderboard": {
       "type": "durable-object",
       "storage": "sqlite"
+    },
+    "BubbleDuelRoom": {
+      "type": "durable-object",
+      "storage": "sqlite"
     }
   },
   "observability": {
@@ -58,5 +66,15 @@
       "enabled": true,
       "invocation_logs": false
     }
-  }
+  },
+  "ratelimits": [
+    {
+      "name": "BUBBLE_CREATE_LIMITER",
+      "namespace_id": "1001",
+      "simple": {
+        "limit": 6,
+        "period": 60
+      }
+    }
+  ]
 }

@@ -1,3 +1,5 @@
+import {routeBubbleWorker} from '../src/bubble-duel-http.mjs';
+export {BubbleDuelRoom} from './bubble-duel-room.mjs';
 import gameModule from '../src/game.js';
 
 const {
@@ -310,6 +312,7 @@ export class BasketballRoom {
 const worker = {
   async fetch(request, env) {
     const url = new URL(request.url);
+    if (url.pathname.startsWith('/api/bubble/')) return routeBubbleWorker(request, env);
     if ((request.method === 'GET' || request.method === 'HEAD') && url.pathname === '/ads.txt') {
       const response = new Response(request.method === 'HEAD' ? null : ADS_TXT, {
         headers: {

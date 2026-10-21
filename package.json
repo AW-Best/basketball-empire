@@ -8,7 +8,9 @@
     "start": "node src/server.js",
     "test": "node --test test/*.test.js test/bubble-court/*.test.js",
     "dev:cloudflare": "wrangler dev",
-    "deploy:cloudflare": "wrangler deploy"
+    "deploy:cloudflare": "wrangler deploy",
+    "dev:duel": "node src/bubble-duel-server.mjs",
+    "test:duel": "node --test test/cloudflare-bubble-duel.test.js test/bubble-court/duel*.test.js test/bubble-court/cinematic.test.js test/bubble-court/library-clock.test.js test/bubble-court/move-lab*.test.js test/bubble-court/player-preview.test.js test/bubble-court/slam*.test.js test/bubble-court/attack-roles-design.test.js"
   },
   "engines": {
     "node": ">=20"

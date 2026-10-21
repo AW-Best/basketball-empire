@@ -72,3 +72,19 @@ test('package scripts support local Cloudflare verification and deployment', () 
   assert.equal(packageJson.scripts['deploy:cloudflare'], 'wrangler deploy');
   assert.match(packageJson.devDependencies.wrangler, /^\^4\./);
 });
+
+test('bubble rooms use the existing declarative DO lifecycle without conflicting migration modes', () => {
+  const config = JSON.parse(fs.readFileSync(path.join(projectRoot, 'wrangler.jsonc'), 'utf8'));
+  assert.equal(config.migrations, undefined, 'Wrangler rejects migrations together with exports');
+  assert.equal(config.exports.BubbleDuelRoom.type, 'durable-object');
+  assert.equal(config.exports.BubbleDuelRoom.storage, 'sqlite');
+  assert.ok(config.durable_objects.bindings.some(binding => binding.name === 'BUBBLE_ROOMS' && binding.class_name === 'BubbleDuelRoom'));
+});
+
+test('Bubble Court has explicit local development and focused regression commands', () => {
+  const packageJson = JSON.parse(fs.readFileSync(path.join(projectRoot, 'package.json'), 'utf8'));
+  assert.equal(packageJson.scripts['dev:duel'], 'node src/bubble-duel-server.mjs');
+  assert.match(packageJson.scripts['test:duel'] ?? '', /node --test/);
+  assert.match(packageJson.scripts['test:duel'] ?? '', /duel\*\.test\.js/);
+  assert.match(packageJson.scripts['test:duel'] ?? '', /cloudflare-bubble-duel\.test\.js/);
+});
