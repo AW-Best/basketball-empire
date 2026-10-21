@@ -1,0 +1,26 @@
+{
+  "version": "motion-v2-2026-10-21",
+  "source": "approved independent motion workbench",
+  "files": {
+    "duel-lab/Constants.js": "4035d1bc274bfd0c0988f1e0c7334680b8b2069b0ac1189d12e1f96941d30918",
+    "duel-lab/slam/playback.mjs": "be52553a25772d12f356be4e13ce85f4e1eb841d19c085fd85012a53875e09e5",
+    "duel-lab/slam/motion.mjs": "0eeca79336b7d66621708b5e69ea3952baac615eba4b32ab9ed1e00e4b59c409",
+    "duel-lab/slam/template.mjs": "4fd26736332f2f6b86a9816e94cb57f05a8b9be92f52cbc39e9e20e3594657ea",
+    "duel-lab/slam/scene.mjs": "27f41d93022e470dbb906bd4789717b80b09b39d3b3c567bae15f4808651e687",
+    "duel-lab/slam/hand.mjs": "b268990bdfe0b5dc6279f4b662c4c77e358336c74097b1e642c9e78148de5205",
+    "duel/attack-timing.mjs": "50075c5972cbc946338d09b2b05a2ee96ee6e8a1c439c61aff0892788505fbdb",
+    "duel/spectacle.mjs": "be234001dd18a943650635dbf93003cbae82ca015102d7c67cd6b41964891045",
+    "duel/moves.mjs": "a2aa545fdbc051aef15736a6369c453749c74f911f96b16f515ad1b9ee7109ed",
+    "duel/move-court.mjs": "9167a0d6c1fcff442abb06e70da859f224b51b2abaceca375f3cacdd49d2b417",
+    "duel/moves/studio-art.mjs": "51019aaae2ed5186b9818db5d7d5149f446ebde6cc12323c2dd6f11c17f40146",
+    "duel/moves/README.md": "45d5198df02b25c8c2cb8f86bf11ee24a9612ed162c9e72575e7c0b16f6ebeb1",
+    "duel/moves/focus.mjs": "6969cfacbd13c1642ed9db0ded90e7d79180a3946e2d9fc7889a1e6701e40cc2",
+    "duel/moves/draw.mjs": "9d65662c79899876ea54b94749a5e9139d897fcdb49574d319a581d81d1ed312",
+    "duel/moves/cat/motion.mjs": "83f62513b30835398ad1a219287f7cbc48df73eea0d764a9f82bec50080de40b",
+    "duel/moves/cat/scene.mjs": "7dd31c0212e80013d793eb208c53cd3f1105af3d5b6c34895d2f14b1371e6887",
+    "duel/moves/windmill/motion.mjs": "1d64f88360e49228dca5e49c8987854d1e08062e8cd9b3fcbb88f7faa2ec7cb0",
+    "duel/moves/windmill/scene.mjs": "4599763c9114fbbd29ccab3bd53c9671acf4971e6272798de90a9a1760fb068e",
+    "duel/moves/blackhole/motion.mjs": "fc4dd6d20b30f611b7c12249a213433eaae70fb19689f23389d0da93d2abcdce",
+    "duel/moves/blackhole/scene.mjs": "523321929a069eeb7a5d86376ac0549d3fe9f5056efa845f6fc9ba4580ddcdb7"
+  }
+}

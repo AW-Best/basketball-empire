@@ -1,0 +1,52 @@
+import {SPECTACLE} from '../../duel-lab/Constants.js';
+import {AttackSpectacle} from '../spectacle.mjs';
+import {getPresentationMove,getCinematicDuration,attackSourceTime,attackOrigin} from '../moves.mjs';
+import {roleView} from './roles.mjs';
+import {createSlamScene} from '../../duel-lab/slam/scene.mjs';
+const attack={id:'DESIGN-01',attacker:'RILEY',defender:'JORDAN',initial:4,remaining:4};
+let stage='action',playing=false,elapsed=0,lastTick=null,lastPaint=-Infinity,raf=null;const NS='http://www.w3.org/2000/svg',reduced=matchMedia('(prefers-reduced-motion: reduce)');
+function el(tag,attributes,parent){const node=document.createElementNS(NS,tag);for(const [key,value]of Object.entries(attributes))node.setAttribute(key,String(value));parent.append(node);return node;}
+const cards=[...document.querySelectorAll('.perspective')].map(card=>{
+ const board=card.querySelector('.bubble-board'),defs=el('defs',{},board),gradient=el('radialGradient',{id:`bubble-${card.dataset.role}`,cx:'.3',cy:'.25',r:'.8'},defs);for(const [offset,color]of [['0','#f5fff4'],['.25','#c1e6dc'],['1','#245368']])el('stop',{offset,'stop-color':color},gradient);
+ for(let row=0;row<4;row++)for(let col=0;col<(row%2?7:8);col++){const colors=['#5bc6c3','#edb36c','#ab8dc9','#72bd8c'],x=24+col*37+(row%2?18:0),y=30+row*31;el('circle',{cx:x,cy:y,r:16,fill:colors[(Math.floor(col/2)+row)%4],stroke:'#d7efdc88','stroke-width':1},board);el('circle',{cx:x-4,cy:y-5,r:4,fill:'#ffffff40'},board);}
+ el('path',{d:'M13 302H307',stroke:'#dba187','stroke-dasharray':'6 5'},board);el('text',{x:15,y:294,fill:'#caae97','font-size':7},board).textContent='DANGER / 碰线才结束';el('path',{d:'M160 343V319M154 326L160 316L166 326',stroke:'#ddedd2','stroke-width':2,fill:'none'},board);el('circle',{cx:160,cy:349,r:18,fill:'#67bda4',stroke:'#d4efcd','stroke-width':2},board);el('circle',{cx:248,cy:349,r:11,fill:'#c69ddb',stroke:'#e0d6e7'},board);
+ for(let i=0;i<15;i++){const dot=document.createElement('i');card.querySelector('.mini-board').append(dot);}
+ card.querySelector('.phone-screen').append(card.querySelector('.travel'));
+ const scene=createSlamScene(card.querySelector('.scene'),{live:true});scene.root.setAttribute('aria-label',card.dataset.role==='sender'?'你发动双手重扣，干扰攻向JORDAN':'RILEY发动双手重扣，干扰朝你的棋盘落下');scene.setOwn(card.dataset.role==='sender');scene.setActive(false);scene.setQuiet(true);
+ card.querySelector('.collapse').onclick=()=>{if(card.dataset.role==='receiver'&&stage==='action')return;const layer=card.querySelector('.attack-layer'),collapsed=layer.classList.toggle('collapsed');card.querySelector('.collapse').textContent=collapsed?'展开 ⌄':'收起 ⌃';card.querySelector('.collapse').setAttribute('aria-expanded',String(!collapsed));card.querySelector('.collapse').setAttribute('aria-label',`${collapsed?'展开':'收起'}${card.dataset.role==='sender'?'发送':'接收'}方演出`);render();};
+ return {card,scene,lastPose:null,fx:new AttackSpectacle(card.querySelector('.phone-screen'),{zIndex:7})};
+});
+function drawFlight(card,view){const host=card.querySelector('.travel');host.replaceChildren();host.hidden=!view.showFlight;if(!view.showFlight)return;
+ const phone=card.querySelector('.phone-screen'),box=phone.getBoundingClientRect(),mini=card.querySelector('.mini-board').getBoundingClientRect(),field=card.querySelector('.field').getBoundingClientRect(),layer=card.querySelector('.attack-layer').getBoundingClientRect();
+ const own=view.role==='sender',accent=own?'#8af4cd':'#ffb17b',target={x:mini.left+mini.width/2-box.left,y:mini.top+mini.height/2-box.top},landing={x:box.width*.5,y:field.top-box.top+field.height*.49};
+ const from=own?{x:box.width*.65,y:layer.bottom-box.top+32}:target,to=own?target:landing;
+ const svg=el('svg',{viewBox:`0 0 ${box.width} ${box.height}`,'aria-hidden':true},host);el('path',{d:`M${from.x} ${from.y}Q${box.width*.92} ${(from.y+to.y)/2} ${to.x} ${to.y}`,stroke:accent,'stroke-width':3,'stroke-dasharray':'7 6',fill:'none'},svg);
+ el('path',{d:own?`M${to.x-8} ${to.y+16}L${to.x} ${to.y}L${to.x+10} ${to.y+16}`:`M${to.x-10} ${to.y-17}L${to.x} ${to.y}L${to.x+13} ${to.y-13}`,stroke:accent,'stroke-width':3,fill:'none'},svg);
+ for(let i=0;i<view.count;i++){const x=own?from.x+14+i*11:landing.x+(i-(view.count-1)/2)*27,y=own?from.y-35-i*29:landing.y+22+(i%2)*6;el('circle',{cx:x,cy:y,r:10,fill:'#82968e',stroke:accent,'stroke-width':2},svg);el('path',{d:`M${x-3} ${y-5}L${x+2} ${y}L${x-2} ${y+5}`,stroke:'#f7e3b2',fill:'none','stroke-width':1.5},svg);}
+ const text=el('text',{x:own?from.x-80:landing.x-66,y:own?from.y+25:landing.y+58,fill:accent,'font-size':11,'font-weight':800},svg);text.textContent=own?`攻向 JORDAN ×${view.count}`:`落入你的棋盘 ×${view.count}`;
+}
+
+function render(){for(const item of cards){const {card,scene}=item;const view=roleView(attack,card.dataset.role,stage);card.dataset.stage=stage;card.dataset.paused=String(view.paused);card.querySelector('.collapse').hidden=!view.canCollapse;if(view.centered)card.querySelector('.attack-layer').classList.remove('collapsed');card.querySelector('.pause-tag').textContent=view.role==='sender'?'等待对手接招 · 双方比赛暂停':'受击演出中，比赛暂停';card.querySelector('.board-caption').textContent=view.paused?'比赛暂停 · 泡泡和计时均保持不动':stage==='warning'?'预告期间仍可消除抵消':'比赛恢复 · 继续消除蓄能';card.querySelector('.role-ribbon').textContent=view.eyebrow;card.querySelector('.attack-status b').textContent=view.direction;card.querySelector('.attack-status span').textContent=stage==='impact'?`抵消${view.blocked} · 命中${view.count}`:`待落 ${view.count} / 4`;
+ card.querySelector('.attack-hint').textContent=view.hint;card.querySelector('.countdown').textContent=view.count?'3':'✓';card.querySelector('.warning-content>span').textContent=view.count?(view.role==='sender'?'目标已锁定\nJORDAN':'来自 RILEY\n的扣篮攻击'):'干扰已全部化解\n本次不会新增泡泡';card.querySelector('.move-name').textContent=view.title;card.querySelector('.warning-content').hidden=stage!=='warning';card.querySelector('.scene').hidden=stage!=='action';card.querySelector('.move-name').hidden=stage!=='action';card.querySelector('.impact-copy').hidden=stage!=='impact';card.querySelector('.impact-copy').textContent=view.title;
+ card.querySelector('.energy-number').textContent=`${view.energy} / 100`;card.querySelector('.energy-bar i').style.width=`${view.energy}%`;card.querySelector('.footer-copy').textContent=view.role==='sender'?'已消耗100能量 · 自己底排已清除':'你的能量不会被对方扣掉 · 可继续蓄能反击';
+ scene.setAttackCount(0);const poseMs=reduced.matches?800:elapsed>0?attackSourceTime('classic',elapsed):810;if(item.lastPose!==poseMs){scene.render(poseMs);item.lastPose=poseMs;}drawFlight(card,view);
+ const phone=card.querySelector('.phone-screen').getBoundingClientRect(),layer=card.querySelector('.attack-layer').getBoundingClientRect(),field=card.querySelector('.field').getBoundingClientRect(),mini=card.querySelector('.mini-board').getBoundingClientRect();
+ const sceneRect=card.querySelector('.scene').getBoundingClientRect(),origin=attackOrigin('classic',sceneRect.width,sceneRect.height);
+ const from={x:sceneRect.left-phone.left+origin.x,y:sceneRect.top-phone.top+origin.y},to=view.role==='sender'?[{x:mini.left-phone.left+mini.width*.5,y:mini.top-phone.top+mini.height*.5}]:Array.from({length:Math.max(1,view.count)},(_,i)=>({x:phone.width*.5+(i-(view.count-1)/2)*27,y:field.top-phone.top+field.height*.5}));
+ card.classList.remove('fx-flight','fx-hold');card.querySelector('.attack-layer').style.opacity='1';
+ if(stage==='action'){const fx=item.fx.render(elapsed,SPECTACLE.contactMs,{count:view.count,own:view.role==='sender',from,to,reduced:reduced.matches});card.classList.toggle('fx-flight',fx.stage==='flight');card.classList.toggle('fx-hold',fx.stage==='hold');const fade=Math.max(0,Math.min(1,(elapsed-(SPECTACLE.clipMs-SPECTACLE.fadeMs))/SPECTACLE.fadeMs));card.querySelector('.attack-layer').style.opacity=String(1-fade);if(['burst','flight','hold'].includes(fx.stage)){card.querySelector('.pause-tag').textContent=fx.stage==='burst'?'砸筐接触 · 闪电同步':view.count?`${view.role==='sender'?'干扰攻向 JORDAN':'来自 RILEY 的干扰飞入'} ×${view.count}`:'BLOCK · 干扰已全部化解';}}else item.fx.clear();
+ }
+ document.querySelectorAll('[data-phase]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.phase===stage)));document.querySelector('#shared-state').textContent=`同一次攻击：RILEY → JORDAN · 初始4个 / 已抵消${4-attack.remaining}个 / 剩余${attack.remaining}个 · 所有数据为设计示意`;
+}
+function stopPlayback(message='关键帧对照 · 点击播放可看完整衔接'){playing=false;lastTick=null;if(raf!==null)cancelAnimationFrame(raf);raf=null;document.querySelector('#play-slow').textContent='播放慢放扣篮';document.querySelector('#playback-state').textContent=message;}
+function playFrame(now){if(!playing||document.hidden)return;if(lastTick!==null)elapsed+=Math.max(0,Math.min(100,now-lastTick));lastTick=now;const move=getPresentationMove('classic'),total=getCinematicDuration('classic');if(elapsed>=total){stopPlayback('演出结束 · 双方比赛恢复，剩余干扰落入');stage='impact';render();return;}if(now-lastPaint>=1000/30){lastPaint=now;render();document.querySelector('#playback-state').textContent=`${(elapsed/1000).toFixed(1)} / ${(total/1000).toFixed(1)}秒 · 慢放重扣 → 闪电爆发 → 干扰飞入`;}raf=requestAnimationFrame(playFrame);}
+document.querySelector('#play-slow').onclick=()=>{stopPlayback();stage='action';elapsed=0;lastPaint=-Infinity;playing=true;document.querySelector('#play-slow').textContent='重新播放慢放';render();raf=requestAnimationFrame(playFrame);};
+document.querySelectorAll('[data-phase]').forEach(button=>button.onclick=()=>{stopPlayback();stage=button.dataset.phase;elapsed=0;render();});
+document.querySelector('#block-one').onclick=()=>{attack.remaining=Math.max(0,attack.remaining-1);render();};document.querySelector('#block-all').onclick=()=>{stopPlayback();attack.remaining=0;stage='impact';render();};document.querySelector('#reset-count').onclick=()=>{attack.remaining=4;render();};
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&playing){stopPlayback('已停止：页面进入后台。返回后可重新播放，不跳过动作。');render();}});
+reduced.addEventListener('change',()=>{stopPlayback();render();});addEventListener('resize',render);render();
+
+document.querySelector('#preview-burst').onclick=()=>{stopPlayback('爆发定格 · 闪电、冲击环与实际剩余数量');stage='action';elapsed=SPECTACLE.contactMs+50;render();};
+document.querySelector('#preview-flight').onclick=()=>{stopPlayback('飞行定格 · 对手缩略棋盘 / 自己棋盘');stage='action';elapsed=SPECTACLE.contactMs+400;render();};
+
+document.querySelector('#preview-hold').onclick=()=>{stopPlayback('同一砸筐姿势定格 · 不新开文字提示层');stage='action';elapsed=SPECTACLE.contactMs+1200;render();};

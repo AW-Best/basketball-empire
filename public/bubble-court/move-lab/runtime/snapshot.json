@@ -1,0 +1,101 @@
+{
+  "created": "2026-10-18",
+  "purpose": "Independent animation iteration; integrate only after visual approval.",
+  "files": [
+    {
+      "source": "duel/moves.mjs",
+      "snapshot": "runtime/duel/moves.mjs",
+      "sha256": "7fa352f9511a8b1c9a087a5ec67b645111b833599f0e80113e3548bc3ee36c10"
+    },
+    {
+      "source": "duel/move-court.mjs",
+      "snapshot": "runtime/duel/move-court.mjs",
+      "sha256": "9167a0d6c1fcff442abb06e70da859f224b51b2abaceca375f3cacdd49d2b417"
+    },
+    {
+      "source": "duel/attack-timing.mjs",
+      "snapshot": "runtime/duel/attack-timing.mjs",
+      "sha256": "50075c5972cbc946338d09b2b05a2ee96ee6e8a1c439c61aff0892788505fbdb"
+    },
+    {
+      "source": "duel/spectacle.mjs",
+      "snapshot": "runtime/duel/spectacle.mjs",
+      "sha256": "5f329f217f5961dc62fe763285ee709c6323df70e6c1e73bdb36a7a953271c95"
+    },
+    {
+      "source": "duel/moves/README.md",
+      "snapshot": "runtime/duel/moves/README.md",
+      "sha256": "45d5198df02b25c8c2cb8f86bf11ee24a9612ed162c9e72575e7c0b16f6ebeb1"
+    },
+    {
+      "source": "duel/moves/focus.mjs",
+      "snapshot": "runtime/duel/moves/focus.mjs",
+      "sha256": "9c8db14c47a6f69b8f339df93f79e9109078a71d3d629a6c4ea338da8c8db971"
+    },
+    {
+      "source": "duel/moves/draw.mjs",
+      "snapshot": "runtime/duel/moves/draw.mjs",
+      "sha256": "9d65662c79899876ea54b94749a5e9139d897fcdb49574d319a581d81d1ed312"
+    },
+    {
+      "source": "duel/moves/cat/motion.mjs",
+      "snapshot": "runtime/duel/moves/cat/motion.mjs",
+      "sha256": "83f62513b30835398ad1a219287f7cbc48df73eea0d764a9f82bec50080de40b"
+    },
+    {
+      "source": "duel/moves/cat/scene.mjs",
+      "snapshot": "runtime/duel/moves/cat/scene.mjs",
+      "sha256": "605f1923842c3a47956857169ca2b840a0358da8b55eda4202ad647c2676b5ba"
+    },
+    {
+      "source": "duel/moves/windmill/motion.mjs",
+      "snapshot": "runtime/duel/moves/windmill/motion.mjs",
+      "sha256": "1d64f88360e49228dca5e49c8987854d1e08062e8cd9b3fcbb88f7faa2ec7cb0"
+    },
+    {
+      "source": "duel/moves/windmill/scene.mjs",
+      "snapshot": "runtime/duel/moves/windmill/scene.mjs",
+      "sha256": "0ca31f2a361d388c905c7202e4a83753a7c15d562544b7f2af51d9a1db426ede"
+    },
+    {
+      "source": "duel/moves/blackhole/motion.mjs",
+      "snapshot": "runtime/duel/moves/blackhole/motion.mjs",
+      "sha256": "fc4dd6d20b30f611b7c12249a213433eaae70fb19689f23389d0da93d2abcdce"
+    },
+    {
+      "source": "duel/moves/blackhole/scene.mjs",
+      "snapshot": "runtime/duel/moves/blackhole/scene.mjs",
+      "sha256": "dd175e6bbc5e59a08c7518641776a1a6f84fb88c5769b25dc47cc2c74481cac7"
+    },
+    {
+      "source": "duel-lab/slam/playback.mjs",
+      "snapshot": "runtime/duel-lab/slam/playback.mjs",
+      "sha256": "be52553a25772d12f356be4e13ce85f4e1eb841d19c085fd85012a53875e09e5"
+    },
+    {
+      "source": "duel-lab/slam/motion.mjs",
+      "snapshot": "runtime/duel-lab/slam/motion.mjs",
+      "sha256": "0eeca79336b7d66621708b5e69ea3952baac615eba4b32ab9ed1e00e4b59c409"
+    },
+    {
+      "source": "duel-lab/slam/template.mjs",
+      "snapshot": "runtime/duel-lab/slam/template.mjs",
+      "sha256": "4fd26736332f2f6b86a9816e94cb57f05a8b9be92f52cbc39e9e20e3594657ea"
+    },
+    {
+      "source": "duel-lab/slam/scene.mjs",
+      "snapshot": "runtime/duel-lab/slam/scene.mjs",
+      "sha256": "27f41d93022e470dbb906bd4789717b80b09b39d3b3c567bae15f4808651e687"
+    },
+    {
+      "source": "duel-lab/slam/hand.mjs",
+      "snapshot": "runtime/duel-lab/slam/hand.mjs",
+      "sha256": "b268990bdfe0b5dc6279f4b662c4c77e358336c74097b1e642c9e78148de5205"
+    },
+    {
+      "source": "duel-lab/Constants.js",
+      "snapshot": "runtime/duel-lab/Constants.js",
+      "sha256": "54203a2123d0c6b632cecdf17de6c8bdfeb67db84fbb7a1c296ef1e964e2a672"
+    }
+  ]
+}

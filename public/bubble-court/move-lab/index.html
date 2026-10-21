@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#eeeadd"><title>Hoopire · 四招动作预览</title><link rel="icon" href="data:,"><link rel="stylesheet" href="style.css"></head>
+<body><main id="lab" aria-busy="true">
+ <header><a class="brand" href="./">HOOPIRE<span>MOTION STUDIES / LOCAL</span></a><span class="local-tag"><i></i>独立预览 · 本地</span></header>
+ <section class="intro"><div><span class="eyebrow">DUNK / MOTION LAB · VOL.02</span><h1>每一招，<em>都有分量。</em></h1></div><p>街头剪影 / 接触慢爆 / 四路传出<br>点选直接播放，也可四招连看。</p></section>
+ <nav id="move-options" aria-label="选择动作"></nav>
+ <section class="viewer" aria-label="动作预览工作台">
+  <div class="stage" id="stage"><div class="stage-top"><span><b id="move-number">01</b><strong id="move-name">双手重扣</strong></span><span id="phase" role="status" aria-live="polite">正在加载动作</span></div><div id="scene" aria-label="扣篮动作特写"></div><div id="target" aria-hidden="true"><i>1</i><i>2</i><i>3</i><i>4</i><span>TO RIVAL / 干扰落点示意</span></div><div class="stage-bottom"><span id="stage-note">完整动作 · 可随时暂停</span><span>HOOPIRE / ACTION STUDY</span></div></div>
+  <div class="transport"><div class="time-title"><label for="timeline">动作时间轴</label><output id="time" for="timeline" aria-live="off">0.00 / 3.00 秒</output></div><input id="timeline" type="range" min="0" max="3000" step="1" value="0" aria-label="拖动查看动作时间"><div id="keyframes" aria-label="跳到动作关键点"></div>
+  <div class="play-controls"><button id="play" class="primary" disabled>播放</button><button id="replay" disabled>↻ 重播</button><button id="playlist" aria-pressed="false">▶ 四招连播</button><div class="speeds" role="group" aria-label="播放速度"><button data-speed="0.5" aria-pressed="false">0.5×</button><button data-speed="1" aria-pressed="true">1×</button></div></div>
+  <div class="options"><label><input id="loop" type="checkbox">循环播放</label><label><input id="show-fx" type="checkbox" checked>干扰飞出与爆破</label><span id="play-state" role="status" aria-live="polite">加载中</span></div></div>
+ </section>
+ <p class="help">拖动时间轴检查衔接；点关键点看手腕、出球和爆破。0.5× 便于检查细节。</p>
+ <footer><span>仅动作预览，不启动对局。动作确认后再集成。</span><a href="research.html">六款竞品 → 本轮设计依据 ↗</a><span>VOL.02 / LOCAL STUDY</span></footer>
+</main><script type="module" src="app.mjs"></script></body></html>
